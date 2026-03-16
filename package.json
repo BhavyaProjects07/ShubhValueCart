@@ -1,0 +1,44 @@
+{
+  "name": "shubh-value-cart",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.36.5",
+    "@imagekit/nodejs": "^7.1.1",
+    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/adapter-neon": "^6.19.1",
+    "@prisma/client": "^6.19.1",
+    "@reduxjs/toolkit": "^2.8.2",
+    "@vercel/analytics": "^1.6.1",
+    "autoprefixer": "^10.4.27",
+    "axios": "^1.13.2",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.26.2",
+    "imagekit": "^6.0.0",
+    "lucide-react": "^0.525.0",
+    "next": "^16.1.1",
+    "openai": "^6.16.0",
+    "postcss": "^8.5.8",
+    "prisma": "^6.19.1",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-hot-toast": "^2.5.2",
+    "react-redux": "^9.2.0",
+    "recharts": "^3.1.2",
+    "svix": "^1.84.1",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/ws": "^8.18.1",
+    "inngest": "^3.48.1",
+    "tailwindcss": "^4.2.1"
+  }
+}
