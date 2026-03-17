@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -5,100 +6,120 @@ const Preloader = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(false), 1400);
+    // Total duration of the preloader before it exits
+    const timer = setTimeout(() => setIsVisible(false), 2600);
     return () => clearTimeout(timer);
   }, []);
+
+  const text = "ShubhValueCart";
+  const letters = text.split("");
+
+  // Container for the staggered text
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.06, delayChildren: 0.4 }
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.9,
+      filter: "blur(10px)",
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  };
+
+  // 3D Flip animation for each letter
+  const letterVariants = {
+    hidden: { opacity: 0, y: 40, rotateX: -90 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      transition: { type: "spring", damping: 12, stiffness: 200 }
+    }
+  };
 
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ y: 0 }}
-          exit={{ y: "-100%" }}
-          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+          key="preloader"
+          // Completely different exit: A sleek "curtain pull" using clip-path
+          initial={{ clipPath: "inset(0 0 0 0)" }}
+          exit={{ clipPath: "inset(0 0 100% 0)" }} 
+          transition={{ duration: 0.9, delay: 0.4, ease: [0.76, 0, 0.24, 1] }}
           className="
             fixed inset-0 z-[100]
-            bg-[#1a1512]
-            flex items-center justify-center
+            bg-white
+            flex flex-col items-center justify-center
             px-6
             overflow-hidden
+            font-inter
           "
           style={{
             paddingTop: "env(safe-area-inset-top)",
             paddingBottom: "env(safe-area-inset-bottom)",
           }}
         >
-          {/* Center wrapper */}
-          <div className="flex flex-col items-center text-center w-full max-w-[420px]">
-            {/* Brand */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="
-                text-[#FDFBF7]
-                font-serif font-light
-                tracking-[0.35em]
-                text-3xl
-                sm:text-4xl
-                md:text-6xl
-                whitespace-nowrap
-              "
-            >
-              FROST WAYNE
-            </motion.h1>
+          <style dangerouslySetInnerHTML={{__html: `
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+            .font-inter { font-family: 'Inter', sans-serif; }
+          `}} />
 
-            {/* Divider */}
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="flex flex-col items-center"
+            style={{ perspective: "1000px" }} // Enables the 3D flip effect
+          >
+            {/* New Premium Loader: Dual Spinning Rings */}
             <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 2, ease: "easeInOut", delay: 0.5 }}
-              className="h-px bg-[#A67C52] mt-4"
-            />
-
-            {/* Tagline */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 1, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                times: [0, 0.5, 1],
-              }}
-              className="
-                text-[#A67C52]
-                text-[9px]
-                sm:text-[10px]
-                uppercase
-                tracking-[0.6em]
-                mt-10
-                font-bold
-              "
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", duration: 1, delay: 0.1 }}
+              className="relative w-14 h-14 mb-10"
             >
-              Defining Silence
-            </motion.p>
+              {/* Outer Ring */}
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+                className="absolute inset-0 border-[3px] border-gray-100 border-t-[#1D1D1F] border-r-[#1D1D1F] rounded-full"
+              />
+              {/* Inner Ring */}
+              <motion.span
+                animate={{ rotate: -360 }}
+                transition={{ repeat: Infinity, duration: 1.8, ease: "linear" }}
+                className="absolute inset-2 border-[3px] border-gray-100 border-b-gray-400 rounded-full"
+              />
+            </motion.div>
 
-            {/* Footer labels */}
-            <div className="mt-14 flex gap-4 overflow-hidden h-4">
-              {["2024", "AW", "ARCHIVE", "VOID"].map((text, i) => (
+            {/* Staggered 3D Text Reveal */}
+            <div className="flex overflow-hidden pb-2">
+              {letters.map((letter, index) => (
                 <motion.span
-                  key={i}
-                  initial={{ y: 20 }}
-                  animate={{ y: 0 }}
-                  transition={{ delay: 0.8 + i * 0.1, duration: 0.5 }}
-                  className="
-                    text-[#FDFBF7]/25
-                    text-[9px]
-                    uppercase
-                    tracking-widest
-                    whitespace-nowrap
-                  "
+                  key={index}
+                  variants={letterVariants}
+                  className="text-[#1D1D1F] font-extrabold tracking-tighter text-4xl sm:text-5xl md:text-6xl inline-block"
+                  style={{ transformOrigin: "bottom" }}
                 >
-                  {text}
+                  {letter}
                 </motion.span>
               ))}
             </div>
-          </div>
+
+            {/* Subtitle Blur Reveal */}
+            <motion.div
+              initial={{ opacity: 0, filter: "blur(10px)", y: 10 }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
+              className="mt-6 text-gray-400 text-xs sm:text-sm tracking-[0.4em] uppercase font-bold"
+            >
+              Premium Experience
+            </motion.div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

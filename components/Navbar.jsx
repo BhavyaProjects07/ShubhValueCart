@@ -10,81 +10,71 @@ import {useUser , useClerk , UserButton , useAuth} from "@clerk/nextjs";
 import { PackageIcon, Store } from "lucide-react";
 import axios from "axios";
 
-
-
 const NavLink = ({ href, children, delay = 0 }) => {
     return (
-        <a
+        <Link
             href={href}
-            className="relative group text-[12px] font-bold tracking-[0.4em] uppercase text-[#c4a484] transition-all duration-500"
+            className="relative group text-sm font-semibold tracking-wide text-gray-600 hover:text-[#1D1D1F] transition-colors duration-300"
             style={{
                 animation: `fadeInUp 0.6s ease-out ${delay}s forwards`,
                 opacity: 0,
             }}
         >
             {children}
-            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-gradient-to-r from-[#C4A484] to-transparent group-hover:w-full transition-all duration-700 ease-out" />
-            <span className="absolute inset-0 text-[#8D6E63] opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                {children}
-            </span>
-        </a>
+            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#1D1D1F] group-hover:w-full transition-all duration-300 ease-out rounded-full" />
+        </Link>
     )
 }
 
 const Navbar = () => {
-
     const { getToken } = useAuth()
-
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSeller, setIsSeller] = useState(false)
-
-
     const { user } = useUser()
-    
     const {openSignIn} = useClerk()
     const router = useRouter();
     const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
-
     const [search, setSearch] = useState('')
     const [isVisible, setIsVisible] = useState(false)
-    const cartCount = useSelector(state => state.cart.total)
+    
+    // Fallback for cartCount if redux is not set up in the environment
+    const cartCount = useSelector(state => state?.cart?.total || 0)
 
     useEffect(() => {
         setIsVisible(true)
     }, [])
 
     useEffect(() => {
-  if (!user) return
+        if (!user) return
 
-  const fetchRoles = async () => {
-    try {
-      const token = await getToken()
+        const fetchRoles = async () => {
+            try {
+                const token = await getToken()
 
-      // Admin check
-      try {
-        await axios.get("/api/admin/is-admin", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        setIsAdmin(true)
-      } catch {
-        setIsAdmin(false)
-      }
+                // Admin check
+                try {
+                    await axios.get("/api/admin/is-admin", {
+                        headers: { Authorization: `Bearer ${token}` },
+                    })
+                    setIsAdmin(true)
+                } catch {
+                    setIsAdmin(false)
+                }
 
-      // Seller check
-      const sellerRes = await axios.get("/api/store/is-seller", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+                // Seller check
+                const sellerRes = await axios.get("/api/store/is-seller", {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
 
-      setIsSeller(!!sellerRes.data?.isSeller)
+                setIsSeller(!!sellerRes.data?.isSeller)
 
-    } catch (err) {
-      console.error("Role check failed", err)
-    }
-  }
+            } catch (err) {
+                console.error("Role check failed", err)
+            }
+        }
 
-  fetchRoles()
-}, [user])
-
+        fetchRoles()
+    }, [user])
 
     const handleSearch = (e) => {
         e.preventDefault()
@@ -95,35 +85,17 @@ const Navbar = () => {
     return (
         <>
             <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+                .font-inter { font-family: 'Inter', sans-serif; }
+                
                 @keyframes fadeInUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
                 }
 
                 @keyframes slideInDown {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-10px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-                @keyframes pulse-glow {
-                    0%, 100% {
-                        box-shadow: 0 0 0 0 rgb(255, 255, 255);
-                    }
-                    50% {
-                        box-shadow: 0 0 0 8px rgba(196, 164, 132, 0);
-                    }
+                    from { opacity: 0; transform: translateY(-10px); }
+                    to { opacity: 1; transform: translateY(0); }
                 }
 
                 .nav-logo {
@@ -138,63 +110,42 @@ const Navbar = () => {
 
                 .search-input-wrapper:focus-within {
                     transform: scale(1.02);
-                }
-
-                .cart-badge {
-                    animation: pulse-glow 2s infinite;
-                }
-
-                .nav-button {
-                    position: relative;
-                    overflow: hidden;
-                }
-
-                .nav-button::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(255, 255, 255, 0.1);
-                    transition: left 0.5s ease;
-                }
-
-                .nav-button:hover::before {
-                    left: 100%;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
                 }
             `}</style>
 
-            
-            <nav className=" fixed top-0 left-0 w-full z-[100] bg-[#111111]/90 pointer-events-auto ">
-
+            <nav className="fixed top-0 left-0 w-full z-[100] bg-white/80 backdrop-blur-xl border-b border-gray-200/50 pointer-events-auto font-inter">
                 <div className="mx-6">
-                    <div className="flex items-center justify-between max-w-7xl mx-auto py-4 transition-all duration-500">
+                    <div className="flex items-center justify-between max-w-[1400px] mx-auto py-4 transition-all duration-500">
 
+                        {/* Desktop Logo */}
                         <Link
-                        href="/"
-                        className="nav-logo relative text-4xl font-semibold text-slate-700 hover:scale-105 transition-transform duration-300 hidden sm:block"
+                            href="/"
+                            className="nav-logo relative text-2xl font-extrabold tracking-tighter text-[#1D1D1F] hover:scale-105 transition-transform duration-300 hidden sm:flex items-center gap-2"
                         >
-                        <Image src={assets.FrostWayne || "/placeholder.svg"} alt="Logo" className="w-29" />
+                            {/* Assuming assets.FrostWayne is available, otherwise fallback to text */}
+                            {assets?.logo ? (
+                                <Image src={assets.logo} alt="Logo" width={120} height={40} className="object-contain" />
+                            ) : (
+                                <span>FROSTWAYNE</span>
+                            )}
                         </Link>
 
-
                         {/* Desktop Menu */}
-                        <div className="hidden lg:flex items-center space-x-12 ">
+                        <div className="hidden lg:flex items-center space-x-10">
                             <NavLink href="/" delay={0}>Home</NavLink>
                             <NavLink href="/shop" delay={0.1}>Shop</NavLink>
                             <NavLink href="/about" delay={0.2}>About</NavLink>
-                            
 
                             <form 
                                 onSubmit={handleSearch} 
-                                className="search-input-wrapper hidden xl:flex items-center w-xs text-sm gap-2 bg-[#c4a484] px-4 py-3 rounded-full hover:bg-[#e4b77b] transition-all duration-300"
+                                className="search-input-wrapper hidden xl:flex items-center w-64 text-sm gap-2 bg-gray-100/80 px-4 py-2.5 rounded-full hover:bg-gray-200/80 transition-all duration-300 border border-transparent focus-within:border-gray-300 focus-within:bg-white"
                             >
-                                <Search size={18} className="text-[#000000] transition-transform duration-300 group-hover:rotate-90" />
+                                <Search size={16} className="text-gray-500 transition-transform duration-300 group-hover:rotate-90" />
                                 <input 
-                                    className="w-full bg-transparent outline-none placeholder-[#000000] transition-colors duration-300" 
+                                    className="w-full bg-transparent outline-none placeholder-gray-500 text-[#1D1D1F] transition-colors duration-300" 
                                     type="text" 
-                                    placeholder="Search products" 
+                                    placeholder="Search products..." 
                                     value={search} 
                                     onChange={(e) => setSearch(e.target.value)} 
                                     required 
@@ -203,54 +154,52 @@ const Navbar = () => {
 
                             <Link 
                                 href="/cart" 
-                                className="relative flex items-center gap-2 text-[#e4b77d] group transition-all duration-300 hover:scale-110"
+                                className="relative flex items-center gap-2 text-gray-600 group transition-all duration-300 hover:scale-105"
                                 style={{
                                     animation: `fadeInUp 0.6s ease-out 0.4s forwards`,
                                     opacity: 0,
                                 }}
                             >
-                                <ShoppingCart size={18} className="transition-transform duration-300 group-hover:rotate-12" />
-                                <span className="group-hover:text-[#8D6E63] transition-colors duration-300">Cart</span>
-                                <button className="cart-badge absolute -top-1 left-3 text-[8px] text-white bg-[#C4A484] size-3.5 rounded-full transition-all duration-300 hover:scale-125 hover:bg-[#654321]">
-                                    {cartCount}
-                                </button>
+                                <div className="relative p-2 bg-gray-100 rounded-full group-hover:bg-gray-200 transition-colors">
+                                    <ShoppingCart size={18} className="text-[#1D1D1F] transition-transform duration-300 group-hover:rotate-12" />
+                                    {cartCount > 0 && (
+                                        <span className="absolute -top-1 -right-1 text-[10px] font-bold text-white bg-[#1D1D1F] size-4.5 flex items-center justify-center rounded-full shadow-sm">
+                                            {cartCount}
+                                        </span>
+                                    )}
+                                </div>
+                                <span className="font-semibold text-sm group-hover:text-[#1D1D1F] transition-colors duration-300">Cart</span>
                             </Link>
 
                             {
                                 !user ? (
                                     <button 
                                         onClick={openSignIn} 
-                                        className="nav-button px-8 py-2 bg-[#C4A484] text-black rounded-full relative transition-all duration-500 hover:shadow-lg hover:shadow-[#C4A48466]"
+                                        className="px-6 py-2.5 bg-[#1D1D1F] text-white text-sm font-semibold rounded-full relative transition-all duration-300 hover:bg-black hover:scale-105 shadow-md shadow-black/10"
                                         style={{
                                             animation: `fadeInUp 0.6s ease-out 0.5s forwards`,
                                             opacity: 0,
                                         }}
                                     >
-                                        <span className="relative z-10">Login</span>
+                                        Login
                                     </button>
-
-                                    
-                                        
                                 ) : (
                                     <div style={{
                                         animation: `fadeInUp 0.6s ease-out 0.5s forwards`,
                                         opacity: 0,
-                                    }}>
-                                        <UserButton>
+                                    }} className="hover:scale-105 transition-transform">
+                                        <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
                                             <UserButton.MenuItems>
-
                                                 <UserButton.Action
-                                                labelIcon={<PackageIcon size={16} />}
-                                                label="My Orders"
-                                                onClick={() => router.push("/orders")}
-                                                    />
-                                                    
-                                                    <UserButton.Action
-                                        labelIcon={<PackageIcon size={16} />}
-                                        label="About Us"
-                                        onClick={() => router.push("/about")}
-                                        />
-
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="My Orders"
+                                                    onClick={() => router.push("/orders")}
+                                                />
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="About Us"
+                                                    onClick={() => router.push("/about")}
+                                                />
                                                 {isSeller && (
                                                 <UserButton.Action
                                                     labelIcon={<Store size={16} />}
@@ -258,7 +207,6 @@ const Navbar = () => {
                                                     onClick={() => router.push("/store")}
                                                 />
                                                 )}
-
                                                 {isAdmin && (
                                                 <UserButton.Action
                                                     labelIcon={<PackageIcon size={16} />}
@@ -266,160 +214,143 @@ const Navbar = () => {
                                                     onClick={() => router.push("/admin")}
                                                 />
                                                 )}
-
                                             </UserButton.MenuItems>
                                         </UserButton>
-
                                     </div>      
                                 )
                             }
-
-
                         </div>
 
-                        {/* Mobile User Button  */}
                         {/* Mobile Nav */}
                         <div
-                        className="sm:hidden flex items-center justify-between w-full"
-                        style={{
-                            animation: `fadeInUp 0.6s ease-out forwards`,
-                            opacity: isVisible ? 1 : 0,
-                        }}
+                            className="sm:hidden flex items-center justify-between w-full"
+                            style={{
+                                animation: `fadeInUp 0.6s ease-out forwards`,
+                                opacity: isVisible ? 1 : 0,
+                            }}
                         >
-                            
-                        {/* Mobile Logo (LEFT) */}
-                        <Link href="/" className="flex items-center">
-                            <Image
-                            src={assets.FrostWayne}
-                            alt="FrostWayne"
-                            width={70}
-                            height={60}
-                            priority
-                            />
-                        </Link>
+                            {/* Mobile Logo (LEFT) */}
+                            <Link href="/" className="flex items-center font-extrabold tracking-tighter text-xl text-[#1D1D1F]">
+                                {assets?.FrostWayne ? (
+                                    <Image src={assets.FrostWayne} alt="FrostWayne" width={90} height={30} priority className="object-contain" />
+                                ) : (
+                                    <span>FROSTWAYNE</span>
+                                )}
+                            </Link>
 
-                        {/* Mobile Actions (RIGHT) */}
-                        <div className="flex items-center gap-3">
-                            {/* Search Icon */}
-                            <button
-                            onClick={() => setMobileSearchOpen((prev) => !prev)}
-                            className="p-2 rounded-full bg-[#c4a484] text-[#111111] hover:bg-[#d8cbc4a0] transition"
-                            >
-                            <Search size={16} />
-                            </button>
-
-                            {/* Shop Icon */}
-                            <button
-                            onClick={() => router.push('/shop')}
-                            className="p-2 rounded-full bg-[#c4a484] text-[#111111] hover:bg-[#d8cbc4a0] transition"
-                            >
-                            <Store size={16} />
-                            </button>
-
-                            {/* Cart Icon */}
-                            <button
-                            onClick={() => router.push('/cart')}
-                            className="relative p-2 rounded-full bg-[#c4a484] text-[#111111] hover:bg-[#d8cbc4a0] transition"
-                            >
-                            <ShoppingCart size={16} />
-                            {cartCount > 0 && (
-                                <span className="absolute -top-1 -right-1 text-[8px] text-white bg-[#C4A484] size-4 rounded-full flex items-center justify-center">
-                                {cartCount}
-                                </span>
-                            )}
-                            </button>
-
-                            {/* Auth */}
-                            {
-                            user ? (
-                                <UserButton>
-                                    <UserButton.MenuItems>
-
-                                        <UserButton.Action
-                                        labelIcon={<ShoppingCart size={16} />}
-                                        label="Cart"
-                                        onClick={() => router.push("/cart")}
-                                        />
-
-                                        <UserButton.Action
-                                        labelIcon={<PackageIcon size={16} />}
-                                        label="My Orders"
-                                        onClick={() => router.push("/orders")}
-                                                />
-                                                
-                                                <UserButton.Action
-                                        labelIcon={<PackageIcon size={16} />}
-                                        label="About Us"
-                                        onClick={() => router.push("/about")}
-                                        />
-
-                                        {isSeller && (
-                                        <UserButton.Action
-                                            labelIcon={<Store size={16} />}
-                                            label="Store Dashboard"
-                                            onClick={() => router.push("/store")}
-                                        />
-                                        )}
-
-                                        {isAdmin && (
-                                        <UserButton.Action
-                                            labelIcon={<PackageIcon size={16} />}
-                                            label="Admin Panel"
-                                            onClick={() => router.push("/admin")}
-                                        />
-                                        )}
-
-                                    </UserButton.MenuItems>
-                                </UserButton>
-
-                            ) : (
+                            {/* Mobile Actions (RIGHT) */}
+                            <div className="flex items-center gap-2">
+                                {/* Search Icon */}
                                 <button
-                                onClick={openSignIn}
-                                className="nav-button px-4 py-1.5 bg-[#C4A484] text-sm text-black rounded-full transition-all duration-500 hover:shadow-lg hover:shadow-[#C4A48466]"
+                                    onClick={() => setMobileSearchOpen((prev) => !prev)}
+                                    className="p-2.5 rounded-full bg-gray-100 text-[#1D1D1F] hover:bg-gray-200 transition-colors"
                                 >
-                                Login
+                                    <Search size={18} />
                                 </button>
-                            )
-                            }
-                        </div>
+
+                                {/* Shop Icon */}
+                                <button
+                                    onClick={() => router.push('/shop')}
+                                    className="p-2.5 rounded-full bg-gray-100 text-[#1D1D1F] hover:bg-gray-200 transition-colors"
+                                >
+                                    <Store size={18} />
+                                </button>
+
+                                {/* Cart Icon */}
+                                <button
+                                    onClick={() => router.push('/cart')}
+                                    className="relative p-2.5 rounded-full bg-gray-100 text-[#1D1D1F] hover:bg-gray-200 transition-colors"
+                                >
+                                    <ShoppingCart size={18} />
+                                    {cartCount > 0 && (
+                                        <span className="absolute -top-1 -right-1 text-[10px] font-bold text-white bg-[#1D1D1F] size-4.5 rounded-full flex items-center justify-center shadow-sm">
+                                            {cartCount}
+                                        </span>
+                                    )}
+                                </button>
+
+                                {/* Auth */}
+                                {
+                                user ? (
+                                    <div className="ml-1">
+                                        <UserButton appearance={{ elements: { avatarBox: "w-9 h-9 shadow-sm" } }}>
+                                            <UserButton.MenuItems>
+                                                <UserButton.Action
+                                                    labelIcon={<ShoppingCart size={16} />}
+                                                    label="Cart"
+                                                    onClick={() => router.push("/cart")}
+                                                />
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="My Orders"
+                                                    onClick={() => router.push("/orders")}
+                                                />
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="About Us"
+                                                    onClick={() => router.push("/about")}
+                                                />
+                                                {isSeller && (
+                                                <UserButton.Action
+                                                    labelIcon={<Store size={16} />}
+                                                    label="Store Dashboard"
+                                                    onClick={() => router.push("/store")}
+                                                />
+                                                )}
+                                                {isAdmin && (
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="Admin Panel"
+                                                    onClick={() => router.push("/admin")}
+                                                />
+                                                )}
+                                            </UserButton.MenuItems>
+                                        </UserButton>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={openSignIn}
+                                        className="ml-1 px-5 py-2 bg-[#1D1D1F] text-sm font-semibold text-white rounded-full transition-all duration-300 hover:bg-black hover:scale-105 shadow-sm"
+                                    >
+                                        Login
+                                    </button>
+                                )
+                                }
+                            </div>
                         </div>
 
                     </div>
                 </div>
 
-                            {mobileSearchOpen && (
-  <form
-    onSubmit={(e) => {
-      handleSearch(e)
-      setMobileSearchOpen(false) // ✅ close after search
-    }}
-    className="sm:hidden px-6 pb-3 animate-[fadeInUp_0.4s_ease-out]"
-  >
-    <div className="flex items-center gap-2 bg-[#d8cbc480] px-4 py-3 rounded-full">
-      <Search size={16} className="text-[#4A372880]" />
-
-      <input
-        type="text"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search products"
-        className="w-full bg-transparent outline-none text-sm placeholder-[#4A372880]"
-        autoFocus
-      />
-
-      {/* ❌ Close button */}
-      <button
-        type="button"
-        onClick={() => setMobileSearchOpen(false)}
-        className="text-[#4A3728] text-lg font-bold px-1"
-      >
-        ✕
-      </button>
-    </div>
-  </form>
-)}
-
-                <hr className="border-gray-300 transition-all duration-500" />
+                {/* Mobile Search Bar Dropdown */}
+                {mobileSearchOpen && (
+                    <form
+                        onSubmit={(e) => {
+                            handleSearch(e)
+                            setMobileSearchOpen(false)
+                        }}
+                        className="sm:hidden px-6 pb-4 animate-[fadeInUp_0.3s_ease-out]"
+                    >
+                        <div className="flex items-center gap-3 bg-gray-100 px-4 py-3 rounded-2xl border border-gray-200 shadow-inner">
+                            <Search size={18} className="text-gray-500" />
+                            <input
+                                type="text"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                placeholder="Search products..."
+                                className="w-full bg-transparent outline-none text-sm font-medium text-[#1D1D1F] placeholder-gray-500"
+                                autoFocus
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setMobileSearchOpen(false)}
+                                className="text-gray-400 hover:text-gray-600 p-1"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    </form>
+                )}
             </nav>
         </>
     )

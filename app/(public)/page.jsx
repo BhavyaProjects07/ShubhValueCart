@@ -25,7 +25,7 @@ export default function Home() {
       <Lookbook />
       <LatestProducts />
       <BestSelling />
-      <OurSpecs />
+      
       <Newsletter />
     </div>
   )

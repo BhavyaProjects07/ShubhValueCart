@@ -20,7 +20,7 @@ import { ClockFadingIcon, HeadsetIcon, SendIcon } from "lucide-react";
 import profile_pic1 from "./profile_pic1.jpg"
 import profile_pic2 from "./profile_pic2.jpg"
 import profile_pic3 from "./profile_pic3.jpg"
-import logo from "./logo.png"
+import logo from "./Logo.png"
 import FrostWayneLogo from "./frostWayneLogo.png"
 import FrostWayne from "./FrostWayne.png"
 
