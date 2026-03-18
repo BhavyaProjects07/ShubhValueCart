@@ -22,7 +22,7 @@ export default function FilterSidebar({ filters, setFilters }) {
   }
 
   return (
-    <aside className="w-full sm:w-64 border border-[#ede6dd] rounded-lg p-4 bg-[#fefdfb] sticky top-28 h-fit">
+    <aside className="w-full sm:w-64 border border-[#ede6dd] rounded-lg p-4 bg-gray-100 sticky top-28 h-fit">
       <h3 className="font-semibold text-[#6b5d52] mb-5 text-base">
         Filters
       </h3>

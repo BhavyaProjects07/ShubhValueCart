@@ -47,31 +47,31 @@ const Navbar = () => {
     useEffect(() => {
         if (!user) return
 
-        const fetchRoles = async () => {
-            try {
-                const token = await getToken()
-
-                // Admin check
+            const fetchRoles = async () => {
                 try {
-                    await axios.get("/api/admin/is-admin", {
+                    const token = await getToken()
+
+                    // Admin check
+                    try {
+                        await axios.get("/api/admin/is-admin", {
+                            headers: { Authorization: `Bearer ${token}` },
+                        })
+                        setIsAdmin(true)
+                    } catch {
+                        setIsAdmin(false)
+                    }
+
+                    // Seller check
+                    const sellerRes = await axios.get("/api/store/is-seller", {
                         headers: { Authorization: `Bearer ${token}` },
                     })
-                    setIsAdmin(true)
-                } catch {
-                    setIsAdmin(false)
+
+                    setIsSeller(!!sellerRes.data?.isSeller)
+
+                } catch (err) {
+                    console.error("Role check failed", err)
                 }
-
-                // Seller check
-                const sellerRes = await axios.get("/api/store/is-seller", {
-                    headers: { Authorization: `Bearer ${token}` },
-                })
-
-                setIsSeller(!!sellerRes.data?.isSeller)
-
-            } catch (err) {
-                console.error("Role check failed", err)
             }
-        }
 
         fetchRoles()
     }, [user])

@@ -97,14 +97,14 @@ const Footer = () => {
           {/* Brand Info */}
           <motion.div variants={itemVariants} className="lg:col-span-4">
             <Link href="/" className="inline-block mb-6 hover:opacity-80 transition-opacity">
-              {assets?.FrostWayne ? (
-                <Image src={assets.FrostWayne} alt="FrostWayne" width={160} height={50} className="object-contain" />
+              {assets?.logo ? (
+                <Image src={assets.logo} alt="FrostWayne" width={160} height={50} className="object-contain" />
               ) : (
                 <span className="text-2xl font-extrabold tracking-tighter">FROSTWAYNE</span>
               )}
             </Link>
             <p className="text-gray-500 text-sm leading-relaxed font-medium max-w-sm mb-8">
-              Frost Wayne is a modern luxury atelier offering carefully curated fashion and lifestyle products designed with precision, quality, and authenticity at the core.
+              Shubh Value Cart offers you latest products with premium high quality
             </p>
             <div className="flex items-center gap-3">
               {socialIcons.map((item, i) => (
