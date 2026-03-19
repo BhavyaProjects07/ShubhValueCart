@@ -53,16 +53,16 @@ const Footer = () => {
     {
       title: "CONTACT",
       links: [
-        { text: "+91 8445695011 & +91 9006848596", path: "/", icon: PhoneIcon },
-        { text: "frostwayneteam@gmail.com", path: "/", icon: MailIcon },
-        { text: "South vanasthali Ballupur Dehradun 248001 , India", path: "/", icon: MapPinIcon },
+        { text: "+918955497322", path: "/", icon: PhoneIcon },
+        { text: "shubhvaluecart@gmail.com", path: "/", icon: MailIcon },
+        { text: "0,M/S BAJRANG AGENCY,SHREERAM MANDIR KE PASS, GADARPURA ROAD,Dholpur , India", path: "/", icon: MapPinIcon },
       ],
     },
   ]
 
   const socialIcons = [
-    { icon: FacebookIcon, link: "https://www.facebook.com/share/1FG3Z91kyv/" },
-    { icon: InstagramIcon, link: "https://www.instagram.com/frostwaynecollaction?igsh=amF6ejRnNG5pdThs" },
+    { icon: FacebookIcon, link: "#" },
+    { icon: InstagramIcon, link: "#" },
   ]
 
   const containerVariants = {
@@ -147,7 +147,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <motion.div variants={itemVariants} className="pt-8 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-500 font-medium">
-            © 2026 <span className="text-[#1D1D1F] font-semibold">FrostWayne</span>. All Rights Reserved.
+            © 2026 <span className="text-[#1D1D1F] font-semibold">Shubh Value Cart</span>. All Rights Reserved.
           </p>
           <div className="flex items-center gap-6 text-sm">
             <Link href="/" className="text-gray-500 hover:text-[#1D1D1F] transition-colors font-medium">
