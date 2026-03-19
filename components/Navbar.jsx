@@ -231,8 +231,8 @@ const Navbar = () => {
                         >
                             {/* Mobile Logo (LEFT) */}
                             <Link href="/" className="flex items-center font-extrabold tracking-tighter text-xl text-[#1D1D1F]">
-                                {assets?.FrostWayne ? (
-                                    <Image src={assets.FrostWayne} alt="FrostWayne" width={90} height={30} priority className="object-contain" />
+                                {assets?.logo ? (
+                                    <Image src={assets.logo} alt="FrostWayne" width={90} height={30} priority className="object-contain" />
                                 ) : (
                                     <span>FROSTWAYNE</span>
                                 )}
