@@ -1,278 +1,373 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ShoppingBag, Star, ShieldCheck, Truck, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Banner from './Banner';
 
-const categories = [
+const carouselItems = [
+  { id: 1, image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop' },
+  { id: 2, image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974&auto=format&fit=crop' },
+  { id: 3, image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop' },
+  { id: 4, image: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?q=80&w=2000&auto=format&fit=crop' }
+];
+
+const bottomCardsRow1 = [
   {
-    id: 'fashion',
-    title: 'Haute Couture',
-    subtitle: 'The Heritage Collection',
-    description: 'Exquisite craftsmanship meets contemporary luxury. Discover our curated selection of premium apparel.',
-    imageMain: 'https://picsum.photos/seed/couture/1200/1600',
-    imageSub: 'https://picsum.photos/seed/fabric/800/800',
-    label: 'Fashion',
-    tags: ['Handcrafted', 'Sustainable', 'Bespoke Fit']
+    type: 'grid',
+    title: 'Up to 60% off | Styles for men',
+    items: [
+      { img: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400', name: 'Clothing' },
+      { img: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400', name: 'Footwear' },
+      { img: 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSOZvqa92xnbdchbWqvS0tjiXxLi0N5PYycJQdWIJIIYgVEICfoMRV2cwL8msDLw3usXdolXui0bdHFTRxjRocDU4ChcuS-xg4ggcMxnmqVIIQ3Bb2hvD93', name: 'Watches' },
+      { img: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400', name: 'Bags & wallets' }
+    ],
+    linkText: 'End of season sale'
   },
   {
-    id: 'groceries',
-    title: 'Epicurean',
-    subtitle: 'The Spice Reserve',
-    description: 'Sourced from the finest estates. Elevate your culinary journey with our premium groceries and rare spices.',
-    imageMain: 'https://picsum.photos/seed/spices/1200/1600',
-    imageSub: 'https://picsum.photos/seed/ingredients/800/800',
-    label: 'Groceries',
-    tags: ['Organic', 'Farm Fresh', 'Export Quality']
+    type: 'grid',
+    title: 'Revamp your home in style',
+    items: [
+      { img: 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=400', name: 'Bedsheets & curtains' },
+      { img: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=400', name: 'Home decoration' },
+      { img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400', name: 'Home storage' },
+      { img: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', name: 'Lighting solutions' }
+    ],
+    linkText: 'Explore all'
   },
   {
-    id: 'cosmetics',
-    title: 'Ayurvedic Luxe',
-    subtitle: 'Radiance Redefined',
-    description: 'Indulge in world-class skincare rooted in ancient wisdom. Formulated with precious botanicals.',
-    imageMain: 'https://picsum.photos/seed/skincare/1200/1600',
-    imageSub: 'https://picsum.photos/seed/serum/800/800',
-    label: 'Cosmetics',
-    tags: ['Cruelty Free', '100% Natural', 'Dermatologist Tested']
+    type: 'grid',
+    title: 'Starting ₹99 | Toys & Games',
+    items: [
+      { img: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400', name: 'Soft Toys' },
+      { img: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTM-FyoGKQCTbE675XvoS4Q87FmU_tIVZ64KWnf5gvKVEWNCT1G_6um4b2tcQp1meA4fGCRhoFQuaLvHntYKfMYjErMsWeG_CFPdOlboJTHvdWsejHANKYdHFg', name: 'Action Figures' },
+      { img: 'https://images.unsplash.com/photo-1611604548018-d56bbd85d681?w=400', name: 'Board Games' },
+      { img: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400', name: 'Educational' }
+    ],
+    linkText: 'Shop now'
   },
   {
-    id: 'toys',
-    title: 'Curated Play',
-    subtitle: 'Heirloom Quality',
-    description: 'Inspire imagination with our collection of premium, sustainably crafted wooden toys and educational masterpieces.',
-    imageMain: 'https://picsum.photos/seed/woodentoys/1200/1600',
-    imageSub: 'https://picsum.photos/seed/play/800/800',
-    label: 'Toys',
-    tags: ['Non-toxic', 'Educational', 'Eco-friendly']
-  },
-  {
-    id: 'fmcg',
-    title: 'Sanctuary',
-    subtitle: 'Elevated Essentials',
-    description: 'Transform your daily rituals. Premium home essentials, brassware, and fragrances designed for the sophisticated household.',
-    imageMain: 'https://picsum.photos/seed/homeinterior/1200/1600',
-    imageSub: 'https://picsum.photos/seed/candles/800/800',
-    label: 'FMCG',
-    tags: ['Premium Quality', 'Long Lasting', 'Authentic']
-  },
-  {
-    id: 'entertainment',
-    title: 'Festive Joy',
-    subtitle: 'The Celebration',
-    description: 'Experience unparalleled vibrancy. The ultimate in premium festive decor, entertainment, and cultural celebrations.',
-    imageMain: 'https://picsum.photos/seed/festival/1200/1600',
-    imageSub: 'https://picsum.photos/seed/decor/800/800',
-    label: 'Entertainment',
-    tags: ['Vibrant', 'Hand-painted', 'Artisanal']
+    type: 'grid',
+    title: 'Fresh Groceries & Essentials',
+    items: [
+      { img: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400', name: 'Fresh Produce' },
+      { img: 'https://images.unsplash.com/photo-1608686207856-001b95cf60ca?w=400', name: 'Dairy & Bakery' },
+      { img: 'https://images.unsplash.com/photo-1590779033100-9f60a05a013d?w=400', name: 'Snacks & Beverages' },
+      { img: 'https://images.unsplash.com/photo-1584473457406-6240486418e9?w=400', name: 'Household Care' }
+    ],
+    linkText: 'See all offers'
   }
 ];
 
+const bottomCardsRow2 = [
+  {
+    type: 'single',
+    title: 'Up to 70% off | Clearance store',
+    image: 'https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=800',
+    linkText: 'Shop now'
+  },
+  {
+    type: 'grid',
+    title: 'Starting ₹149 | Headphones',
+    items: [
+      { img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400', name: 'Boat' },
+      { img: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400', name: 'Boult' },
+      { img: 'https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?w=400', name: 'Noise' },
+      { img: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400', name: 'Zebronics' }
+    ],
+    linkText: 'See all offers'
+  },
+  {
+    type: 'single',
+    title: 'Upgrade your tech | Laptops',
+    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800',
+    linkText: 'Shop now'
+  },
+  {
+    type: 'grid',
+    title: 'Beauty & Personal Care',
+    items: [
+      { img: 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTHXuHmJvfNmEo4oHvVkO_-qx1tCqkMsHZzAdJhFi2mtiCTwFk_9jMP4wdTc8x0o17odJa9j8fY7s0h07outCxA35pk0iGfWnWjQG9IF8EQ1XUoZEdx7StK', name: 'Makeup' },
+      { img: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400', name: 'Skincare' },
+      { img: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400', name: 'Haircare' },
+      { img: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRnaiVc_pK_0oboYBJ7S30w2rs30YIEtWsl6mwR5Ae945K5DZRutwixFk7YY_EeNfCRujwmjRpsc5Wd_3okH2yQeCCz6txVRU2Roe0as2i5jTJ_RWGnsBVj', name: 'Bath & Body' }
+    ],
+    linkText: 'Explore all'
+  }
+];
+
+const deals = [
+  { id: 1, img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400', discount: 'Up to 30% off', name: 'Smartphones & Accessories' },
+  { id: 2, img: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400', discount: 'Up to 50% off', name: 'Laptops & Tablets' },
+  { id: 3, img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400', discount: 'Up to 40% off', name: 'Smartwatches' },
+  { id: 4, img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400', discount: 'Up to 60% off', name: 'Running Shoes' },
+  { id: 5, img: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400', discount: 'Up to 75% off', name: 'Wireless Earbuds' },
+  { id: 6, img: 'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=400', discount: 'Up to 20% off', name: 'Home Appliances' },
+  { id: 7, img: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400', discount: 'Up to 40% off', name: 'Camera & Photography' },
+  { id: 8, img: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400', discount: 'Up to 15% off', name: 'Smart Watches' },
+];
+
 export const Hero = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    // Preload images to ensure smooth transitions
-    categories.forEach((category) => {
-      const imgMain = new Image();
-      imgMain.src = category.imageMain;
-      const imgSub = new Image();
-      imgSub.src = category.imageSub;
-    });
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
+    }, 5000);
+    return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % categories.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [isAutoPlaying]);
-
-  const handleManualChange = (index) => {
-    setActiveIndex(index);
-    setIsAutoPlaying(false);
-    // Resume auto-play after 10 seconds of inactivity
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + carouselItems.length) % carouselItems.length);
 
   return (
-    <section className="relative w-full min-h-[100dvh] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white via-[#F5F5F7] to-[#E8E8ED] text-[#1D1D1F] overflow-hidden flex flex-col justify-center pt-24 pb-32 lg:py-0">
+    <div className="bg-[#E3E6E6] min-h-screen pt-[72px] sm:pt-[80px]">
       <style dangerouslySetInnerHTML={{__html: `
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        .font-inter { font-family: 'Inter', sans-serif; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 25s linear infinite;
+}
       `}} />
 
-      {/* Vertical Side Indicator (Desktop Only) */}
-      <div className="hidden xl:flex absolute left-8 top-1/2 -translate-y-1/2 flex-col items-center gap-6 z-20">
-        <span className="font-inter text-[10px] font-bold tracking-[0.3em] text-gray-400 [writing-mode:vertical-lr] rotate-180">
-          EXPLORE COLLECTION
-        </span>
-        <div className="w-[1px] h-24 bg-gray-300"></div>
-      </div>
+      {/* Banner Container - Placed at the top */}
+     
 
-      <div className="max-w-[1400px] mx-auto w-full px-6 md:px-12 xl:px-24 flex flex-col lg:flex-row items-center gap-12 lg:gap-20 relative z-10">
+      <div className="relative w-full max-w-[1500px] mx-auto">
         
-        {/* Left Content Area */}
-        <div className="w-full lg:w-1/2 flex flex-col items-center text-center lg:items-start lg:text-left">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeIndex}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="flex flex-col items-center lg:items-start w-full"
+        {/* Full-width Carousel Background */}
+        <div className="absolute top-0 left-0 w-full h-[300px] sm:h-[400px] lg:h-[600px] z-0 overflow-hidden">
+          {carouselItems.map((item, index) => (
+            <div 
+              key={item.id}
+              className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
             >
-              <span className="font-inter text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">
-                {categories[activeIndex].subtitle}
-              </span>
-              
-              <h1 className="font-inter text-5xl sm:text-6xl lg:text-7xl xl:text-[5rem] font-extrabold tracking-tighter text-[#1D1D1F] leading-[1.05] mb-6">
-                {categories[activeIndex].title}
-              </h1>
-
-              {/* Dynamic Feature Tags */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-6">
-                {categories[activeIndex].tags.map((tag, i) => (
-                  <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/60 backdrop-blur-sm border border-gray-200/60 rounded-full text-xs font-semibold text-gray-700 shadow-sm">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#1D1D1F]" /> {tag}
-                  </span>
-                ))}
-              </div>
-              
-              <p className="font-inter text-base sm:text-lg text-gray-600 max-w-md mb-8 leading-relaxed">
-                {categories[activeIndex].description}
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-10">
-                <button className="w-full sm:w-auto px-8 py-4 bg-[#1D1D1F] text-white rounded-full font-inter font-medium flex items-center justify-center gap-3 hover:bg-black hover:scale-105 transition-all duration-300 shadow-xl shadow-black/10">
-                  Shop Now <ShoppingBag className="w-4 h-4" />
-                </button>
-                <button className="w-full sm:w-auto px-8 py-4 bg-white text-[#1D1D1F] rounded-full font-inter font-medium flex items-center justify-center gap-3 hover:bg-gray-50 hover:scale-105 transition-all duration-300 shadow-sm border border-gray-200">
-                  Explore <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Trust / Social Proof Section */}
-              <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4 pt-8 border-t border-gray-200/80 w-full max-w-md">
-                <div className="flex -space-x-3">
-                  {[1, 2, 3, 4].map((i) => (
-                    <img 
-                      key={i} 
-                      src={`https://i.pravatar.cc/100?img=${i + 10}`} 
-                      className="w-10 h-10 rounded-full border-2 border-[#F5F5F7] shadow-sm object-cover" 
-                      alt="Customer" 
-                      referrerPolicy="no-referrer"
-                    />
-                  ))}
-                </div>
-                <div className="flex flex-col items-center sm:items-start">
-                  <div className="flex items-center gap-1 text-yellow-500 mb-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-current" />
-                    ))}
-                  </div>
-                  <span className="font-inter text-xs font-medium text-gray-600">
-                    Trusted by <strong className="text-[#1D1D1F]">10,000+</strong> customers
-                  </span>
-                </div>
-              </div>
-
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Right Image Composition Area */}
-        <div className="w-full lg:w-1/2 relative h-[40vh] sm:h-[50vh] lg:h-[70vh] max-w-2xl mx-auto">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeIndex}
-              initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
-              transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-              className="absolute inset-0 rounded-[2rem] sm:rounded-[3rem] overflow-hidden shadow-2xl shadow-black/10 bg-gray-200"
-            >
-              <img 
-                src={categories[activeIndex].imageMain} 
-                alt={categories[activeIndex].title}
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              {/* Subtle inner shadow for depth */}
-              <div className="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)] rounded-[2rem] sm:rounded-[3rem] pointer-events-none" />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Floating Sub Image (Hidden on very small screens) */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`sub-${activeIndex}`}
-              initial={{ opacity: 0, x: 20, y: 20, rotate: -5 }}
-              animate={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
-              exit={{ opacity: 0, x: -20, y: -20, rotate: 5 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
-              className="absolute -bottom-6 -left-6 lg:-bottom-12 lg:-left-12 w-32 h-40 sm:w-48 sm:h-64 rounded-2xl overflow-hidden border-[8px] border-[#F5F5F7] shadow-2xl z-20 hidden sm:block bg-gray-200"
-            >
-              <img 
-                src={categories[activeIndex].imageSub} 
-                alt="Detail view"
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Floating Trust Badge */}
-          <div className="absolute top-6 -right-6 lg:top-12 lg:-right-12 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-gray-100 z-30 hidden md:flex items-center gap-3 animate-bounce" style={{ animationDuration: '3s' }}>
-            <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-              <ShieldCheck className="w-5 h-5 text-emerald-600" />
+              <img src={item.image} alt="Carousel Banner" className="w-full h-full object-cover object-top" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-inter text-xs font-bold text-gray-900">Secure Checkout</span>
-              <span className="font-inter text-[10px] text-gray-500">100% Protected</span>
-            </div>
-          </div>
+          ))}
           
-          <div className="absolute bottom-12 -right-6 lg:bottom-24 lg:-right-12 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-gray-100 z-30 hidden md:flex items-center gap-3 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
-            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-              <Truck className="w-5 h-5 text-blue-600" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-inter text-xs font-bold text-gray-900">Free Shipping</span>
-              <span className="font-inter text-[10px] text-gray-500">On orders over $50</span>
-            </div>
-          </div>
+          {/* Gradient overlay to blend into the #E3E6E6 background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#E3E6E6] z-10 pointer-events-none" />
 
+          {/* Carousel Controls - Amazon Style (Tall rectangles) */}
+          <button 
+            onClick={prevSlide}
+            className="absolute left-0 top-10 h-[200px] sm:h-[250px] px-2 sm:px-4 focus:outline-none z-20 group"
+          >
+            <div className="bg-transparent group-hover:bg-white/50 border-2 border-transparent group-hover:border-white rounded-sm p-2 transition-all">
+              <ChevronLeft className="w-8 h-8 text-gray-800" />
+            </div>
+          </button>
+          <button 
+            onClick={nextSlide}
+            className="absolute right-0 top-10 h-[200px] sm:h-[250px] px-2 sm:px-4 focus:outline-none z-20 group"
+          >
+            <div className="bg-transparent group-hover:bg-white/50 border-2 border-transparent group-hover:border-white rounded-sm p-2 transition-all">
+              <ChevronRight className="w-8 h-8 text-gray-800" />
+            </div>
+          </button>
         </div>
 
-      </div>
+        {/* Overlapping Content (Cards) */}
+        <div className="relative z-10 px-4 pt-[120px] sm:pt-[200px] lg:pt-[280px] pb-8">
+          
+          {/* Grid Cards Row 1 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+  {bottomCardsRow1.map((card, idx) => (
+    <div
+      key={idx}
+      className="group bg-white/80 backdrop-blur-lg border border-gray-200 rounded-2xl p-5 flex flex-col h-full shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+    >
+      {/* Title */}
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 leading-snug tracking-tight">
+        {card.title}
+      </h3>
 
-      {/* Sleek Bottom Navigation Pill */}
-      <div className="absolute bottom-6 sm:bottom-10 left-0 w-full flex justify-center z-30 px-4">
-        <div className="bg-white/70 backdrop-blur-xl p-1.5 sm:p-2 rounded-full shadow-lg shadow-black/5 border border-white/40 flex gap-1 sm:gap-2 overflow-x-auto max-w-full hide-scrollbar">
-          {categories.map((cat, index) => (
-            <button
-              key={cat.id}
-              onClick={() => handleManualChange(index)}
-              className={`relative px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-inter text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
-                activeIndex === index ? 'text-white' : 'text-gray-500 hover:text-gray-900'
-              }`}
+      {card.type === "grid" ? (
+        <div className="grid grid-cols-2 gap-4 flex-grow">
+          {card.items.map((item, i) => (
+            <div
+              key={i}
+              className="flex flex-col gap-2 cursor-pointer"
             >
-              {activeIndex === index && (
-                <motion.div
-                  layoutId="activeNavPill"
-                  className="absolute inset-0 bg-[#1D1D1F] rounded-full -z-10"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              {/* Image */}
+              <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
+                <img
+                  src={item.img}
+                  alt={item.name}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-              )}
-              {cat.label}
-            </button>
+              </div>
+
+              {/* Text */}
+              <span className="text-xs font-medium text-gray-600 leading-tight line-clamp-2">
+                {item.name}
+              </span>
+            </div>
           ))}
         </div>
+      ) : (
+        <div className="flex-grow cursor-pointer mb-4 overflow-hidden rounded-lg bg-gray-100">
+          <img
+            src={card.image}
+            alt={card.title}
+            className="w-full h-full object-cover max-h-[300px] transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
+      )}
+
+      {/* CTA */}
+      <a
+        href="#"
+        className="mt-6 text-sm font-semibold text-gray-900 hover:text-black flex items-center gap-1 transition-all duration-200"
+      >
+        {card.linkText}
+        <span className="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+    </div>
+  ))}
+          </div>
+
+          {/* Grid Cards Row 2 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+  {bottomCardsRow2.map((card, idx) => (
+    <div
+      key={idx}
+      className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-gradient-to-b from-white to-gray-50 p-5 flex flex-col h-full shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1"
+    >
+      {/* Glow Effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-transparent via-white/40 to-transparent blur-2xl pointer-events-none" />
+
+      {/* Title */}
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 leading-snug tracking-tight">
+        {card.title}
+      </h3>
+
+      {card.type === "grid" ? (
+        <div className="grid grid-cols-2 gap-4 flex-grow">
+          {card.items.map((item, i) => (
+            <div key={i} className="flex flex-col gap-2 cursor-pointer">
+              
+              {/* Image */}
+              <div className="aspect-square overflow-hidden rounded-xl bg-gray-100 relative">
+                <img
+                  src={item.img}
+                  alt={item.name}
+                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                />
+
+                {/* Soft overlay on hover */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition duration-300" />
+              </div>
+
+              {/* Text */}
+              <span className="text-xs font-medium text-gray-600 leading-tight line-clamp-2 group-hover:text-gray-900 transition-colors">
+                {item.name}
+              </span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex-grow cursor-pointer mb-4 overflow-hidden rounded-xl bg-gray-100 relative">
+          <img
+            src={card.image}
+            alt={card.title}
+            className="w-full h-full object-cover max-h-[300px] transition-all duration-500 group-hover:scale-110"
+          />
+
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition duration-300" />
+        </div>
+      )}
+
+      {/* CTA */}
+      <a
+        href="#"
+        className="mt-6 text-sm font-semibold text-gray-900 flex items-center justify-between group-hover:text-black transition-all duration-300"
+      >
+        {card.linkText}
+        <span className="translate-x-0 group-hover:translate-x-2 transition-transform duration-300">
+          →
+        </span>
+      </a>
+    </div>
+  ))}
+          </div>
+
+          {/* Horizontal Scroll Section (Today's Deals) */}
+          <div className="mt-8 relative overflow-hidden">
+  
+  {/* Container */}
+  <div className="bg-gradient-to-b from-white to-gray-50 border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+
+    {/* Header */}
+    <div className="flex items-center justify-between mb-6">
+      <h3 className="text-xl font-semibold text-gray-900 tracking-tight">
+        Today’s Deals
+      </h3>
+
+      <a
+        href="#"
+        className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center gap-1"
+      >
+        See all
+        <span className="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+    </div>
+
+    {/* 🔥 Moving Loop */}
+    <div className="overflow-hidden">
+      <div className="flex gap-6 w-max animate-scroll hover:[animation-play-state:paused]">
+        
+        {[...deals, ...deals].map((deal, idx) => (
+          <div
+            key={idx}
+            className="min-w-[180px] sm:min-w-[220px] group flex flex-col gap-3 cursor-pointer"
+          >
+            
+            {/* Image Card */}
+            <div className="relative h-[180px] sm:h-[220px] bg-gray-100 rounded-xl flex items-center justify-center p-4 overflow-hidden">
+              
+              <img
+                src={deal.img}
+                alt={deal.name}
+                className="max-h-full object-contain transition-transform duration-500 group-hover:scale-110"
+              />
+
+              {/* Hover Overlay */}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition duration-300" />
+            </div>
+
+            {/* Discount Badge */}
+            <div className="flex items-center gap-2">
+              <span className="bg-black text-white text-[11px] font-semibold px-2.5 py-1 rounded-full tracking-wide">
+                {deal.discount}
+              </span>
+              <span className="text-xs text-gray-500 hidden sm:inline">
+                Limited Deal
+              </span>
+            </div>
+
+            {/* Product Name */}
+            <span className="text-sm font-medium text-gray-700 leading-tight line-clamp-2 group-hover:text-gray-900 transition-colors">
+              {deal.name}
+            </span>
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
   );
 };
 

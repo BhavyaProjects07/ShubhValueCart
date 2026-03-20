@@ -127,7 +127,7 @@ const Navbar = () => {
                             {assets?.logo ? (
                                 <Image src={assets.logo} alt="Logo" width={120} height={40} className="object-contain" />
                             ) : (
-                                <span>FROSTWAYNE</span>
+                                <span>Shubh Value Cart</span>
                             )}
                         </Link>
 

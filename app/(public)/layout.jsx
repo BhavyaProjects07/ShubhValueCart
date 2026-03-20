@@ -44,12 +44,17 @@ export default function PublicLayout({ children }) {
 
     return (
         <>
+            {/* <Banner /> */}
             <Preloader
             />
             <Navbar />
-        
-        
+            <div className="pt-24">
+            <Banner />
             {children}
+            </div>
+        
+        
+            
             <Footer />
         </>
     );
