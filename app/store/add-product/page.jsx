@@ -31,22 +31,47 @@ export default function StoreAddProduct() {
     "UK-11": false,
   })
 
+  /* ---------------- CATEGORY SYSTEM ---------------- */
+
+  const [categories, setCategories] = useState([])
+
+  const categoryMap = {
+    SNACKS: "Food & Grocery",
+    BISCUITS: "Food & Grocery",
+    CHOCOLATE: "Food & Grocery",
+    FOOD: "Food & Grocery",
+    DRINKS: "Food & Grocery",
+    ICE_CREAM: "Food & Grocery",
+
+    MASALAS: "Staples & Cooking",
+    GRAIN: "Staples & Cooking",
+    FLOUR: "Staples & Cooking",
+    DRY_FRUITS: "Staples & Cooking",
+
+    BODY_CARE: "Personal Care",
+    FACE_CARE: "Personal Care",
+    HAIR_CARE: "Personal Care",
+
+    CLEANING_ITEMS: "Home & Cleaning",
+
+    BABY_CARE: "Baby Care",
+    TOYS: "Toys & Kids",
+    KIDS_TOY: "Toys & Kids",
+
+    BULB: "Household Essentials",
+    POOJA_ITEMS: "Household Essentials",
+
+    STATIONERY: "Stationery",
+  }
+
   /* ---------------- PRODUCT STATE ---------------- */
-  const categories = [
-    "Electronics",
-    "Mens-Clothing",
-    "Womens-Clothing",
-    "Footwear",
-    "Accessories", 
-    "Beauty & Health",
-   
-  ]
 
   const searchParams = useSearchParams()
   const editProductId = searchParams.get("edit")
   const isEditMode = !!editProductId
 
   const [images, setImages] = useState({ 1: null, 2: null, 3: null, 4: null })
+
   const [productInfo, setProductInfo] = useState({
     name: "",
     description: "",
@@ -58,7 +83,41 @@ export default function StoreAddProduct() {
   const [loading, setLoading] = useState(false)
   const [aiUsed, setAiUsed] = useState(false)
 
+  /* ---------------- FETCH CATEGORIES ---------------- */
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axios.get("/api/categories")
+
+        if (!data?.categories) {
+          throw new Error("No categories from API")
+        }
+
+        setCategories(data.categories)
+      } catch (err) {
+        console.error("Category API failed → using fallback")
+
+        setCategories([
+          "Food & Grocery",
+          "Staples & Cooking",
+          "Personal Care",
+          "Home & Cleaning",
+          "Baby Care",
+          "Toys & Kids",
+          "Household Essentials",
+          "Stationery",
+          "Electronics",
+          "Fashion",
+        ])
+      }
+    }
+
+    fetchCategories()
+  }, [])
+
   /* ---------------- HANDLERS ---------------- */
+
   const onChangeHandler = (e) => {
     setProductInfo({ ...productInfo, [e.target.name]: e.target.value })
   }
@@ -109,50 +168,63 @@ export default function StoreAddProduct() {
   }
 
   /* ---------------- SUBMIT ---------------- */
+
   const onSubmitHandler = async (e) => {
-    e.preventDefault()
+  e.preventDefault()
 
-    if (!images[1] && !images[2] && !images[3] && !images[4]) {
-      return toast.error("Please upload at least one product image.")
-    }
+  try {
+    setLoading(true)
 
-    try {
-      setLoading(true)
-      const token = await getToken()
+    const token = await getToken()
+    console.log("TOKEN:", token) // 🔥 ADD THIS
 
-      const formData = new FormData()
-      Object.entries(productInfo).forEach(([k, v]) =>
-        formData.append(k, v)
-      )
+    const formData = new FormData()
 
-      Object.keys(images).forEach(key => {
-        images[key] && formData.append("images", images[key])
-      })
+    const mappedCategory =
+      categoryMap[productInfo.category?.toUpperCase()] ||
+      productInfo.category
 
-      // 👇 SIZE DATA
-      formData.append("hasSizes", enableSizes)
-      formData.append("sizes", JSON.stringify(sizes))
+    Object.entries({
+      ...productInfo,
+      category: mappedCategory,
+    }).forEach(([k, v]) => formData.append(k, v))
 
-      const endpoint = isEditMode
-        ? `/api/store/product/${editProductId}`
-        : "/api/store/product"
+    Object.keys(images).forEach((key) => {
+      if (images[key] && typeof images[key] !== "string") {
+        formData.append("images", images[key])
+      }
+    })
 
-      const method = isEditMode ? "put" : "post"
+    formData.append("hasSizes", enableSizes)
+    formData.append("sizes", JSON.stringify(sizes))
 
-      const { data } = await axios[method](endpoint, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    const endpoint = isEditMode
+      ? `/api/store/product/${editProductId}`
+      : "/api/store/product"
 
-      toast.success(data.message)
-      router.push("/store/manage-product")
-    } catch (err) {
-      toast.error(err.response?.data?.error || err.message)
-    } finally {
-      setLoading(false)
-    }
+    const method = isEditMode ? "put" : "post"
+
+    const promise = axios[method](endpoint, formData, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+    await toast.promise(promise, {
+      loading: "Saving Product...",
+      success: "Product added successfully",
+      error: "Failed to add product",
+    })
+
+    router.push("/store/manage-product")
+  } catch (err) {
+    console.error(err)
+    toast.error(err.response?.data?.error || err.message)
+  } finally {
+    setLoading(false)
   }
+}
 
   /* ---------------- EDIT PREFILL ---------------- */
+
   useEffect(() => {
     if (!isEditMode) return
 
@@ -192,21 +264,15 @@ export default function StoreAddProduct() {
   }, [editProductId])
 
   /* ---------------- UI ---------------- */
+
   return (
-    <form
-      onSubmit={(e) =>
-        toast.promise(onSubmitHandler(e), { loading: "Saving Product..." })
-      }
-      className="text-[#9a8978] mb-28"
-    >
+    <form onSubmit={onSubmitHandler}>
       <h1 className="text-2xl mb-8">
         {isEditMode ? "Update" : "Add New"}{" "}
         <span className="text-[#6b5d52] font-medium">Product</span>
       </h1>
 
-      {/* ===== TWO COLUMN LAYOUT ===== */}
       <div className="flex gap-14 items-start">
-        {/* ===== LEFT: PRODUCT INFO ===== */}
         <div className="flex-1 max-w-xl">
           <p>Product Images</p>
 
@@ -216,13 +282,13 @@ export default function StoreAddProduct() {
                 <Image
                   width={120}
                   height={120}
-                  className="h-20 w-auto border border-[#ede6dd] rounded cursor-pointer"
+                  className="h-20 w-auto border rounded cursor-pointer"
                   src={
                     typeof images[key] === "string"
                       ? images[key]
                       : images[key]
                       ? URL.createObjectURL(images[key])
-                      : assets.upload_area
+                      : "/placeholder.png"
                   }
                   alt=""
                 />
@@ -238,77 +304,62 @@ export default function StoreAddProduct() {
             ))}
           </div>
 
-          <label htmlFor="" className="flex flex-col gap-2 my-6 ">
-        Name
-        <input
-          type="text"
-          name="name"
-          onChange={onChangeHandler}
-          value={productInfo.name}
-          placeholder="Enter product name"
-          className="w-full max-w-sm p-2 px-4 outline-none border border-[#ede6dd] rounded text-[#6b5d52] bg-white"
-          required
-        />
-      </label>
-
-      <label htmlFor="" className="flex flex-col gap-2 my-6 ">
-        Description
-        <textarea
-          name="description"
-          onChange={onChangeHandler}
-          value={productInfo.description}
-          placeholder="Enter product description"
-          rows={5}
-          className="w-full max-w-sm p-2 px-4 outline-none border border-[#ede6dd] rounded resize-none text-[#6b5d52] bg-white"
-          required
-        />
-      </label>
-
-      <div className="flex gap-5">
-        <label htmlFor="" className="flex flex-col gap-2 ">
-          Actual Price ($)
           <input
-            type="number"
-            name="mrp"
+            type="text"
+            name="name"
+            value={productInfo.name}
             onChange={onChangeHandler}
-            value={productInfo.mrp}
-            placeholder="0"
-            rows={5}
-            className="w-full max-w-45 p-2 px-4 outline-none border border-[#ede6dd] rounded resize-none text-[#6b5d52] bg-white"
+            placeholder="Product Name"
+            className="w-full p-2 my-4 border rounded"
             required
           />
-        </label>
-        <label htmlFor="" className="flex flex-col gap-2 ">
-          Offer Price ($)
-          <input
-            type="number"
-            name="price"
+
+          <textarea
+            name="description"
+            value={productInfo.description}
             onChange={onChangeHandler}
-            value={productInfo.price}
-            placeholder="0"
-            rows={5}
-            className="w-full max-w-45 p-2 px-4 outline-none border border-[#ede6dd] rounded resize-none text-[#6b5d52] bg-white"
+            placeholder="Description"
+            className="w-full p-2 border rounded"
             required
           />
-        </label>
-      </div>
 
-      <select
-        onChange={(e) => setProductInfo({ ...productInfo, category: e.target.value })}
-        value={productInfo.category}
-        className="w-full max-w-sm p-2 px-4 my-6 outline-none border border-[#ede6dd] rounded text-[#6b5d52] bg-white"
-        required
-      >
-        <option value="">Select a category</option>
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+          <div className="flex gap-4 my-4">
+            <input
+              type="number"
+              name="mrp"
+              value={productInfo.mrp}
+              onChange={onChangeHandler}
+              placeholder="MRP"
+              className="w-1/2 p-2 border rounded"
+            />
+            <input
+              type="number"
+              name="price"
+              value={productInfo.price}
+              onChange={onChangeHandler}
+              placeholder="Price"
+              className="w-1/2 p-2 border rounded"
+            />
+          </div>
+
+          {/* ✅ FIXED CATEGORY DROPDOWN */}
+          <select
+            value={productInfo.category}
+            onChange={(e) =>
+              setProductInfo({ ...productInfo, category: e.target.value })
+            }
+            className="w-full p-2 border rounded"
+          >
+            <option value="">Select Category</option>
+
+            {categories.map((cat) => (
+              <option key={cat.slug || cat} value={cat.name || cat}>
+                {cat.name || cat}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* ===== RIGHT: SIZE PANEL ===== */}
         <div className="w-[320px] border border-[#ede6dd] rounded-xl p-5 bg-white">
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -344,11 +395,11 @@ export default function StoreAddProduct() {
         </div>
       </div>
 
-      <button
-        disabled={loading}
-        className="bg-[#6b5d52] text-white px-6 py-2 mt-10"
-      >
-        {isEditMode ? "Update Product" : "Add Product"}
+
+      
+
+      <button className="mt-6 px-6 py-2 bg-black text-white">
+        {isEditMode ? "Update" : "Add Product"}
       </button>
     </form>
   )

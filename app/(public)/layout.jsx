@@ -48,10 +48,10 @@ export default function PublicLayout({ children }) {
             <Preloader
             />
             <Navbar />
-            <div className="pt-24">
-            <Banner />
+            
+            {/* <Banner /> */}
             {children}
-            </div>
+          
         
         
             

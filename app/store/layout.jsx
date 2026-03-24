@@ -1,8 +1,8 @@
 import StoreLayout from "@/components/store/StoreLayout"
 import { SignedIn,SignedOut,SignIn } from "@clerk/nextjs"
 export const metadata = {
-  title: "FrostWayne - Store Dashboard",
-  description: "FrostWayne - Store Dashboard",
+  title: "Shubh Value Cart",
+  description: "Shubh Value Cart",
 }
 
 export default function RootAdminLayout({ children }) {

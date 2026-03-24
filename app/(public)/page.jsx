@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <Lookbook />
+      
       <LatestProducts />
       <BestSelling />
       

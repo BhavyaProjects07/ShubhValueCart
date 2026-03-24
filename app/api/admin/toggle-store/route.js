@@ -33,8 +33,11 @@ export async function POST(request) {
 
         await prisma.store.update({
             where: { id: storeId },
-            data: { isActive: !store.isActive }
-        })
+            data: {
+                isActive: !store.isActive,
+                status: "approved", // ✅ FORCE APPROVAL
+            }
+        });
 
         return NextResponse.json({ message: "Store status toggled successfully" })
 

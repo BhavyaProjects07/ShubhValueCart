@@ -50,6 +50,7 @@ const Navbar = () => {
             const fetchRoles = async () => {
                 try {
                     const token = await getToken()
+                    if (!token) return;
 
                     // Admin check
                     try {
@@ -62,9 +63,12 @@ const Navbar = () => {
                     }
 
                     // Seller check
-                    const sellerRes = await axios.get("/api/store/is-seller", {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
+                    const sellerRes = await axios.get(
+                        `${window.location.origin}/api/store/is-seller`,
+                        {
+                            headers: { Authorization: `Bearer ${token}` },
+                        }
+                        );
 
                     setIsSeller(!!sellerRes.data?.isSeller)
 
