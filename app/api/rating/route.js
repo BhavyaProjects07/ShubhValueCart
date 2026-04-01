@@ -46,3 +46,23 @@ export async function POST(request) {
         return NextResponse.json({ error: error.code || error.message }, { status: 500 });
     }
 }
+
+export async function GET(request) {
+  try {
+    const ratings = await prisma.rating.findMany({
+      select: {
+        id: true,
+        productId: true,
+        rating: true,
+      }
+    })
+
+    return NextResponse.json({ ratings })
+
+  } catch (error) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    )
+  }
+}

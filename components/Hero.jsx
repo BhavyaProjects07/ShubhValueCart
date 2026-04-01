@@ -5,27 +5,20 @@ import {
   Star, Heart, Menu, MapPin, ChevronDown, Zap, Clock, Tag,
   Gift, Percent, Truck
 } from 'lucide-react';
-
+import axios from 'axios';
+import Deals from "@/components/Deals"
+import Recommended from "@/components/Recommended"
+import Dealstrip from "@/components/home/Dealstrip"
+import { useRouter } from "next/navigation";
 // --- DATA ---
-const categories = [
-  { name: 'Mobiles', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200', color: 'bg-blue-50' },
-  { name: 'Fashion', image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=200', color: 'bg-pink-50' },
-  { name: 'Electronics', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=200', color: 'bg-gray-100' },
-  { name: 'Home & Furniture', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200', color: 'bg-amber-50' },
-  { name: 'Appliances', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200', color: 'bg-teal-50' },
-  { name: 'Beauty', image: 'https://images.unsplash.com/photo-1596462502278-27bf85033e5a?w=200', color: 'bg-rose-50' },
-  { name: 'Toys & Baby', image: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=200', color: 'bg-purple-50' },
-  { name: 'Sports', image: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=200', color: 'bg-green-50' },
-  { name: 'Books', image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=200', color: 'bg-yellow-50' },
-  { name: 'Grocery', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200', color: 'bg-red-50' },
-];
+
 
 const heroBanners = [
   {
     id: 1,
     image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop',
     badge: 'Mega Sale',
-    title: 'Big Billion Days',
+    title: 'Shubh Value Cart',
     subtitle: 'Up to 70% OFF on Top Electronics & Gadgets',
     color: 'from-blue-900/95 via-blue-900/80 to-transparent',
     accent: 'bg-blue-500'
@@ -86,14 +79,28 @@ const gridBanners = [
 
 // --- COMPONENTS ---
 
-const CustomNavbar = () => {
+const CustomNavbar = ({ categories }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [coupon, setCoupon] = useState(null)
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+          axios.get('/api/public/coupons')
+              .then(res => {
+                  if (res.data?.length) {
+                      setCoupon(res.data[0])
+                  }
+              })
+              .catch(err => {
+                  console.error('COUPON FETCH ERROR:', err)
+              })
+      }, [])
 
   return (
     <motion.header 
@@ -108,9 +115,9 @@ const CustomNavbar = () => {
           <span className="flex items-center gap-1 font-medium"><MapPin className="w-3 h-3" /> Deliver to Mumbai 400001</span>
         </div>
         <div className="flex items-center gap-4 font-medium">
-          <a href="#" className="hover:underline">Sell on Shubh Value Cart</a>
-          <a href="#" className="hover:underline">Track Order</a>
-          <a href="#" className="hover:underline">24/7 Customer Care</a>
+          <a href="/create-store" className="hover:underline">Sell on Shubh Value Cart</a>
+          <a href="/orders" className="hover:underline">Track Order</a>
+          <a href="/about" className="hover:underline">24/7 Customer Care</a>
         </div>
       </div>
 
@@ -163,17 +170,38 @@ const CustomNavbar = () => {
       {/* Mini Category Bar (Desktop) */}
       <div className="hidden md:flex border-t border-gray-100 bg-white">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-6 text-sm font-medium text-gray-700">
-          <button className="flex items-center gap-1 hover:text-[#2874f0] font-bold"><Menu className="w-4 h-4"/> All Categories</button>
+          
+          <button className="flex items-center gap-1 hover:text-[#2874f0] font-bold">
+            <Menu className="w-4 h-4" /> All Categories
+          </button>
+
           {categories.slice(0, 8).map((cat, idx) => (
-            <a key={idx} href="#" className="hover:text-[#2874f0] transition-colors">{cat.name}</a>
+            <span
+  key={idx}
+  onClick={() => router.push(`/shop?category=${cat.slug}`)}
+  className="cursor-pointer hover:text-[#2874f0]"
+>
+  {cat.name}
+</span>
           ))}
+
         </div>
       </div>
 
       {/* Bank Offer Strip */}
       <div className="bg-[#f0f5ff] border-b border-blue-100 hidden md:block">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-center gap-2 text-xs font-medium text-[#2874f0]">
-          <span className="animate-pulse">💳</span> 10% Instant Discount on HDFC Bank Credit Cards. <a href="#" className="font-bold underline">T&C Apply</a>
+          <span className="animate-pulse">💳</span> {coupon ? (
+  <>
+    <span className="animate-pulse">💳</span>
+    {coupon.description}
+    <a href="#" className="font-bold underline">
+      Use - {coupon.code}
+    </a>
+  </>
+) : (
+  <span className="text-gray-400">Loading offers...</span>
+)}
         </div>
       </div>
 
@@ -256,6 +284,7 @@ const HeroSlider = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="bg-[#ff9900] hover:bg-[#e68a00] text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-xl transition-colors flex items-center gap-2"
+                    href="/shop"
                   >
                     Shop Now <ChevronRight className="w-5 h-5" />
                   </motion.button>
@@ -263,6 +292,7 @@ const HeroSlider = () => {
                     whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.2)" }}
                     whileTap={{ scale: 0.95 }}
                     className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-xl transition-colors"
+                    href=""
                   >
                     View Offers
                   </motion.button>
@@ -303,7 +333,7 @@ const HeroSlider = () => {
   );
 };
 
-const CategoryGrid = () => {
+const CategoryGrid = ({ categories }) => {
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10 -mt-8 sm:-mt-12">
       <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-100 backdrop-blur-lg bg-white/90">
@@ -418,64 +448,7 @@ const CountdownTimer = () => {
   );
 };
 
-const DealsStrip = () => {
-  const scrollRef = useRef(null);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const { current } = scrollRef;
-      const scrollAmount = direction === 'left' ? -current.offsetWidth : current.offsetWidth;
-      current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  return (
-    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
-      <div className="bg-white rounded-2xl shadow-md p-4 sm:p-8 border border-gray-200 relative group overflow-hidden">
-        {/* Background accent */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-        
-        <div className="flex items-center justify-between mb-6 sm:mb-8 border-b border-gray-100 pb-4 relative z-10">
-          <div className="flex items-center gap-4">
-            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 flex items-center gap-2">
-              <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-[#ff9900]" />
-              Deal of the Day
-            </h2>
-            <div className="flex items-center gap-2 bg-red-50 px-3 py-1 rounded-full border border-red-100">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <CountdownTimer />
-            </div>
-          </div>
-          <motion.button whileHover={{ x: 5 }} className="bg-[#2874f0] hover:bg-[#1a5ec4] text-white px-5 py-2.5 rounded-lg font-bold flex items-center gap-1 text-sm sm:text-base transition-colors shadow-sm">
-            View All Deals <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-          </motion.button>
-        </div>
-
-        <button 
-          onClick={() => scroll('left')}
-          className="absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-900 opacity-0 group-hover:opacity-100 transition-all z-20 shadow-xl hidden md:flex hover:bg-gray-50"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-
-        <div ref={scrollRef} className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 pb-4 cursor-grab active:cursor-grabbing snap-x snap-mandatory relative z-10">
-          {deals.map((deal, idx) => (
-            <div key={idx} className="snap-start shrink-0">
-              <ProductCard product={deal} isScrollable={true} />
-            </div>
-          ))}
-        </div>
-
-        <button 
-          onClick={() => scroll('right')}
-          className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-900 opacity-0 group-hover:opacity-100 transition-all z-20 shadow-xl hidden md:flex hover:bg-gray-50"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-      </div>
-    </div>
-  );
-};
+<Deals/>
 
 const MidBanner = ({ banner }) => {
   const ref = useRef(null);
@@ -663,6 +636,21 @@ const MultiCarousel = ({ title, products, icon: Icon }) => {
 };
 
 export default function Hero2() {
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axios.get("/api/categories");
+        setCategories(data.categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -689,11 +677,11 @@ export default function Hero2() {
           100% { background-position: 468px 0; }
         }
       `}} />
-      <CustomNavbar />
+      <CustomNavbar categories={categories}/>
       <div className="pt-[110px] md:pt-[170px]">
         <HeroSlider />
-        <CategoryGrid />
-        <DealsStrip />
+        <CategoryGrid categories={categories}  />
+        <Dealstrip deals={deals} />
         <GridBanners />
         <SplitBanners />
         <ProductGrid title="Best Sellers" products={bestSellers} icon={Star} />

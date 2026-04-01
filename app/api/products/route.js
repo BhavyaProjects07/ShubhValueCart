@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-// ✅ SLUG → DB CATEGORY MAP (CRITICAL FIX)
+// ✅ SLUG → DB CATEGORY MAP
 const CATEGORY_SLUG_MAP = {
   "food-grocery": "Food & Grocery",
   "staples-cooking": "Staples & Cooking",
@@ -21,64 +21,106 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
 
+    // ✅ PAGINATION PARAMS
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 50;
+    const skip = (page - 1) * limit;
+
+    const minPrice = Number(searchParams.get("minPrice")) || 0
+const maxPrice = Number(searchParams.get("maxPrice")) || 0
+const minRating = Number(searchParams.get("minRating")) || 0
+const minDiscount = Number(searchParams.get("minDiscount")) || 0
+
     const search = searchParams.get("search") || "";
     const rawCategory = searchParams.get("category");
 
-    // ---------- STEP 1: CLEAN SEARCH ----------
+    // ---------- CLEAN SEARCH ----------
     const words = search
       .toLowerCase()
       .split(" ")
       .map(w => w.trim())
       .filter(w => w && !STOP_WORDS.includes(w));
 
-    // ---------- STEP 2: FIX CATEGORY ----------
+    // ---------- CATEGORY FIX ----------
     let category = null;
-
     if (rawCategory) {
       const normalized = rawCategory.toLowerCase();
-
-      // ✅ Convert slug → DB category
       category = CATEGORY_SLUG_MAP[normalized] || rawCategory;
     }
 
-    // ---------- STEP 3: SEARCH KEYWORDS ----------
     const searchKeywords = words;
 
-    // ---------- STEP 4: QUERY ----------
-    const products = await prisma.product.findMany({
-      where: {
-        // ✅ safer than strict true
-        inStock: { not: false },
+    // ---------- WHERE CLAUSE ----------
+    const whereClause = {
+  inStock: { not: false },
 
-        ...(category && {
-          category: { equals: category },
-        }),
+  store: {
+    isActive: true,
+  },
 
-        ...(searchKeywords.length > 0 && {
-          OR: searchKeywords.map(word => ({
-            OR: [
-              { name: { contains: word, mode: "insensitive" } },
-              { description: { contains: word, mode: "insensitive" } },
-            ],
-          })),
-        }),
+  ...(category && {
+    category: { equals: category },
+  }),
+
+  ...(minPrice || maxPrice
+    ? {
+        price: {
+          ...(minPrice && { gte: minPrice }),
+          ...(maxPrice && { lte: maxPrice }),
+        },
+      }
+    : {}),
+
+  ...(minDiscount && {
+    discount: { gte: minDiscount },
+  }),
+
+  ...(minRating && {
+    rating: {
+      some: {
+        value: { gte: minRating },
       },
+    },
+  }),
 
-      include: {
-        rating: true,
-        store: true,
+  ...(searchKeywords.length > 0 && {
+    OR: searchKeywords.map(word => ({
+      OR: [
+        { name: { contains: word, mode: "insensitive" } },
+        { description: { contains: word, mode: "insensitive" } },
+      ],
+    })),
+  }),
+}
+
+    // ---------- PARALLEL QUERIES ----------
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where: whereClause,
+        include: {
+          rating: true,
+          store: true,
+        },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+
+      prisma.product.count({
+        where: whereClause,
+      }),
+    ]);
+
+    // ---------- RESPONSE ----------
+    return NextResponse.json({
+      products,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       },
-
-      orderBy: { createdAt: "desc" },
     });
-    console.log("ALL PRODUCTS:", products);
-
-    // ---------- STEP 5: STORE FILTER ----------
-    const activeProducts = products.filter(
-      p => p.store?.isActive !== false // ✅ safer check
-    );
-
-    return NextResponse.json({ products: activeProducts });
 
   } catch (error) {
     console.error("SEARCH ERROR:", error);

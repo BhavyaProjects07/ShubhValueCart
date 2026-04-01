@@ -3,7 +3,7 @@ import axios from "axios";
 import FormData from "form-data";
 
 // ---------------- LOAD EXCEL ----------------
-const workbook = XLSX.readFile("./Updated_Final_Filtered_Stock2.xlsx");
+const workbook = XLSX.readFile("./stock.xlsx");
 const sheet = workbook.Sheets[workbook.SheetNames[0]];
 const data = XLSX.utils.sheet_to_json(sheet);
 
@@ -12,7 +12,7 @@ console.log("📦 Total Products:", data.length);
 // ---------------- GET TOP 5 VALID PRODUCTS ----------------
 const products = data
   .filter(p => p.Name && p["Selling Price"])
-  .slice(0, 25);
+  .slice(51, 100);
 
 if (products.length === 0) {
   console.log("❌ No valid products found");

@@ -40,6 +40,12 @@ const Navbar = () => {
     // Fallback for cartCount if redux is not set up in the environment
     const cartCount = useSelector(state => state?.cart?.total || 0)
 
+    const [mounted, setMounted] = useState(false)
+
+useEffect(() => {
+  setMounted(true)
+}, [])
+
     useEffect(() => {
         setIsVisible(true)
     }, [])
@@ -64,7 +70,7 @@ const Navbar = () => {
 
                     // Seller check
                     const sellerRes = await axios.get(
-                        `${window.location.origin}/api/store/is-seller`,
+                        "/api/store/is-seller",
                         {
                             headers: { Authorization: `Bearer ${token}` },
                         }
@@ -176,62 +182,31 @@ const Navbar = () => {
                             </Link>
 
                             {
-                                !user ? (
-                                    <button 
-                                        onClick={openSignIn} 
-                                        className="px-6 py-2.5 bg-[#1D1D1F] text-white text-sm font-semibold rounded-full relative transition-all duration-300 hover:bg-black hover:scale-105 shadow-md shadow-black/10"
-                                        style={{
-                                            animation: `fadeInUp 0.6s ease-out 0.5s forwards`,
-                                            opacity: 0,
-                                        }}
-                                    >
-                                        Login
-                                    </button>
-                                ) : (
-                                    <div style={{
-                                        animation: `fadeInUp 0.6s ease-out 0.5s forwards`,
-                                        opacity: 0,
-                                    }} className="hover:scale-105 transition-transform">
-                                        <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
-                                            <UserButton.MenuItems>
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="My Orders"
-                                                    onClick={() => router.push("/orders")}
-                                                />
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="About Us"
-                                                    onClick={() => router.push("/about")}
-                                                />
-                                                {isSeller && (
-                                                <UserButton.Action
-                                                    labelIcon={<Store size={16} />}
-                                                    label="Store Dashboard"
-                                                    onClick={() => router.push("/store")}
-                                                />
-                                                )}
-                                                {isAdmin && (
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="Admin Panel"
-                                                    onClick={() => router.push("/admin")}
-                                                />
-                                                )}
-                                            </UserButton.MenuItems>
-                                        </UserButton>
-                                    </div>      
-                                )
+                            !mounted ? (
+                                <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse" />
+                            ) : !user ? (
+                                <button 
+                                onClick={openSignIn} 
+                                className="px-6 py-2.5 bg-[#1D1D1F] text-white text-sm font-semibold rounded-full relative transition-all duration-300 hover:bg-black hover:scale-105 shadow-md shadow-black/10"
+                                >
+                                Login
+                                </button>
+                            ) : (
+                                <div className="hover:scale-105 transition-transform">
+                                <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
+                                    <UserButton.MenuItems>
+                                    {/* keep your menu items */}
+                                    </UserButton.MenuItems>
+                                </UserButton>
+                                </div>
+                            )
                             }
                         </div>
 
                         {/* Mobile Nav */}
                         <div
-                            className="sm:hidden flex items-center justify-between w-full"
-                            style={{
-                                animation: `fadeInUp 0.6s ease-out forwards`,
-                                opacity: isVisible ? 1 : 0,
-                            }}
+                            className="sm:hidden flex items-center justify-between w-full opacity-0 animate-[fadeInUp_0.6s_ease-out_0.5s_forwards]"
+                            
                         >
                             {/* Mobile Logo (LEFT) */}
                             <Link href="/" className="flex items-center font-extrabold tracking-tighter text-xl text-[#1D1D1F]">
