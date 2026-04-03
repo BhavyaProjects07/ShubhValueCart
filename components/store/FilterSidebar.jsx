@@ -158,14 +158,16 @@ export default function FilterSidebar({ filters, setFilters }) {
 
       {/* CLEAR ALL */}
       <button
-        onClick={() =>
-          setFilters({
-            minPrice: 0,
-            maxPrice: 10000, // ✅ FIXED
-            minRating: 0,
-            minDiscount: 0,
-          })
-        }
+        onClick={() => {
+  setFilters({
+    minPrice: 0,
+    maxPrice: 10000,
+    minRating: 0,
+    minDiscount: 0,
+  })
+
+  router.push("/shop?page=1&maxPrice=10000")
+}}
         className="w-full text-sm text-[#6b5d52] border border-[#ede6dd] rounded-md py-2 hover:bg-[#ede6dd]"
       >
         Clear All Filters

@@ -20,7 +20,7 @@ function ShopContent() {
   const page = Number(searchParams.get("page")) || 1
 
   const minPrice = Number(searchParams.get("minPrice")) || 0
-  const maxPrice = Number(searchParams.get("maxPrice")) || 100000
+  const maxPrice = Number(searchParams.get("maxPrice")) || 10000
   const minRating = Number(searchParams.get("minRating")) || 0
   const minDiscount = Number(searchParams.get("minDiscount")) || 0
 

@@ -195,7 +195,36 @@ useEffect(() => {
                                 <div className="hover:scale-105 transition-transform">
                                 <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
                                     <UserButton.MenuItems>
-                                    {/* keep your menu items */}
+                                         <UserButton.Action
+                                                    labelIcon={<ShoppingCart size={16} />}
+                                                    label="Cart"
+                                                    onClick={() => router.push("/cart")}
+                                                />
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="My Orders"
+                                                    onClick={() => router.push("/orders")}
+                                                />
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="About Us"
+                                                    onClick={() => router.push("/about")}
+                                                />
+                                                {isSeller && (
+                                                <UserButton.Action
+                                                    labelIcon={<Store size={16} />}
+                                                    label="Store Dashboard"
+                                                    onClick={() => router.push("/store")}
+                                                />
+                                                )}
+                                                {isAdmin && (
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="Admin Panel"
+                                                    onClick={() => router.push("/admin")}
+                                                />
+                                                )}              
+                                                        
                                     </UserButton.MenuItems>
                                 </UserButton>
                                 </div>
@@ -213,7 +242,7 @@ useEffect(() => {
                                 {assets?.logo ? (
                                     <Image src={assets.logo} alt="FrostWayne" width={90} height={30} priority className="object-contain" />
                                 ) : (
-                                    <span>FROSTWAYNE</span>
+                                    <span>Shubh Value Cart</span>
                                 )}
                             </Link>
 

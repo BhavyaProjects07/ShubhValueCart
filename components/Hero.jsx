@@ -10,6 +10,7 @@ import Deals from "@/components/Deals"
 import Recommended from "@/components/Recommended"
 import Dealstrip from "@/components/home/Dealstrip"
 import { useRouter } from "next/navigation";
+import GridBanners from './GridBanners';
 // --- DATA ---
 
 
@@ -19,7 +20,7 @@ const heroBanners = [
     image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop',
     badge: 'Mega Sale',
     title: 'Shubh Value Cart',
-    subtitle: 'Up to 70% OFF on Top Electronics & Gadgets',
+    subtitle: 'Up to 10% OFF on Groceries and SkinCare',
     color: 'from-blue-900/95 via-blue-900/80 to-transparent',
     accent: 'bg-blue-500'
   },
@@ -72,8 +73,8 @@ const splitBanners = [
 
 const gridBanners = [
   { id: 1, title: 'Under ₹499', subtitle: 'Daily Essentials', image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400', color: 'bg-pink-50' },
-  { id: 2, title: 'Up to 80% Off', subtitle: 'Top Electronics', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400', color: 'bg-blue-50' },
-  { id: 3, title: 'New Launches', subtitle: 'Premium Watches', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400', color: 'bg-purple-50' },
+  { id: 2, title: 'Up to 10% off', subtitle: 'HouseHold Essentials', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400', color: 'bg-blue-50' },
+  { id: 3, title: 'New Toys', subtitle: 'Toys for kids', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400', color: 'bg-purple-50' },
   { id: 4, title: 'Clearance', subtitle: 'Home Decor', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400', color: 'bg-orange-50' }
 ];
 
@@ -292,7 +293,7 @@ const HeroSlider = () => {
                     whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.2)" }}
                     whileTap={{ scale: 0.95 }}
                     className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-xl transition-colors"
-                    href=""
+                    href="/shop"
                   >
                     View Offers
                   </motion.button>
@@ -479,9 +480,12 @@ const MidBanner = ({ banner }) => {
           <div className="px-6 sm:px-12 lg:px-20 text-white max-w-2xl">
             <h3 className="text-3xl sm:text-5xl lg:text-6xl font-black mb-3 sm:mb-4 drop-shadow-lg leading-tight">{banner.title}</h3>
             <p className="text-base sm:text-xl lg:text-2xl font-medium mb-6 sm:mb-8 text-white/90 drop-shadow">{banner.subtitle}</p>
+            <a href="shop?page=1&category=food-grocery&maxPrice=10000">
             <button className="bg-white text-gray-900 px-6 py-2.5 sm:px-8 sm:py-3.5 rounded-lg font-bold hover:bg-[#ff9900] hover:text-white transition-colors shadow-lg text-sm sm:text-base flex items-center gap-2">
               Explore Now <ChevronRight className="w-4 h-4" />
             </button>
+
+            </a>
           </div>
         </div>
       </div>
@@ -524,37 +528,7 @@ const SplitBanners = () => {
   );
 };
 
-const GridBanners = () => {
-  return (
-    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        {gridBanners.map((banner, idx) => (
-          <motion.div 
-            key={idx}
-            whileHover={{ y: -5 }}
-            className={`relative h-[160px] sm:h-[200px] rounded-2xl overflow-hidden group cursor-pointer shadow-sm hover:shadow-md transition-all ${banner.color}`}
-          >
-            <div className="absolute inset-0 p-4 sm:p-6 flex flex-col justify-center z-10 w-2/3">
-              <h3 className="text-lg sm:text-xl font-black text-gray-900 mb-1 leading-tight">{banner.title}</h3>
-              <p className="text-xs sm:text-sm font-medium text-gray-600 mb-3">{banner.subtitle}</p>
-              <div className="mt-auto">
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-sm text-[#2874f0] group-hover:bg-[#2874f0] group-hover:text-white transition-colors">
-                  <ChevronRight className="w-4 h-4" />
-                </span>
-              </div>
-            </div>
-            <img 
-              src={banner.image} 
-              alt={banner.title} 
-              loading="lazy"
-              className="absolute right-0 bottom-0 w-1/2 h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" 
-            />
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-};
+<GridBanners />
 
 const ProductGrid = ({ title, products, icon: Icon }) => {
   return (
@@ -684,11 +658,11 @@ export default function Hero2() {
         <Dealstrip deals={deals} />
         <GridBanners />
         <SplitBanners />
-        <ProductGrid title="Best Sellers" products={bestSellers} icon={Star} />
+        
         <MidBanner banner={midBanners[0]} />
         <MultiCarousel title="Trending Electronics" products={deals} icon={Zap} />
         <MidBanner banner={midBanners[1]} />
-        <ProductGrid title="Recommended For You" products={bestSellers.slice().reverse()} icon={Gift} />
+        
       </div>
     </motion.div>
   );
