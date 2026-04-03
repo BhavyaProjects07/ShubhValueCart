@@ -87,6 +87,13 @@ const OrderSummary = ({ totalPrice, items }) => {
     }
   }, [totalPrice])
 
+  useEffect(() => {
+  const script = document.createElement("script");
+  script.src = "https://checkout.razorpay.com/v1/checkout.js";
+  script.async = true;
+  document.body.appendChild(script);
+}, []);
+
   /* ================= PLACE ORDER ================= */
   const handlePlaceOrder = async (e) => {
     e.preventDefault()
@@ -121,16 +128,54 @@ const OrderSummary = ({ totalPrice, items }) => {
       }
 
       const { data } = await axios.post('/api/orders', orderData, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+  headers: { Authorization: `Bearer ${token}` },
+});
 
-      if (paymentMethod === 'STRIPE') {
-        window.location.href = data.session.url
-      } else {
-        toast.success('Order placed successfully')
-        router.push('/orders')
-        dispatch(fetchCart({ getToken }))
-      }
+const options = {
+  key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  amount: data.amount * 100,
+  order_id: data.razorpayOrderId,
+
+  handler: function (response) {
+    toast.success("Payment successful!");
+    router.push("/orders");
+  },
+};
+      if (paymentMethod === "RAZORPAY") {
+  // create order with isPaid = false
+
+  const order = await prisma.order.create({
+    data: {
+      userId,
+      storeId,
+      addressId,
+      total,
+      paymentMethod,
+      isPaid: false,
+    },
+  });
+
+  // create razorpay order
+  const razorpayOrder = await razorpay.orders.create({
+    amount: total * 100,
+    currency: "INR",
+    receipt: order.id,
+  });
+
+  // save razorpayOrderId
+  await prisma.order.update({
+    where: { id: order.id },
+    data: {
+      razorpayOrderId: razorpayOrder.id,
+    },
+  });
+
+  return NextResponse.json({
+    razorpayOrderId: razorpayOrder.id,
+    orderId: order.id,
+    amount: total,
+  });
+}
 
     } catch (error) {
       toast.error(error.response?.data?.message || error.message)
@@ -153,13 +198,13 @@ const OrderSummary = ({ totalPrice, items }) => {
         <label>COD</label>
       </div>
       <div className="flex gap-2 items-center mt-1">
-        <input
-          type="radio"
-          checked={paymentMethod === 'STRIPE'}
-          onChange={() => setPaymentMethod('STRIPE')}
-        />
-        <label>Stripe Payment</label>
-      </div>
+  <input
+    type="radio"
+    checked={paymentMethod === 'RAZORPAY'}
+    onChange={() => setPaymentMethod('RAZORPAY')}
+  />
+  <label>Razorpay</label>
+</div>
 
       {/* ADDRESS */}
       <div className="my-4 py-4 border-y border-slate-200 text-slate-400">

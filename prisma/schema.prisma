@@ -78,15 +78,29 @@ model Order {
   id            String         @id @default(cuid())
   total         Float
   status        OrderStatus    @default(ORDER_PLACED)
+
   userId        String
   storeId       String
   addressId     String
-  isPaid        Boolean        @default(false)
+
+  // 💰 PAYMENT CORE
   paymentMethod PaymentMethod
+  isPaid        Boolean        @default(false)
+
+  // 🔥 RAZORPAY FIELDS (NEW)
+  razorpayOrderId    String?   @unique
+  razorpayPaymentId  String?   @unique
+  razorpaySignature  String?
+
+  // 🧾 OPTIONAL (Future proofing)
+  paymentCapturedAt  DateTime?
+
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+
   isCouponUsed  Boolean        @default(false)
   coupon        Json           @default("{}")
+
   orderItems    OrderItem[]
   returnRequest ReturnRequest?
 
