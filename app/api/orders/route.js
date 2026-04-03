@@ -17,6 +17,12 @@ function buildOrderItemsBlock(orderItems) {
     .join("<br/>");
 }
 
+import Razorpay from "razorpay";
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 /* ---------------- POST : CREATE ORDER ---------------- */
 
 export async function POST(request) {
@@ -79,6 +85,34 @@ export async function POST(request) {
         );
       }
     }
+
+    if (paymentMethod === "RAZORPAY") {
+
+  // calculate total first
+  let total = 0;
+
+  for (const item of items) {
+    const product = await prisma.product.findUnique({
+      where: { id: item.id },
+    });
+
+    total += product.price * item.quantity;
+  }
+
+  total += 5; // shipping
+
+  // 🔥 create razorpay order
+  const razorpayOrder = await razorpay.orders.create({
+    amount: total * 100,
+    currency: "INR",
+    receipt: "receipt_" + Date.now(),
+  });
+
+  return NextResponse.json({
+    razorpayOrderId: razorpayOrder.id,
+    amount: total,
+  });
+}
 
     /* -------- GROUP ITEMS BY STORE -------- */
 
