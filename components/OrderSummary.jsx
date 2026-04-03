@@ -14,6 +14,7 @@ import { useUser, useAuth } from '@clerk/nextjs'
 import axios from 'axios'
 import { fetchCart } from '@/lib/features/cart/cartSlice'
 
+
 const OrderSummary = ({ totalPrice, items }) => {
   const { user } = useUser()
   const { getToken } = useAuth()
