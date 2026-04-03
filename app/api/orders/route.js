@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import  prisma from "@/lib/prisma";
 import { PaymentMethod } from "@prisma/client";
 import { sendBrevoEmail } from "@/lib/brevo";
+import Razorpay from "razorpay";
 
 /* ---------------- HELPERS ---------------- */
 
@@ -17,7 +18,6 @@ function buildOrderItemsBlock(orderItems) {
     .join("<br/>");
 }
 
-import Razorpay from "razorpay";
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -86,9 +86,8 @@ export async function POST(request) {
       }
     }
 
-    if (paymentMethod === "RAZORPAY") {
+  if (paymentMethod === "RAZORPAY") {
 
-  // calculate total first
   let total = 0;
 
   for (const item of items) {
@@ -96,12 +95,19 @@ export async function POST(request) {
       where: { id: item.id },
     });
 
+    // 🔥 FIX: check product existence
+    if (!product) {
+      return NextResponse.json(
+        { error: `Product not found: ${item.id}` },
+        { status: 404 }
+      );
+    }
+
     total += product.price * item.quantity;
   }
 
-  total += 5; // shipping
+  total += 5;
 
-  // 🔥 create razorpay order
   const razorpayOrder = await razorpay.orders.create({
     amount: total * 100,
     currency: "INR",
@@ -393,11 +399,11 @@ export async function GET(request) {
         OR: [
           { paymentMethod: PaymentMethod.COD },
           {
-            AND: [
-              { paymentMethod: PaymentMethod.STRIPE },
-              { isPaid: true },
-            ],
-          },
+          AND: [
+            { paymentMethod: PaymentMethod.RAZORPAY },
+            { isPaid: true },
+          ],
+        },
         ],
       },
       include: {

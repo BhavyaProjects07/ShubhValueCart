@@ -97,91 +97,95 @@ const OrderSummary = ({ totalPrice, items }) => {
 
   /* ================= PLACE ORDER ================= */
   const handlePlaceOrder = async (e) => {
-    e.preventDefault()
+  e.preventDefault();
 
-    try {
-      if (!user) {
-        toast.error('Please login to place order')
-        return
-      }
-
-      if (!selectedAddress) {
-        toast.error('Please select an address')
-        return
-      }
-
-      const token = await getToken()
-
-      const orderData = {
-        addressId: selectedAddress.id,
-        paymentMethod,
-        items: items.map(item => ({
-          id: item.id,
-          quantity: item.quantity,
-          hasSize: item.hasSize || false,
-          size: item.size || null,
-        })),
-      }
-
-
-      if (coupon) {
-        orderData.couponCode = coupon.code
-      }
-
-      const { data } = await axios.post('/api/orders', orderData, {
-  headers: { Authorization: `Bearer ${token}` },
-});
-
-const options = {
-  key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-  amount: data.amount * 100,
-  order_id: data.razorpayOrderId,
-
-  handler: function (response) {
-    toast.success("Payment successful!");
-    router.push("/orders");
-  },
-};
-      if (paymentMethod === "RAZORPAY") {
-  // create order with isPaid = false
-
-  const order = await prisma.order.create({
-    data: {
-      userId,
-      storeId,
-      addressId,
-      total,
-      paymentMethod,
-      isPaid: false,
-    },
-  });
-
-  // create razorpay order
-  const razorpayOrder = await razorpay.orders.create({
-    amount: total * 100,
-    currency: "INR",
-    receipt: order.id,
-  });
-
-  // save razorpayOrderId
-  await prisma.order.update({
-    where: { id: order.id },
-    data: {
-      razorpayOrderId: razorpayOrder.id,
-    },
-  });
-
-  return NextResponse.json({
-    razorpayOrderId: razorpayOrder.id,
-    orderId: order.id,
-    amount: total,
-  });
-}
-
-    } catch (error) {
-      toast.error(error.response?.data?.message || error.message)
+  try {
+    if (!user) {
+      toast.error('Please login to place order');
+      return;
     }
+
+    if (!selectedAddress) {
+      toast.error('Please select an address');
+      return;
+    }
+
+    const token = await getToken();
+
+    const orderData = {
+      addressId: selectedAddress.id,
+      paymentMethod,
+      items: items.map(item => ({
+        id: item.id,
+        quantity: item.quantity,
+        hasSize: item.hasSize || false,
+        size: item.size || null,
+      })),
+    };
+
+    if (coupon) {
+      orderData.couponCode = coupon.code;
+    }
+
+    // 🔥 Call backend
+    const { data } = await axios.post('/api/orders', orderData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // =============================
+    // 💰 RAZORPAY FLOW
+    // =============================
+    if (paymentMethod === "RAZORPAY") {
+
+      if (!window.Razorpay) {
+        toast.error("Payment system not loaded. Please refresh.");
+        return;
+      }
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: data.amount, // ✅ already in paise from backend
+        currency: "INR",
+        order_id: data.razorpayOrderId,
+
+        name: "Shubh Value Cart",
+        description: "Order Payment",
+
+        handler: function (response) {
+          // ❌ DO NOT call /api/orders again
+          toast.success("Payment successful!");
+          router.push("/orders");
+        },
+
+        modal: {
+          ondismiss: function () {
+            toast.error("Payment cancelled");
+          },
+        },
+
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+      return; // 🔥 STOP HERE
+    }
+
+    // =============================
+    // 📦 COD FLOW
+    // =============================
+    toast.success("Order placed successfully!");
+    router.push("/orders");
+    dispatch(fetchCart({ getToken }));
+
+  } catch (error) {
+    console.error("ORDER ERROR:", error);
+    toast.error(error.response?.data?.error || error.message);
   }
+};
 
   /* ================= UI ================= */
   return (
