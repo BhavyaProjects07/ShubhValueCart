@@ -229,8 +229,8 @@ const PrivacyPolicy = () => {
               <p className="text-[11px] tracking-[0.5em] uppercase text-[#C5A059] font-bold">Contact Support Protocol</p>
               <p className="text-[10px] tracking-widest uppercase text-[#D4C4B5]/40">Ensure all unboxing media and Order ID are attached.</p>
             </div>
-            <a href="mailto:frostwayneteam@gmail.com" className="block font-serif text-4xl md:text-6xl text-[#E8DED1] hover:text-[#C5A059] transition-all duration-700 underline underline-offset-[16px] decoration-[1px] decoration-[#C5A059]/30">
-              frostwayneteam@gmail.com
+            <a href="mailto:shubhvaluecart@gmail.com" className="block font-serif text-4xl md:text-6xl text-[#E8DED1] hover:text-[#C5A059] transition-all duration-700 underline underline-offset-[16px] decoration-[1px] decoration-[#C5A059]/30">
+              shubhvaluecart@gmail.com
             </a>
           </div>
 
@@ -241,6 +241,12 @@ const PrivacyPolicy = () => {
              </div>
              <p className="text-[9px] tracking-[0.6em] uppercase text-[#D4C4B5]/30 leading-loose">
                 BY PLACING AN ORDER ON FROSTWAYNE, YOU CONFIRM FULL COMPLIANCE WITH THIS QUALITY ASSURANCE SYSTEM AND ACCEPT THE PROOF-BASED RETURN PROTOCOL.
+            </p>
+            <br></br>
+             
+            <p className="text-[9px] tracking-[0.6em] uppercase text-[#D4C4B5]/30 leading-loose">
+              Stay Informed, We'd love to keep you updated with the latest news, exclusive offers, and valuable insights. Please give your consent to receive messages and emails from us.
+
              </p>
              <div className="w-12 h-[1px] bg-[#C5A059]/20 mx-auto"></div>
              <p className="font-serif text-xl italic text-[#C5A059]/40 tracking-widest">
