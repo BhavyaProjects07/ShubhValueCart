@@ -6,9 +6,7 @@ export async function GET() {
     const products = await prisma.product.findMany({
       where: {
         inStock: { not: false },
-        store: {
-          isActive: true,
-        },
+        store: { isActive: true },
         mrp: { gt: 0 },
       },
       include: {
@@ -17,21 +15,36 @@ export async function GET() {
       },
     });
 
-    // ✅ compute discount
     const withDiscount = products.map(p => {
-      const discount = ((p.mrp - p.price) / p.mrp) * 100;
+      const discount = Math.round(
+  ((p.mrp - p.price) / p.mrp) * 100
+)
 
       return {
-        ...p,
-        discount,
-      };
+  id: p.id,
+  name: p.name,
+  price: p.price,
+  mrp: p.mrp,
+  images: p.images,
+  category: p.category,
+  storeId: p.storeId,
+  createdAt: p.createdAt,
+  discount,
+}
     });
 
-    // ✅ filter + sort + take 24
+    // ✅ STRICT FILTER (CRITICAL FIX)
     const deals = withDiscount
-      .filter(p => p.discount > 0)
+      .filter(p => 
+        p.discount > 5 &&
+        p.id &&                    // 🔥 MUST HAVE
+        p.images?.length > 0 &&    // 🔥 MUST HAVE IMAGE
+        p.price > 0                // 🔥 VALID PRICE
+      )
       .sort((a, b) => b.discount - a.discount)
       .slice(0, 24);
+
+    
 
     return NextResponse.json({ deals });
 

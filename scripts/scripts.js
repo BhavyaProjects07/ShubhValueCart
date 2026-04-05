@@ -12,7 +12,7 @@ console.log("📦 Total Products:", data.length);
 // ---------------- GET TOP 5 VALID PRODUCTS ----------------
 const products = data
   .filter(p => p.Name && p["Selling Price"])
-  .slice(301, 400);
+  .slice(1001, 2735);
 
 if (products.length === 0) {
   console.log("❌ No valid products found");

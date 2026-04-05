@@ -11,6 +11,7 @@ import Recommended from "@/components/Recommended"
 import Dealstrip from "@/components/home/Dealstrip"
 import { useRouter } from "next/navigation";
 import GridBanners from './GridBanners';
+
 // --- DATA ---
 
 
@@ -44,6 +45,49 @@ const heroBanners = [
   }
 ];
 
+export const cats = [
+  {
+    name: "Food & Grocery",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e"
+  },
+  {
+    name: "Staples & Cooking",
+    image: "https://images.unsplash.com/photo-1606787366850-de6330128bfc"
+  },
+  {
+    name: "Personal Care",
+    image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571"
+  },
+  {
+    name: "Home & Cleaning",
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952"
+  },
+  {
+    name: "Baby Care",
+    image: "https://images.unsplash.com/photo-1604917877934-07d8d248d396"
+  },
+  {
+    name: "Toys & Kids",
+    image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b"
+  },
+  {
+    name: "Household Essentials",
+    image: "https://images.unsplash.com/photo-1586201375761-83865001e31c"
+  },
+  {
+    name: "Stationery",
+    image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4"
+  },
+  {
+    name: "Electronics",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8"
+  },
+  {
+    name: "Fashion",
+    image: "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53"
+  }
+];
+
 const deals = [
   { id: 1, name: 'Apple iPhone 15 (128GB)', price: '₹65,999', original: '₹79,900', discount: '17% OFF', rating: 4.8, reviews: '12k', image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400' },
   { id: 2, name: 'Sony WH-1000XM5', price: '₹24,990', original: '₹34,990', discount: '28% OFF', rating: 4.7, reviews: '8k', image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400' },
@@ -62,13 +106,13 @@ const bestSellers = [
 ];
 
 const midBanners = [
-  { id: 1, title: 'Grocery Sale', subtitle: 'Stock up and save big on daily essentials', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200', color: 'from-green-900/90' },
-  { id: 2, title: 'Electronics Fest', subtitle: 'Latest gadgets at unbeatable prices', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=1200', color: 'from-blue-900/90' }
+  { id: 1, title: 'Grocery Sale', subtitle: 'Stock up and save big on daily essentials', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200', color: 'from-green-900/90' , cat:"food-grocery" },
+  { id: 2, title: 'Enhance your skin', subtitle: 'Latest skin care products at unbeatable prices', image: 'https://thephrase.in/cdn/shop/articles/Skin_Care_Banner_1.jpg?v=1697455809&width=1100?w=1200', color: 'from-pink-900/90' , cat:"personal-care"}
 ];
 
 const splitBanners = [
-  { id: 1, title: 'Smart Watches', subtitle: 'Starting at ₹1,999', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800', color: 'from-purple-900/90' },
-  { id: 2, title: 'Sneaker Store', subtitle: 'Up to 60% OFF', image: 'https://images.unsplash.com/photo-1552346154-21d32810baa3?w=800', color: 'from-red-900/90' }
+  { id: 1, title: 'Staples & Cooking', subtitle: 'Starting at ₹1,999', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC4CAlq-V7qlxvzyWFr3D6SIRkT9lwJiS5-Q&s', color: 'from-purple-900/90' ,cat : "staples-cooking"},
+  { id: 2, title: 'Your Stationary Collection', subtitle: 'Up to 60% OFF', image: 'https://static.vecteezy.com/system/resources/thumbnails/071/157/463/small/back-to-school-supplies-background-colorful-stationery-calculator-and-blank-workspace-for-educational-and-creative-projects-photo.jpg?w=800', color: 'from-red-900/90' , cat : "stationery"}
 ];
 
 const gridBanners = [
@@ -84,6 +128,7 @@ const CustomNavbar = ({ categories }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [coupon, setCoupon] = useState(null)
   const router = useRouter();
+  const [showOffer, setShowOffer] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -133,20 +178,7 @@ const CustomNavbar = ({ categories }) => {
           </a>
         </div>
 
-        {/* Search */}
-        <div className="hidden md:flex flex-1 max-w-3xl mx-8 relative group">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="w-5 h-5 text-gray-400 group-focus-within:text-[#2874f0] transition-colors" />
-          </div>
-          <input 
-            type="text" 
-            placeholder="Search for products, brands and more..." 
-            className="w-full pl-12 pr-24 py-2.5 bg-[#f0f5ff] border border-transparent focus:border-[#2874f0] focus:bg-white focus:shadow-md rounded-xl outline-none transition-all text-sm font-medium"
-          />
-          <button className="absolute inset-y-0 right-0 px-6 bg-[#ff9900] hover:bg-[#e68a00] text-white font-bold rounded-r-xl transition-colors text-sm">
-            Search
-          </button>
-        </div>
+        
 
         {/* Actions */}
         <div className="flex items-center gap-4 md:gap-8">
@@ -169,58 +201,76 @@ const CustomNavbar = ({ categories }) => {
       </div>
 
       {/* Mini Category Bar (Desktop) */}
-      <div className="hidden md:flex border-t border-gray-100 bg-white">
+     <div className="flex md:flex border-t border-gray-100 bg-white overflow-x-auto hide-scrollbar pt-5">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-6 text-sm font-medium text-gray-700">
           
           <button className="flex items-center gap-1 hover:text-[#2874f0] font-bold">
             <Menu className="w-4 h-4" /> All Categories
           </button>
 
-          {categories.slice(0, 8).map((cat, idx) => (
-            <span
-  key={idx}
-  onClick={() => router.push(`/shop?category=${cat.slug}`)}
-  className="cursor-pointer hover:text-[#2874f0]"
->
-  {cat.name}
-</span>
-          ))}
+          <div className="flex gap-4 overflow-x-auto whitespace-nowrap px-4 py-2 bg-white hide-scrollbar">
+  {categories.slice(0, 10).map((cat, idx) => (
+    <span
+      key={idx}
+      className="text-sm font-semibold text-gray-700 shrink-0"
+    >
+      {cat.name}
+    </span>
+  ))}
+</div>
 
         </div>
       </div>
 
       {/* Bank Offer Strip */}
-      <div className="bg-[#f0f5ff] border-b border-blue-100 hidden md:block">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-center gap-2 text-xs font-medium text-[#2874f0]">
-          <span className="animate-pulse">💳</span> {coupon ? (
-  <>
-    <span className="animate-pulse">💳</span>
-    {coupon.description}
-    <a href="#" className="font-bold underline">
-      Use - {coupon.code}
-    </a>
-  </>
-) : (
-  <span className="text-gray-400">Loading offers...</span>
-)}
-        </div>
+      {showOffer && (
+  <div className="bg-[#f0f5ff] border-b border-blue-100">
+    <div className="px-4 py-2 flex items-center justify-between gap-2 text-[11px] sm:text-xs font-medium text-[#2874f0]">
+
+      {/* LEFT CONTENT */}
+      <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap hide-scrollbar">
+        <span className="animate-pulse shrink-0">💳</span>
+
+        {coupon ? (
+          <>
+            <span className="truncate">
+              {coupon.description}
+            </span>
+            <span className="font-bold underline shrink-0">
+              {coupon.code}
+            </span>
+          </>
+        ) : (
+          <span className="text-gray-400">Loading offers...</span>
+        )}
       </div>
 
+      {/* ❌ CLOSE BUTTON */}
+      <button
+        onClick={() => {
+          setShowOffer(false);
+          localStorage.setItem("hideOffer", "true");
+        }}
+        className="text-gray-500 hover:text-black text-sm font-bold px-2"
+      >
+        ✕
+      </button>
+
+    </div>
+  </div>
+)}
+
       {/* Mobile Search */}
-      <div className="md:hidden px-4 pb-3">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="w-4 h-4 text-gray-400" />
-          </div>
-          <input 
-            type="text" 
-            placeholder="Search for products..." 
-            className="w-full pl-9 pr-4 py-2.5 bg-[#f0f5ff] border border-transparent focus:border-[#2874f0] rounded-lg outline-none text-sm font-medium"
-          />
-        </div>
-      </div>
+      
     </motion.header>
   );
+
+  useEffect(() => {
+  const hidden = localStorage.getItem("hideOffer");
+  if (hidden === "true") {
+    setShowOffer(false);
+  }
+}, []);
 };
 
 const HeroSlider = () => {
@@ -334,27 +384,55 @@ const HeroSlider = () => {
   );
 };
 
-const CategoryGrid = ({ categories }) => {
+
+const CategoryGrid = ({ categories = [] }) => {
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10 -mt-8 sm:-mt-12">
       <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-100 backdrop-blur-lg bg-white/90">
-        <div className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 pb-2 sm:pb-0 snap-x snap-mandatory">
-          {categories.map((cat, idx) => (
-            <motion.div 
-              key={idx}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="flex flex-col items-center gap-3 min-w-[100px] sm:min-w-[120px] cursor-pointer group snap-start shrink-0"
-            >
-              <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl ${cat.color} overflow-hidden relative shadow-sm group-hover:shadow-md transition-all duration-300 border border-gray-100`}>
-                <img src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
-              </div>
-              <span className="text-xs sm:text-sm font-bold text-gray-800 text-center group-hover:text-[#2874f0] transition-colors leading-tight">
-                {cat.name}
-              </span>
-            </motion.div>
-          ))}
-        </div>
+        
+        {/* Empty State */}
+        {categories.length === 0 ? (
+          <div className="text-center text-gray-400 py-10 font-medium">
+            Loading categories...
+          </div>
+        ) : (
+          <div className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 pb-2 sm:pb-0 snap-x snap-mandatory">
+            
+            {categories.map((cat, idx) => (
+              <motion.div
+                key={cat._id || idx}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="flex flex-col items-center gap-3 min-w-[100px] sm:min-w-[120px] cursor-pointer group snap-start shrink-0"
+              >
+                {/* Image Box */}
+                <div
+                  className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl ${
+                    cat.color || "bg-gray-100"
+                  } overflow-hidden relative shadow-sm group-hover:shadow-md transition-all duration-300 border border-gray-100`}
+                >
+                  <img
+                    src={
+                      cat.image ||
+                      "https://via.placeholder.com/150?text=Category"
+                    }
+                    alt={cat.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
+                </div>
+
+                {/* Name */}
+                <span className="text-xs sm:text-sm font-bold text-gray-800 text-center group-hover:text-[#2874f0] transition-colors leading-tight">
+                  {cat.name}
+                </span>
+              </motion.div>
+            ))}
+
+          </div>
+        )}
       </div>
     </div>
   );
@@ -452,6 +530,9 @@ const CountdownTimer = () => {
 <Deals/>
 
 const MidBanner = ({ banner }) => {
+
+  const router = useRouter();
+  
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -474,18 +555,24 @@ const MidBanner = ({ banner }) => {
           src={banner.image} 
           alt={banner.title} 
           loading="lazy"
+          
           className="absolute inset-0 w-full h-[130%] object-cover group-hover:scale-105 transition-transform duration-700" 
         />
         <div className={`absolute inset-0 bg-gradient-to-r ${banner.color} to-transparent flex items-center`}>
           <div className="px-6 sm:px-12 lg:px-20 text-white max-w-2xl">
             <h3 className="text-3xl sm:text-5xl lg:text-6xl font-black mb-3 sm:mb-4 drop-shadow-lg leading-tight">{banner.title}</h3>
             <p className="text-base sm:text-xl lg:text-2xl font-medium mb-6 sm:mb-8 text-white/90 drop-shadow">{banner.subtitle}</p>
-            <a href="shop?page=1&category=food-grocery&maxPrice=10000">
-            <button className="bg-white text-gray-900 px-6 py-2.5 sm:px-8 sm:py-3.5 rounded-lg font-bold hover:bg-[#ff9900] hover:text-white transition-colors shadow-lg text-sm sm:text-base flex items-center gap-2">
+            
+            <button 
+            onClick={() => {
+                    if (banner.cat) {
+                        router.push(`/shop?page=1&category=${banner.cat}`)
+                    }
+                    }} className="bg-white text-gray-900 px-6 py-2.5 sm:px-8 sm:py-3.5 rounded-lg font-bold hover:bg-[#ff9900] hover:text-white transition-colors shadow-lg text-sm sm:text-base flex items-center gap-2">
               Explore Now <ChevronRight className="w-4 h-4" />
             </button>
 
-            </a>
+            
           </div>
         </div>
       </div>
@@ -494,6 +581,9 @@ const MidBanner = ({ banner }) => {
 };
 
 const SplitBanners = () => {
+
+  const router = useRouter();
+  
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -504,6 +594,11 @@ const SplitBanners = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: idx * 0.1 }}
+            onClick={() => {
+                    if (banner.cat) {
+                        router.push(`/shop?page=1&category=${banner.cat}`)
+                    }
+                    }}
             className="relative h-[200px] sm:h-[250px] rounded-2xl overflow-hidden group cursor-pointer shadow-sm hover:shadow-lg transition-shadow"
           >
             <img 
@@ -654,13 +749,13 @@ export default function Hero2() {
       <CustomNavbar categories={categories}/>
       <div className="pt-[110px] md:pt-[170px]">
         <HeroSlider />
-        <CategoryGrid categories={categories}  />
+        <CategoryGrid categories={cats}  />
         <Dealstrip deals={deals} />
         <GridBanners />
         <SplitBanners />
         
         <MidBanner banner={midBanners[0]} />
-        <MultiCarousel title="Trending Electronics" products={deals} icon={Zap} />
+        <MultiCarousel title="Upcoming Electronics..Stay Tuned" products={deals} icon={Zap} />
         <MidBanner banner={midBanners[1]} />
         
       </div>

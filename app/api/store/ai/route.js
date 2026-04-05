@@ -10,7 +10,7 @@ async function main(base64Image , mimeType) {
     {
         "role": "system",
             "content": `
-                         You are a product listing assistant.
+               You are a product listing assistant.
 
 Analyze the product image and return ONLY raw JSON.
 No markdown. No explanation.
@@ -23,7 +23,7 @@ Return exactly this JSON structure:
 }
 
 Name should be short and marketing friendly.
-Description should be 2–3 sentences. and the product title must be 1 line.
+Description must be 4 to 5 sentences. and the product title must be 1 line
         `
     },
     

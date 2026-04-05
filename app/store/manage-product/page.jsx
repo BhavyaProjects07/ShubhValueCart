@@ -16,22 +16,28 @@ export default function StoreManageProducts() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState([])
+  const [page, setPage] = useState(1)
+const [totalPages, setTotalPages] = useState(1)
+  
+  
+  const fetchProducts = async (pageNum = 1) => {
+  try {
+    const token = await getToken()
 
-  const fetchProducts = async () => {
-    try {
-      const token = await getToken()
-      const {data} = await axios.get("/api/store/product", {   
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      setProducts(data.products.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)))
-      
-    } catch (error) {
-       toast.error(error?.response?.data?.error || error.message)
-    }
-    setLoading(false)
+    const { data } = await axios.get(`/api/store/product?page=${pageNum}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    setProducts(data.products)
+    setTotalPages(data.pagination.totalPages)
+
+  } catch (error) {
+    toast.error(error?.response?.data?.error || error.message)
   }
+  setLoading(false)
+}
 
   const toggleStock = async (productId) => {
     try {
@@ -117,6 +123,30 @@ export default function StoreManageProducts() {
           ))}
         </tbody>
       </table>
+
+      <div className="flex justify-center items-center gap-2 mt-6">
+
+  <button
+    disabled={page === 1}
+    onClick={() => setPage(prev => prev - 1)}
+    className="px-3 py-1 border rounded disabled:opacity-50"
+  >
+    Prev
+  </button>
+
+  <span className="text-sm">
+    Page {page} of {totalPages}
+  </span>
+
+  <button
+    disabled={page === totalPages}
+    onClick={() => setPage(prev => prev + 1)}
+    className="px-3 py-1 border rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+
+</div>
     </>
   )
 }

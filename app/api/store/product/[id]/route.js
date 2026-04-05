@@ -8,38 +8,28 @@ import { NextResponse } from "next/server"
 
 export async function GET(req, context) {
   try {
-
-    
-
-
-
-    const { params } = context
-    const { id } = await params // ✅ FIX HERE
+    const { id } = await context.params; // ✅ FIX
 
     const stores = await prisma.store.findMany();
-const storeId = stores[0]?.id;
-
-
+    const storeId = stores[0]?.id;
 
     if (!storeId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const product = await prisma.product.findFirst({
-      where: {
-        id,
-        storeId,
-      },
-    })
+      where: { id, storeId },
+    });
 
     if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ product })
+    return NextResponse.json({ product });
+
   } catch (error) {
-    console.error(error)
-    return NextResponse.json({ error: error.message }, { status: 400 })
+    console.error(error);
+    return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
 
@@ -50,71 +40,68 @@ const storeId = stores[0]?.id;
 
 export async function PUT(req, context) {
   try {
-    // ✅ FIX 1: unwrap params correctly
-    const { id } = context.params
+    const { id } = await context.params; // 🔥 FIX HERE
 
-   const stores = await prisma.store.findMany();
-   const storeId = stores[0]?.id;
+    const stores = await prisma.store.findMany();
+    const storeId = stores[0]?.id;
 
     if (!storeId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const formData = await req.formData()
+    const formData = await req.formData();
 
-    const hasSizes = formData.get("hasSizes") === "true"
-    const sizesRaw = formData.get("sizes")
+    const hasSizes = formData.get("hasSizes") === "true";
+    const sizesRaw = formData.get("sizes");
 
-    let sizes = null
+    let sizes = null;
     if (hasSizes && sizesRaw) {
-      sizes = JSON.parse(sizesRaw)
+      sizes = JSON.parse(sizesRaw);
     }
 
-    const name = formData.get("name")
-    const description = formData.get("description")
-    const price = Number(formData.get("price"))
-    const mrp = Number(formData.get("mrp"))
-    const category = formData.get("category")
-    const images = formData.getAll("images")
+    const name = formData.get("name");
+    const description = formData.get("description");
+    const price = Number(formData.get("price"));
+    const mrp = Number(formData.get("mrp"));
+    const category = formData.get("category");
+    const images = formData.getAll("images");
 
     if (!name || !description || !price || !mrp || !category) {
       return NextResponse.json(
         { error: "Missing product info" },
         { status: 400 }
-      )
+      );
     }
 
-    // ✅ Ownership check (IMPORTANT)
     const existingProduct = await prisma.product.findFirst({
       where: { id, storeId },
-    })
+    });
 
     if (!existingProduct) {
       return NextResponse.json(
         { error: "Product not found or unauthorized" },
         { status: 404 }
-      )
+      );
     }
 
-    // Upload images if changed
-    let imagesUrl = existingProduct.images
+    let imagesUrl = existingProduct.images;
 
     if (images.length) {
       imagesUrl = await Promise.all(
         images.map(async (image) => {
-          if (typeof image === "string") return image
-          const buffer = Buffer.from(await image.arrayBuffer())
+          if (typeof image === "string") return image;
+          const buffer = Buffer.from(await image.arrayBuffer());
           const res = await imagekit.upload({
             file: buffer,
             fileName: image.name,
             folder: "products",
-          })
-          return imagekit.url({ path: res.filePath })
+          });
+          return imagekit.url({ path: res.filePath });
         })
-      )
+      );
     }
 
-    // ✅ FIX 2: update by UNIQUE id only
+    // ✅ NOW id is defined
     await prisma.product.update({
       where: { id },
       data: {
@@ -125,16 +112,14 @@ export async function PUT(req, context) {
         category,
         images: imagesUrl,
         hasSizes,
-        sizes
+        sizes,
       },
-    })
+    });
 
-    return NextResponse.json({ message: "Product updated successfully" })
+    return NextResponse.json({ message: "Product updated successfully" });
+
   } catch (error) {
-    console.error(error)
-    return NextResponse.json(
-      { error: error.message },
-      { status: 400 }
-    )
+    console.error(error);
+    return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }

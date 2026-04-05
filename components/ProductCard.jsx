@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, ArrowUpRight } from 'lucide-react';
+import Link from "next/link"
 
 /**
  * Luxury Editorial Product Card
@@ -38,10 +39,10 @@ if (Array.isArray(product?.rating)) {
     const isDiscounted = !!productMrp;
 
     return (
-        <a 
-            href={`/product/${productId}`} 
-            className="group flex flex-col w-full max-w-[320px] mx-auto bg-gradient-to-b from-white to-[#f8f9fa] border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-8px_rgba(0,0,0,0.12)] rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1.5"
-        >
+        <Link 
+  href={`/product/${productId}`} prefetch
+  className="group flex flex-col w-full max-w-[320px] mx-auto ..."
+>
             {/* Image Container */}
             <div className="relative aspect-[4/5] overflow-hidden bg-[#f3f4f6] p-6 flex items-center justify-center">
                 <img 
@@ -103,7 +104,7 @@ if (Array.isArray(product?.rating)) {
                     </span>
                 </div>
             </div>
-        </a>
+        </Link>
     );
 };
 

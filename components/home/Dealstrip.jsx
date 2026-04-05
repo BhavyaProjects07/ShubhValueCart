@@ -15,10 +15,34 @@ export default function Dealstrip() {
   // ✅ Fetch 24 deals
   useEffect(() => {
     const fetchDeals = async () => {
-      const res = await fetch('/api/deals')
-      const data = await res.json()
+      try {
+        console.log("🚀 Fetching deals...")
 
-      setDeals(data.deals || [])
+        const res = await fetch('/api/deals')
+        const data = await res.json()
+
+        console.log("🔥 RAW API RESPONSE:", data)
+
+        const incomingDeals = data.deals || data.products || []
+
+        console.log("📦 Deals Count:", incomingDeals.length)
+
+        // 🔥 Validate deals (IMPORTANT)
+        const validDeals = incomingDeals.filter((d, i) => {
+          if (!d?.id) {
+            console.error(`❌ Missing ID at index ${i}`, d)
+            return false
+          }
+          return true
+        })
+
+        console.log("✅ Valid Deals:", validDeals)
+
+        setDeals(validDeals)
+
+      } catch (err) {
+        console.error("❌ DEAL FETCH ERROR:", err)
+      }
     }
 
     fetchDeals()
@@ -26,26 +50,30 @@ export default function Dealstrip() {
 
   // ✅ Rotate every 24 hours
   useEffect(() => {
-    if (deals.length === 0) return
+    if (deals.length === 0) {
+      console.warn("⚠️ No deals available")
+      return
+    }
 
     const getDailyDeals = () => {
       const now = new Date()
 
-      // 🔥 days since epoch
       const daysSinceEpoch = Math.floor(now.getTime() / (1000 * 60 * 60 * 24))
-
-      const dayIndex = daysSinceEpoch % 4 // 0–3
+      const dayIndex = daysSinceEpoch % 4
 
       const start = dayIndex * 6
       const end = start + 6
 
-      setVisibleDeals(deals.slice(start, end))
+      const sliced = deals.slice(start, end)
+
+      console.log("📅 Day Index:", dayIndex)
+      console.log("📊 Showing deals:", sliced)
+
+      setVisibleDeals(sliced)
     }
 
     getDailyDeals()
   }, [deals])
-
-  
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -81,11 +109,17 @@ export default function Dealstrip() {
         </button>
 
         <div ref={scrollRef} className="flex overflow-x-auto gap-4">
-          {visibleDeals?.map((deal, idx) => (
-            <div key={idx} className="shrink-0">
-              <ProductCard product={deal} isScrollable />
-            </div>
-          ))}
+          {visibleDeals?.map((deal) => {
+            
+            // 🔥 Debug each card
+            console.log("🧾 Rendering deal:", deal)
+
+            return (
+              <div key={deal.id} className="shrink-0">
+                <ProductCard product={deal} isScrollable />
+              </div>
+            )
+          })}
         </div>
 
         <button onClick={() => scroll('right')} className="absolute right-2 top-1/2 -translate-y-1/2 hidden md:flex">

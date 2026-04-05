@@ -124,19 +124,45 @@ else {
 }
 
 // ---------------- GET PRODUCTS ----------------
-export async function GET(request) {
+export async function GET(req) {
   try {
+    const { searchParams } = new URL(req.url);
+
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = 50;
+    const skip = (page - 1) * limit;
+
     const stores = await prisma.store.findMany();
     const storeId = stores[0]?.id;
 
-    const products = await prisma.product.findMany({
-      where: { storeId },
-      orderBy: { createdAt: "desc" },
+    if (!storeId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where: { storeId },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+
+      prisma.product.count({
+        where: { storeId },
+      }),
+    ]);
+
+    return NextResponse.json({
+      products,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
     });
 
-    return NextResponse.json({ products });
   } catch (error) {
-    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
