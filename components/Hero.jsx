@@ -212,6 +212,7 @@ const CustomNavbar = ({ categories }) => {
   {categories.slice(0, 10).map((cat, idx) => (
     <span
       key={idx}
+      onClick={() => router.push(`/shop?category=${cat.slug}`)}
       className="text-sm font-semibold text-gray-700 shrink-0"
     >
       {cat.name}
@@ -228,7 +229,7 @@ const CustomNavbar = ({ categories }) => {
     <div className="px-4 py-2 flex items-center justify-between gap-2 text-[11px] sm:text-xs font-medium text-[#2874f0]">
 
       {/* LEFT CONTENT */}
-      <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap hide-scrollbar">
+      <div className="flex items-center justify-center gap-2 overflow-x-auto whitespace-nowrap hide-scrollbar">
         <span className="animate-pulse shrink-0">💳</span>
 
         {coupon ? (
