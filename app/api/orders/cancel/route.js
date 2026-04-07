@@ -63,11 +63,11 @@ export async function POST(req) {
 
     await sendBrevoEmail({
       to: cancelledOrder.user.email,
-      subject: "Your FrostWayne order has been cancelled",
+      subject: "Your ShubhValueCart order has been cancelled",
       htmlContent: `
         <p>Hello ${cancelledOrder.user.name || "Customer"},</p>
     
-        <p>Your order on <strong>FrostWayne</strong> has been successfully cancelled.</p>
+        <p>Your order on <strong>ShubhValueCart</strong> has been successfully cancelled.</p>
     
         <hr/>
     
@@ -81,8 +81,8 @@ export async function POST(req) {
     
         <p>
           Regards,<br/>
-          <strong>Team FrostWayne</strong><br/>
-          <a href="https://www.frostwayne.shop">www.frostwayne.shop</a>
+          <strong>Team ShubhValueCart</strong><br/>
+          <a href="https://www.shubhavaluecart.in">www.shubhavaluecart.in</a>
         </p>
       `,
           });
@@ -107,7 +107,7 @@ export async function POST(req) {
         <p>Please ensure stock and internal records are updated.</p>
     
         <p>
-          <a href="https://www.frostwayne.shop/admin">
+          <a href="https://www.shubhavaluecart.in/admin">
             Open Admin Dashboard
           </a>
         </p>

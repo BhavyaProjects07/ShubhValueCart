@@ -1,11 +1,14 @@
 'use client'
-
+import { useDispatch } from "react-redux"
+import { addProducts } from "@/lib/features/product/productSlice"
 import { useEffect, useRef, useState } from "react"
 import { ChevronLeft, ChevronRight, Clock } from "lucide-react"
 import { motion } from "framer-motion"
 import ProductCard from "@/components/ProductCard"
 
 export default function Dealstrip() {
+
+const dispatch = useDispatch()
 
   const [deals, setDeals] = useState([])
   const [visibleDeals, setVisibleDeals] = useState([])
@@ -14,39 +17,33 @@ export default function Dealstrip() {
 
   // ✅ Fetch 24 deals
   useEffect(() => {
-    const fetchDeals = async () => {
-      try {
-        console.log("🚀 Fetching deals...")
+  const fetchDeals = async () => {
+    try {
+      const res = await fetch('/api/deals')
+      const data = await res.json()
 
-        const res = await fetch('/api/deals')
-        const data = await res.json()
+      const incomingDeals = data.deals || data.products || []
 
-        console.log("🔥 RAW API RESPONSE:", data)
+      const validDeals = incomingDeals
+        .map((d) => ({
+          ...d,
+          id: d.id || d._id,
+        }))
+        .filter((d) => d.id)
 
-        const incomingDeals = data.deals || data.products || []
+      // ✅ LOCAL STATE
+      setDeals(validDeals)
 
-        console.log("📦 Deals Count:", incomingDeals.length)
+      // 🔥 GLOBAL STATE (THIS FIXES YOUR ISSUE)
+      dispatch(addProducts(validDeals))
 
-        // 🔥 Validate deals (IMPORTANT)
-        const validDeals = incomingDeals.filter((d, i) => {
-          if (!d?.id) {
-            console.error(`❌ Missing ID at index ${i}`, d)
-            return false
-          }
-          return true
-        })
-
-        console.log("✅ Valid Deals:", validDeals)
-
-        setDeals(validDeals)
-
-      } catch (err) {
-        console.error("❌ DEAL FETCH ERROR:", err)
-      }
+    } catch (err) {
+      console.error("❌ DEAL FETCH ERROR:", err)
     }
+  }
 
-    fetchDeals()
-  }, [])
+  fetchDeals()
+}, [])
 
   // ✅ Rotate every 24 hours
   useEffect(() => {

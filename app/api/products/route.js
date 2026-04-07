@@ -84,15 +84,13 @@ const minDiscount = Number(searchParams.get("minDiscount")) || 0
   }),
 
   ...(searchKeywords.length > 0 && {
-    OR: searchKeywords.map(word => ({
-      OR: [
-        { name: { contains: word, mode: "insensitive" } },
-        { description: { contains: word, mode: "insensitive" } },
-      ],
-    })),
-  }),
+  OR: searchKeywords.map((word) => ({
+    name: { contains: word, mode: "insensitive" },
+  })),
+}),
 }
 
+    
     // ---------- PARALLEL QUERIES ----------
     const [products, total] = await Promise.all([
       prisma.product.findMany({
@@ -111,9 +109,69 @@ const minDiscount = Number(searchParams.get("minDiscount")) || 0
       }),
     ]);
 
+    // ---------- LEVEL 2: RELEVANCE SCORING ----------
+// ---------- LEVEL 2: RELEVANCE SCORING ----------
+let finalProducts = products;
+
+if (searchKeywords.length > 0) {
+  const searchText = search.toLowerCase();
+
+  finalProducts = products
+    .map((product) => {
+      let score = 0;
+
+      const name = product.name?.toLowerCase() || "";
+      const desc = product.description?.toLowerCase() || "";
+
+      let strongMatch = false; // 🔥 NEW
+
+      // 🔥 Exact match
+      if (name === searchText) {
+        score += 100;
+        strongMatch = true;
+      }
+
+      // 🔥 Full phrase match
+      if (name.includes(searchText)) {
+        score += 60;
+        strongMatch = true;
+      }
+
+      // 🔥 Word match
+      searchKeywords.forEach((word) => {
+        if (name.includes(word)) {
+          score += 15;
+
+          // 🔥 VERY IMPORTANT: strong keyword logic
+          if (word.length > 3) {
+            strongMatch = true;
+          }
+        }
+
+        if (desc.includes(word)) score += 5;
+      });
+
+      // 🔥 Category boost
+      if (
+        product.category &&
+        searchKeywords.some((word) =>
+          product.category.toLowerCase().includes(word)
+        )
+      ) {
+        score += 10;
+      }
+
+      return { ...product, score, strongMatch };
+    })
+    // 🔥 FINAL FILTER (THIS FIXES YOUR ISSUE)
+    .filter((p) => p.score > 0 && p.strongMatch)
+    .sort((a, b) => b.score - a.score);
+
+}
+    
     // ---------- RESPONSE ----------
     return NextResponse.json({
-      products,
+      products: finalProducts,
       pagination: {
         total,
         page,

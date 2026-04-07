@@ -21,20 +21,33 @@ export default function Cart() {
     const [totalPrice, setTotalPrice] = useState(0);
 
     const createCartArray = () => {
-        setTotalPrice(0);
-        const cartArray = [];
-        for (const [key, value] of Object.entries(cartItems)) {
-            const product = products.find(product => product.id === key);
-            if (product) {
-                cartArray.push({
-                    ...product,
-                    quantity: value,
-                });
-                setTotalPrice(prev => prev + product.price * value);
-            }
+    let total = 0;
+    const arr = [];
+
+    for (const [key, value] of Object.entries(cartItems)) {
+        const product = products.find(
+  p =>
+    String(p.id) === String(key) ||
+    String(p._id) === String(key)
+);
+
+        if (product) {
+            arr.push({
+                ...product,
+                quantity: value,
+            });
+
+            total += product.price * value;
+        } else {
+            console.log("❌ Product not found for:", key);
         }
-        setCartArray(cartArray);
+        
     }
+        
+
+    setCartArray(arr);
+    setTotalPrice(total);
+};
 
     const handleDeleteItemFromCart = (productId) => {
         dispatch(deleteItemFromCart({ productId }))

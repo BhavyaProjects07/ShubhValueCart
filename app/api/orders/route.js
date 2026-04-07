@@ -237,11 +237,11 @@ export async function POST(request) {
 
     await sendBrevoEmail({
       to: user.email,
-      subject: "Your FrostWayne order has been placed successfully",
+      subject: "Your ShubhValueCart order has been placed successfully",
       htmlContent: `
         <p>Hello ${user.name || "Customer"},</p>
 
-        <p>Thank you for shopping with <strong>FrostWayne</strong>.</p>
+        <p>Thank you for shopping with <strong>ShubhValueCart</strong>.</p>
 
         <p>
           We’re happy to confirm that your order has been placed successfully.
@@ -289,21 +289,21 @@ export async function POST(request) {
 
         <p>
           If you have any questions, feel free to contact us at
-          <a href="mailto:support@frostwayne.shop">
-            support@frostwayne.shop
+          <a href="mailto:shubhvaluecart@gmail.com">
+            shubhvaluecart@gmail.com
           </a>.
         </p>
 
         <p>
-          Thank you for choosing <strong>FrostWayne</strong>.<br/>
+          Thank you for choosing <strong>ShubhValueCart</strong>.<br/>
           We appreciate your trust in our brand.
         </p>
 
         <p>
           Warm regards,<br/>
-          <strong>Team FrostWayne</strong><br/>
-          <a href="https://www.frostwayne.shop">
-            https://www.frostwayne.shop
+          <strong>Team ShubhValueCart</strong><br/>
+          <a href="https://www.shubhavaluecart.in">
+            https://www.shubhavaluecart.in
           </a>
         </p>
       `,
@@ -318,7 +318,7 @@ export async function POST(request) {
         <p>Hello Admin,</p>
 
         <p>
-          A new order has been placed on <strong>FrostWayne</strong>.
+          A new order has been placed on <strong>ShubhValueCart</strong>.
           Please find the details below.
         </p>
 
@@ -361,15 +361,15 @@ export async function POST(request) {
 
         <p>
           Admin Dashboard:<br/>
-          <a href="https://www.frostwayne.shop/admin">
-            https://www.frostwayne.shop/admin
+          <a href="https://www.shubhavaluecart.in/admin">
+            https://www.shubhavaluecart.in/admin
           </a>
         </p>
 
         <p>
           —<br/>
           <strong>System Notification</strong><br/>
-          FrostWayne Order Management
+          ShubhValueCart Order Management
         </p>
       `,
     });

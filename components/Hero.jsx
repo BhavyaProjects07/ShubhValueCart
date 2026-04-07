@@ -252,6 +252,7 @@ const CustomNavbar = ({ categories }) => {
 
 
 const CategoryGrid = React.memo(({ categories = [] }) => {
+  const router = useRouter(); // This line was already present in the user's last edit.
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10 -mt-8 sm:-mt-12">
       <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-100 backdrop-blur-lg bg-white/90">
@@ -267,6 +268,7 @@ const CategoryGrid = React.memo(({ categories = [] }) => {
             {categories.map((cat, idx) => (
               <div
                 key={cat._id || idx}
+                onClick={() => router.push(`/shop?category=${cat.slug}`)} 
                 className="flex flex-col items-center gap-3 min-w-[100px] sm:min-w-[120px] cursor-pointer group shrink-0 will-change-transform transition-transform duration-200 hover:scale-105 hover:-translate-y-1"
               >
                 {/* Image Box */}
