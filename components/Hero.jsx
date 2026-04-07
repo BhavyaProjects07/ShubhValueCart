@@ -11,39 +11,11 @@ import Recommended from "@/components/Recommended"
 import Dealstrip from "@/components/home/Dealstrip"
 import { useRouter } from "next/navigation";
 import GridBanners from './GridBanners';
-
+import HeroSlider from './heroBanner';
 // --- DATA ---
 
 
-const heroBanners = [
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop',
-    badge: 'Mega Sale',
-    title: 'Shubh Value Cart',
-    subtitle: 'Up to 10% OFF on Groceries and SkinCare',
-    color: 'from-blue-900/95 via-blue-900/80 to-transparent',
-    accent: 'bg-blue-500'
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop',
-    badge: 'Trending Now',
-    title: 'Fashion Carnival',
-    subtitle: 'Min 50% OFF on Premium Brands',
-    color: 'from-orange-900/95 via-orange-900/80 to-transparent',
-    accent: 'bg-orange-500'
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=2070&auto=format&fit=crop',
-    badge: 'New Arrivals',
-    title: 'Home Essentials',
-    subtitle: 'Upgrade Your Living Space Today',
-    color: 'from-purple-900/95 via-purple-900/80 to-transparent',
-    accent: 'bg-purple-500'
-  }
-];
+
 
 export const cats = [
   {
@@ -265,128 +237,21 @@ const CustomNavbar = ({ categories }) => {
       
     </motion.header>
   );
-
   useEffect(() => {
   const hidden = localStorage.getItem("hideOffer");
   if (hidden === "true") {
     setShowOffer(false);
   }
-}, []);
-};
-
-const HeroSlider = () => {
-  const [current, setCurrent] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  useEffect(() => {
-    if (isHovered) return;
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % heroBanners.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [isHovered]);
-
-  return (
-    <div 
-      className="relative w-full h-[350px] sm:h-[500px] lg:h-[600px] overflow-hidden bg-gray-900 group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <AnimatePresence initial={false} mode="wait">
-        <motion.div
-          key={current}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="absolute inset-0"
-        >
-          <motion.img 
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 6, ease: "easeOut" }}
-            src={heroBanners[current].image} 
-            alt="Banner" 
-            className="w-full h-full object-cover" 
-          />
-          <div className={`absolute inset-0 bg-gradient-to-r ${heroBanners[current].color} flex items-center`}>
-            <div className="max-w-[1600px] w-full mx-auto px-6 lg:px-12 relative z-10">
-              <motion.div 
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-                className="max-w-2xl text-white"
-              >
-                <motion.span 
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className={`inline-block ${heroBanners[current].accent} text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider`}
-                >
-                  {heroBanners[current].badge}
-                </motion.span>
-                <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black mb-4 leading-tight drop-shadow-2xl">
-                  {heroBanners[current].title}
-                </h2>
-                <p className="text-lg sm:text-2xl font-medium mb-8 drop-shadow-lg text-white/90">
-                  {heroBanners[current].subtitle}
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <motion.button 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="bg-[#ff9900] hover:bg-[#e68a00] text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-xl transition-colors flex items-center gap-2"
-                    href="/shop"
-                  >
-                    Shop Now <ChevronRight className="w-5 h-5" />
-                  </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.2)" }}
-                    whileTap={{ scale: 0.95 }}
-                    className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-xl transition-colors"
-                    href="/shop"
-                  >
-                    View Offers
-                  </motion.button>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Floating Particles (Decorative) */}
-      
-
-      {/* Controls */}
-      <div className="absolute bottom-6 sm:bottom-10 left-0 right-0 flex justify-center gap-3 z-20">
-        {heroBanners.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrent(idx)}
-            className={`h-2 rounded-full transition-all duration-300 ${current === idx ? 'w-10 bg-[#ff9900]' : 'w-3 bg-white/50 hover:bg-white/80'}`}
-          />
-        ))}
-      </div>
-
-      <button 
-        onClick={() => setCurrent((prev) => (prev - 1 + heroBanners.length) % heroBanners.length)}
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all z-20 shadow-lg"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-      <button 
-        onClick={() => setCurrent((prev) => (prev + 1) % heroBanners.length)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all z-20 shadow-lg"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
-    </div>
-  );
-};
+  }, []);
+  };
 
 
-const CategoryGrid = ({ categories = [] }) => {
+<HeroSlider/>
+
+
+
+
+const CategoryGrid = React.memo(({ categories = [] }) => {
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10 -mt-8 sm:-mt-12">
       <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-100 backdrop-blur-lg bg-white/90">
@@ -397,19 +262,18 @@ const CategoryGrid = ({ categories = [] }) => {
             Loading categories...
           </div>
         ) : (
-          <div className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 pb-2 sm:pb-0 snap-x snap-mandatory">
+          <div className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 pb-2 sm:pb-0">
             
             {categories.map((cat, idx) => (
-              <motion.div
+              <div
                 key={cat._id || idx}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center gap-3 min-w-[100px] sm:min-w-[120px] cursor-pointer group snap-start shrink-0"
+                className="flex flex-col items-center gap-3 min-w-[100px] sm:min-w-[120px] cursor-pointer group shrink-0 will-change-transform transition-transform duration-200 hover:scale-105 hover:-translate-y-1"
               >
                 {/* Image Box */}
                 <div
                   className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl ${
                     cat.color || "bg-gray-100"
-                  } overflow-hidden relative shadow-sm group-hover:shadow-md transition-all duration-300 border border-gray-100`}
+                  } overflow-hidden relative shadow-sm border border-gray-100 transition-shadow duration-200 group-hover:shadow-md`}
                 >
                   <img
                     src={
@@ -418,18 +282,19 @@ const CategoryGrid = ({ categories = [] }) => {
                     }
                     alt={cat.name}
                     loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    decoding="async"
+                    className="w-full h-full object-cover will-change-transform transition-transform duration-300 group-hover:scale-105"
                   />
 
                   {/* Overlay */}
-                  <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-200" />
                 </div>
 
                 {/* Name */}
                 <span className="text-xs sm:text-sm font-bold text-gray-800 text-center group-hover:text-[#2874f0] transition-colors leading-tight">
                   {cat.name}
                 </span>
-              </motion.div>
+              </div>
             ))}
 
           </div>
@@ -437,7 +302,9 @@ const CategoryGrid = ({ categories = [] }) => {
       </div>
     </div>
   );
-};
+});
+
+
 
 const ProductCard = ({ product, isScrollable = false }) => {
   const [isHovered, setIsHovered] = useState(false);
