@@ -50,7 +50,7 @@ const ProductDescription = ({ product }) => {
             <div className="flex gap-3 mt-14">
                 
                 <div>
-                    <p className="font-medium text-slate-600">Product by {product.store.name}</p>
+                    <p className="font-medium text-slate-600">Product by ShubhValueCart</p>
                     <Link href={`/shop/${product.store.username}`} className="flex items-center gap-1.5 text-[#c4a484]"> view store <ArrowRight size={14} /></Link>
                 </div>
             </div>
