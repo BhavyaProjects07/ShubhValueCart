@@ -51,7 +51,7 @@ const ProductDescription = ({ product }) => {
                 
                 <div>
                     <p className="font-medium text-slate-600">Product by ShubhValueCart</p>
-                    <Link href={`/shop/${product.store.username}`} className="flex items-center gap-1.5 text-[#c4a484]"> view store <ArrowRight size={14} /></Link>
+                    <Link href={`/shop/shubh_value_cart`} className="flex items-center gap-1.5 text-[#c4a484]"> view store <ArrowRight size={14} /></Link>
                 </div>
             </div>
         </div>
