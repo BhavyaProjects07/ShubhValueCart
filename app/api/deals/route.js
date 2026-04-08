@@ -15,23 +15,27 @@ export async function GET() {
       },
     });
 
-    const withDiscount = products.map(p => {
-      const discount = Math.round(
-  ((p.mrp - p.price) / p.mrp) * 100
-)
+   const withDiscount = products.map(p => {
+  const discount = Math.round(
+    ((p.mrp - p.price) / p.mrp) * 100
+  );
 
-      return {
-  id: p.id,
-  name: p.name,
-  price: p.price,
-  mrp: p.mrp,
-  images: p.images,
-  category: p.category,
-  storeId: p.storeId,
-  createdAt: p.createdAt,
-  discount,
-}
-    });
+  return {
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    mrp: p.mrp,
+    images: p.images,
+    category: p.category,
+    storeId: p.storeId,
+    createdAt: p.createdAt,
+
+    // 🔥 CRITICAL FIX
+    rating: p.rating || [],
+
+    discount,
+  };
+});
 
     // ✅ STRICT FILTER (CRITICAL FIX)
     const deals = withDiscount
