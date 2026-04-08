@@ -280,7 +280,7 @@ useEffect(() => {
                                 {/* Auth */}
                                 {
                                 user ? (
-                                    <div className="ml-1">
+                                    
                                         <UserButton appearance={{ elements: { avatarBox: "w-9 h-9 shadow-sm" } }}>
                                             <UserButton.MenuItems>
                                                 <UserButton.Action
@@ -314,7 +314,7 @@ useEffect(() => {
                                                 )}
                                             </UserButton.MenuItems>
                                         </UserButton>
-                                    </div>
+                                    
                                 ) : (
                                     <button
                                         onClick={openSignIn}
