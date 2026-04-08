@@ -20,45 +20,56 @@ import HeroSlider from './heroBanner';
 export const cats = [
   {
     name: "Food & Grocery",
+    slug: "food-grocery",
     image: "https://images.unsplash.com/photo-1542838132-92c53300491e"
   },
   {
     name: "Staples & Cooking",
+    slug: "staples-cooking",
     image: "https://images.unsplash.com/photo-1606787366850-de6330128bfc"
   },
   {
     name: "Personal Care",
+    slug: "personal-care",
     image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571"
   },
   {
     name: "Home & Cleaning",
+    slug: "home-cleaning",
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952"
   },
   {
     name: "Baby Care",
+    slug: "baby-care",
     image: "https://images.unsplash.com/photo-1604917877934-07d8d248d396"
   },
   {
     name: "Toys & Kids",
+    slug: "toys-kids",
     image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b"
   },
   {
     name: "Household Essentials",
+    slug: "household",
     image: "https://images.unsplash.com/photo-1586201375761-83865001e31c"
   },
   {
     name: "Stationery",
+    slug: "stationery",
     image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4"
   },
   {
     name: "Electronics",
+    slug: "electronics",
     image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8"
   },
   {
     name: "Fashion",
+    slug: "fashion",
     image: "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53"
   }
 ];
+
 
 const deals = [
   { id: 1, name: 'Apple iPhone 15 (128GB)', price: '₹65,999', original: '₹79,900', discount: '17% OFF', rating: 4.8, reviews: '12k', image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400' },
@@ -141,98 +152,156 @@ const CustomNavbar = ({ categories }) => {
 
       {/* Main Nav */}
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-        {/* Logo */}
-        <div className="flex items-center gap-2 md:gap-4">
-          <button className="md:hidden p-1"><Menu className="w-6 h-6 text-gray-700" /></button>
-          <a href="#" className="flex flex-col">
-            <span className="text-xl md:text-2xl font-black text-[#2874f0] tracking-tight leading-none">Shubh Value</span>
-            <span className="text-[10px] md:text-xs font-bold text-[#ff9900] leading-none tracking-widest mt-1">CART</span>
-          </a>
-        </div>
 
-        
+  {/* Logo */}
+  <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/")}>
+    <div className="bg-[#2874f0] text-white px-2 py-1 rounded-md font-black text-lg">
+      SV
+    </div>
+    <div className="flex flex-col leading-none">
+      <span className="text-lg md:text-xl font-black text-[#2874f0]">Shubh Value</span>
+      <span className="text-[10px] font-bold text-[#ff9900] tracking-widest">CART</span>
+    </div>
+  </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-4 md:gap-8">
-          <motion.button whileHover={{ scale: 1.05 }} className="hidden md:flex items-center gap-2 hover:text-[#2874f0] transition-colors font-bold text-gray-700">
-            <User className="w-5 h-5" />
-            <span>Login</span>
-            <ChevronDown className="w-4 h-4" />
-          </motion.button>
-          
-          <motion.button whileHover={{ scale: 1.05 }} className="flex items-center gap-2 hover:text-[#2874f0] transition-colors font-bold text-gray-700 relative">
-            <div className="relative">
-              <ShoppingCart className="w-6 h-6" />
-              <span className="absolute -top-2 -right-2 bg-[#ff9900] text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">
-                3
-              </span>
-            </div>
-            <span className="hidden md:block">Cart</span>
-          </motion.button>
-        </div>
+  {/* 🔥 SEARCH BAR (NEW - VERY IMPORTANT) */}
+  <div className="hidden md:flex flex-1 max-w-xl mx-6">
+    <input
+      type="text"
+      placeholder="Search for products, brands..."
+      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#2874f0] text-sm"
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          router.push(`/shop?search=${e.target.value}`)
+        }
+      }}
+    />
+  </div>
+
+  {/* Actions */}
+  <div className="flex items-center gap-4 md:gap-6">
+
+    {/* Login */}
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700"
+    >
+      <User className="w-5 h-5" />
+      Login
+    </motion.button>
+
+    {/* Cart */}
+    <motion.button
+      whileHover={{ scale: 1.08 }}
+      onClick={() => router.push("/cart")}
+      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700 relative"
+    >
+      <div className="relative">
+        <ShoppingCart className="w-6 h-6" />
+        <span className="absolute -top-2 -right-2 bg-[#ff9900] text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">
+          3
+        </span>
+      </div>
+      <span className="hidden md:block">Cart</span>
+    </motion.button>
+
+  </div>
       </div>
 
       {/* Mini Category Bar (Desktop) */}
-     <div className="flex md:flex border-t border-gray-100 bg-white overflow-x-auto hide-scrollbar pt-5">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-6 text-sm font-medium text-gray-700">
-          
-          <button className="flex items-center gap-1 hover:text-[#2874f0] font-bold">
-            <Menu className="w-4 h-4" /> All Categories
-          </button>
+     <div className="border-t border-gray-100 bg-white">
+  <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-3 overflow-x-auto hide-scrollbar">
 
-          <div className="flex gap-4 overflow-x-auto whitespace-nowrap px-4 py-2 bg-white hide-scrollbar">
-  {categories.slice(0, 10).map((cat, idx) => (
-    <span
-      key={idx}
-      onClick={() => router.push(`/shop?category=${cat.slug}`)}
-      className="text-sm font-semibold text-gray-700 shrink-0"
-    >
-      {cat.name}
-    </span>
-  ))}
-</div>
+    {/* All Categories */}
+    <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-sm font-semibold shrink-0">
+      <Menu className="w-4 h-4" /> All
+    </button>
 
-        </div>
+    {/* Categories */}
+    {categories.slice(0, 10).map((cat, idx) => (
+      <button
+        key={idx}
+        onClick={() => router.push(`/shop?category=${cat.slug}`)}
+        className="px-3 py-1.5 rounded-full text-sm font-semibold text-gray-700 bg-gray-50 hover:bg-[#2874f0] hover:text-white transition-all shrink-0"
+      >
+        {cat.name}
+      </button>
+    ))}
+
+  </div>
       </div>
 
       {/* Bank Offer Strip */}
       {showOffer && (
-  <div className="bg-[#f0f5ff] border-b border-blue-100">
-    <div className="px-4 py-2 flex items-center justify-between gap-2 text-[11px] sm:text-xs font-medium text-[#2874f0]">
+  <div className="bg-gradient-to-r from-[#2874f0] via-[#3b82f6] to-[#60a5fa] text-white border-b border-blue-300 shadow-sm">
+    
+    <div className="px-4 py-2 flex items-center justify-between gap-3">
 
       {/* LEFT CONTENT */}
-      <div className="flex items-center justify-center gap-2 overflow-x-auto whitespace-nowrap hide-scrollbar">
-        <span className="animate-pulse shrink-0">💳</span>
+      <div className="flex items-center gap-3 overflow-x-auto whitespace-nowrap hide-scrollbar">
+
+        {/* ICON */}
+        <div className="animate-pulse text-lg">💳</div>
 
         {coupon ? (
-          <>
-            <span className="truncate">
+          <div className="flex items-center gap-2">
+
+            {/* DESCRIPTION */}
+            <span className="text-[11px] sm:text-xs font-medium opacity-90">
               {coupon.description}
             </span>
-            <span className="font-bold underline shrink-0">
+
+            {/* COUPON BADGE */}
+            <span className="bg-white text-[#2874f0] font-bold px-2.5 py-1 rounded-md text-[11px] sm:text-xs shadow-sm tracking-wide">
               {coupon.code}
             </span>
-          </>
+
+            {/* COPY BUTTON */}
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(coupon.code);
+              }}
+              className="text-[10px] sm:text-xs font-semibold bg-white/20 hover:bg-white/30 px-2 py-1 rounded transition-all"
+            >
+              Copy
+            </button>
+
+          </div>
         ) : (
-          <span className="text-gray-400">Loading offers...</span>
+          <span className="text-white/70 text-xs">Loading offers...</span>
         )}
+
       </div>
 
-      {/* ❌ CLOSE BUTTON */}
-      <button
-        onClick={() => {
-          setShowOffer(false);
-          localStorage.setItem("hideOffer", "true");
-        }}
-        className="text-gray-500 hover:text-black text-sm font-bold px-2"
-      >
-        ✕
-      </button>
+      {/* RIGHT ACTIONS */}
+      <div className="flex items-center gap-2">
+
+        {/* CTA */}
+        {coupon && (
+          <button
+            onClick={() => navigator.clipboard.writeText(coupon.code)}
+            className="hidden sm:block bg-white text-[#2874f0] text-xs font-bold px-3 py-1.5 rounded-md hover:scale-105 active:scale-95 transition-all shadow"
+          >
+            Apply Now
+          </button>
+        )}
+
+        {/* CLOSE BUTTON */}
+        <button
+          onClick={() => {
+            setShowOffer(false);
+            localStorage.setItem("hideOffer", "true");
+          }}
+          className="text-white/80 hover:text-white text-sm font-bold px-2"
+        >
+          ✕
+        </button>
+
+      </div>
 
     </div>
   </div>
-)}
-
+      )}
       {/* Mobile Search */}
       
     </motion.header>
