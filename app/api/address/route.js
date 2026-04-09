@@ -8,21 +8,36 @@ import prisma from "@/lib/prisma";
 export async function POST(request) {
     try {
         const { userId } = getAuth(request);
+
+        // 🚨 BLOCK UNAUTHORIZED
+        if (!userId) {
+            return NextResponse.json(
+                { error: "Unauthorized. Please login." },
+                { status: 401 }
+            );
+        }
+
         const { address } = await request.json();
-        
+
         address.userId = userId;
 
         const newAddress = await prisma.address.create({
             data: address
-        })
+        });
 
-        return NextResponse.json({newAddress, message: "Address added successfully" });
+        return NextResponse.json({
+            newAddress,
+            message: "Address added successfully"
+        });
+
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ error: error.message || error.code }, { status: 500 });
+        return NextResponse.json(
+            { error: error.message || error.code },
+            { status: 500 }
+        );
     }
 }
-
 
 // get all addresses of a user
 
