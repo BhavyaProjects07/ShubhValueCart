@@ -120,16 +120,10 @@ const AddressModal = ({ setShowAddressModal }) => {
 
                 {/* BUTTON */}
                 <button
-                    disabled={!isSignedIn || loading}
-                    className={`text-sm font-medium py-2.5 rounded-md transition-all
-                        ${!isSignedIn || loading
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-slate-800 text-white hover:bg-slate-900 active:scale-95"
-                        }`}
-                >
-                    {loading ? "Saving..." : "SAVE ADDRESS"}
-                </button>
-
+  className="bg-slate-800 text-white text-sm font-medium py-2.5 rounded-md hover:bg-slate-900 active:scale-95 transition-all"
+>
+  {loading ? "Saving..." : "SAVE ADDRESS"}
+</button>
             </div>
 
             {/* CLOSE BUTTON */}
