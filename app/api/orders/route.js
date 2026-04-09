@@ -235,144 +235,159 @@ export async function POST(request) {
 
     /* -------- CUSTOMER EMAIL (EXACT FORMAT) -------- */
 
-    await sendBrevoEmail({
-      to: user.email,
-      subject: "Your ShubhValueCart order has been placed successfully",
-      htmlContent: `
-        <p>Hello ${user.name || "Customer"},</p>
 
-        <p>Thank you for shopping with <strong>ShubhValueCart</strong>.</p>
+    if (user?.email && user.email.includes("@")) {
+      await sendBrevoEmail({
+        to: user.email,
+        subject: "Your ShubhValueCart order has been placed successfully",
+        htmlContent: `
+          <p>Hello ${user.name || "Customer"},</p>
+  
+          <p>Thank you for shopping with <strong>ShubhValueCart</strong>.</p>
+  
+          <p>
+            We’re happy to confirm that your order has been placed successfully.
+            Below are your order details for reference.
+          </p>
+  
+          <hr/>
+  
+          <h3>🧾 Order Summary</h3>
+          <p>
+            <strong>Order ID(s):</strong> ${orderIdString}<br/>
+            <strong>Order Date:</strong> ${orderDate}<br/>
+            <strong>Payment Method:</strong> ${paymentMethod}
+          </p>
+  
+          <hr/>
+  
+          <h3>📦 Items Ordered</h3>
+          <p>${orderItemsBlock}</p>
+  
+          <hr/>
+  
+          <h3>💰 Price Details</h3>
+          <p>
+            <strong>Subtotal:</strong> ₹${subtotal.toFixed(2)}<br/>
+            <strong>Discount:</strong> ₹${discountAmount.toFixed(2)}<br/>
+            <strong>Shipping Fee:</strong> ₹${shippingFee.toFixed(2)}<br/>
+            <strong>Total Amount Paid:</strong>
+            <strong>₹${fullAmount.toFixed(2)}</strong>
+          </p>
+  
+          <hr/>
+  
+          <h3>🚚 Delivery Address</h3>
+          <p>${deliveryAddress}</p>
+  
+          <hr/>
+  
+          <h3>⏱ What happens next?</h3>
+          <ul>
+            <li>Your order is being processed by the seller</li>
+            <li>You will receive another email once it is shipped</li>
+            <li>Delivery usually takes <strong>3–7 business days</strong></li>
+          </ul>
+  
+          <p>
+            If you have any questions, feel free to contact us at
+            <a href="mailto:shubhvaluecart@gmail.com">
+              shubhvaluecart@gmail.com
+            </a>.
+          </p>
+  
+          <p>
+            Thank you for choosing <strong>ShubhValueCart</strong>.<br/>
+            We appreciate your trust in our brand.
+          </p>
+  
+          <p>
+            Warm regards,<br/>
+            <strong>Team ShubhValueCart</strong><br/>
+            <a href="https://www.shubhavaluecart.in">
+              https://www.shubhavaluecart.in
+            </a>
+          </p>
+        `,
+      });
+      
+    }
 
-        <p>
-          We’re happy to confirm that your order has been placed successfully.
-          Below are your order details for reference.
-        </p>
-
-        <hr/>
-
-        <h3>🧾 Order Summary</h3>
-        <p>
-          <strong>Order ID(s):</strong> ${orderIdString}<br/>
-          <strong>Order Date:</strong> ${orderDate}<br/>
-          <strong>Payment Method:</strong> ${paymentMethod}
-        </p>
-
-        <hr/>
-
-        <h3>📦 Items Ordered</h3>
-        <p>${orderItemsBlock}</p>
-
-        <hr/>
-
-        <h3>💰 Price Details</h3>
-        <p>
-          <strong>Subtotal:</strong> ₹${subtotal.toFixed(2)}<br/>
-          <strong>Discount:</strong> ₹${discountAmount.toFixed(2)}<br/>
-          <strong>Shipping Fee:</strong> ₹${shippingFee.toFixed(2)}<br/>
-          <strong>Total Amount Paid:</strong>
-          <strong>₹${fullAmount.toFixed(2)}</strong>
-        </p>
-
-        <hr/>
-
-        <h3>🚚 Delivery Address</h3>
-        <p>${deliveryAddress}</p>
-
-        <hr/>
-
-        <h3>⏱ What happens next?</h3>
-        <ul>
-          <li>Your order is being processed by the seller</li>
-          <li>You will receive another email once it is shipped</li>
-          <li>Delivery usually takes <strong>3–7 business days</strong></li>
-        </ul>
-
-        <p>
-          If you have any questions, feel free to contact us at
-          <a href="mailto:shubhvaluecart@gmail.com">
-            shubhvaluecart@gmail.com
-          </a>.
-        </p>
-
-        <p>
-          Thank you for choosing <strong>ShubhValueCart</strong>.<br/>
-          We appreciate your trust in our brand.
-        </p>
-
-        <p>
-          Warm regards,<br/>
-          <strong>Team ShubhValueCart</strong><br/>
-          <a href="https://www.shubhavaluecart.in">
-            https://www.shubhavaluecart.in
-          </a>
-        </p>
-      `,
-    });
+    else {
+      console.error("Invalid user email:", user?.email);
+    }
 
     /* -------- ADMIN EMAIL (ALREADY FORMATTED) -------- */
 
-    await sendBrevoEmail({
-      to: process.env.ADMIN_EMAIL,
-      subject: `New Order Received | ${orderIdString}`,
-      htmlContent: `
-        <p>Hello Admin,</p>
 
-        <p>
-          A new order has been placed on <strong>ShubhValueCart</strong>.
-          Please find the details below.
-        </p>
-
-        <hr/>
-
-        <h3>📌 Order Information</h3>
-        <p>
-          <strong>Order ID(s):</strong> ${orderIdString}<br/>
-          <strong>Order Date:</strong> ${orderDate}<br/>
-          <strong>Payment Method:</strong> ${paymentMethod}<br/>
-          <strong>Total Amount:</strong> ₹${fullAmount.toFixed(2)}
-        </p>
-
-        <hr/>
-
-        <h3>👤 Customer Details</h3>
-        <p>
-          <strong>Name:</strong> ${user.name || "N/A"}<br/>
-          <strong>Email:</strong> ${user.email}
-        </p>
-
-        <hr/>
-
-        <h3>📦 Items Ordered</h3>
-        <p>${orderItemsBlock}</p>
-
-        <hr/>
-
-        <h3>🚚 Shipping Address</h3>
-        <p>${deliveryAddress}</p>
-
-        <hr/>
-
-        <h3>⚠ Action Required</h3>
-        <ul>
-          <li>Review the order in the admin panel</li>
-          <li>Assign shipment</li>
-          <li>Update order status when dispatched</li>
-        </ul>
-
-        <p>
-          Admin Dashboard:<br/>
-          <a href="https://www.shubhavaluecart.in/admin">
-            https://www.shubhavaluecart.in/admin
-          </a>
-        </p>
-
-        <p>
-          —<br/>
-          <strong>System Notification</strong><br/>
-          ShubhValueCart Order Management
-        </p>
-      `,
-    });
+    if (process.env.ADMIN_EMAIL) {
+      await sendBrevoEmail({
+        to: process.env.ADMIN_EMAIL,
+        subject: `New Order Received | ${orderIdString}`,
+        htmlContent: `
+          <p>Hello Admin,</p>
+  
+          <p>
+            A new order has been placed on <strong>ShubhValueCart</strong>.
+            Please find the details below.
+          </p>
+  
+          <hr/>
+  
+          <h3>📌 Order Information</h3>
+          <p>
+            <strong>Order ID(s):</strong> ${orderIdString}<br/>
+            <strong>Order Date:</strong> ${orderDate}<br/>
+            <strong>Payment Method:</strong> ${paymentMethod}<br/>
+            <strong>Total Amount:</strong> ₹${fullAmount.toFixed(2)}
+          </p>
+  
+          <hr/>
+  
+          <h3>👤 Customer Details</h3>
+          <p>
+            <strong>Name:</strong> ${user.name || "N/A"}<br/>
+            <strong>Email:</strong> ${user.email}
+          </p>
+  
+          <hr/>
+  
+          <h3>📦 Items Ordered</h3>
+          <p>${orderItemsBlock}</p>
+  
+          <hr/>
+  
+          <h3>🚚 Shipping Address</h3>
+          <p>${deliveryAddress}</p>
+  
+          <hr/>
+  
+          <h3>⚠ Action Required</h3>
+          <ul>
+            <li>Review the order in the admin panel</li>
+            <li>Assign shipment</li>
+            <li>Update order status when dispatched</li>
+          </ul>
+  
+          <p>
+            Admin Dashboard:<br/>
+            <a href="https://www.shubhavaluecart.in/admin">
+              https://www.shubhavaluecart.in/admin
+            </a>
+          </p>
+  
+          <p>
+            —<br/>
+            <strong>System Notification</strong><br/>
+            ShubhValueCart Order Management
+          </p>
+        `,
+      });
+      
+    }
+    else {
+      console.error("ADMIN_EMAIL not set in environment variables");
+    }
 
     return NextResponse.json(
       { message: "Order placed successfully", orderIds, fullAmount },
