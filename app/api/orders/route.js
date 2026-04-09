@@ -246,7 +246,7 @@ export async function POST(request) {
           <p>Thank you for shopping with <strong>ShubhValueCart</strong>.</p>
   
           <p>
-            We’re happy to confirm that your order has been placed successfully.
+            We're happy to confirm that your order has been placed successfully.
             Below are your order details for reference.
           </p>
   
