@@ -326,10 +326,10 @@ useEffect(() => {
                                     
 
                                     <button
-                                        onClick={() => router.push("/phone-login")}
+                                        onClick={() => router.push("/phone-signup")}
                                         className="px-4 py-2 border text-sm rounded-full"
                                     >
-                                        Phone
+                                        Sign Up
                                     </button>
                                     </div>
                                 )
