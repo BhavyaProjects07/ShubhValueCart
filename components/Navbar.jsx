@@ -246,7 +246,7 @@ useEffect(() => {
                             {/* Mobile Logo (LEFT) */}
                             <Link href="/" className="flex items-center font-extrabold tracking-tighter text-xl text-[#1D1D1F]">
                                 {assets?.logo ? (
-                                    <Image src={assets.logo} alt="FrostWayne" width={90} height={30} priority className="object-contain" />
+                                    <Image src={assets.logo} alt="FrostWayne" width={67} height={21} priority className="object-contain" />
                                 ) : (
                                     <span>Shubh Value Cart</span>
                                 )}
