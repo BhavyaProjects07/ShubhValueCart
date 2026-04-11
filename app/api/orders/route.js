@@ -320,7 +320,7 @@ export async function POST(request) {
     /* -------- ADMIN EMAIL (ALREADY FORMATTED) -------- */
 
 
-    if (process.env.ADMIN_EMAIL) {
+    
       await sendBrevoEmail({
         to: process.env.ADMIN_EMAIL,
         subject: `New Order Received | ${orderIdString}`,
@@ -384,10 +384,8 @@ export async function POST(request) {
         `,
       });
       
-    }
-    else {
-      console.error("ADMIN_EMAIL not set in environment variables");
-    }
+    
+    
 
     return NextResponse.json(
       { message: "Order placed successfully", orderIds, fullAmount },

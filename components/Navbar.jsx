@@ -217,7 +217,7 @@ useEffect(() => {
                                                     label="About Us"
                                                     onClick={() => router.push("/about")}
                                                         />
-                                                        <UserButton.Action
+                                                <UserButton.Action
                                                     labelIcon={<PhoneCallIcon size={16} />}
                                                     label="Contact US"
                                                     onClick={() => router.push("/contact")}
