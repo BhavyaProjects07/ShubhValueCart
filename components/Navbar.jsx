@@ -185,12 +185,18 @@ useEffect(() => {
                             !mounted ? (
                                 <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse" />
                             ) : !user ? (
-                                <button 
-                                onClick={openSignIn} 
-                                className="px-6 py-2.5 bg-[#1D1D1F] text-white text-sm font-semibold rounded-full relative transition-all duration-300 hover:bg-black hover:scale-105 shadow-md shadow-black/10"
+                                <div className="flex items-center gap-3">
+                                {/* Clerk Login */}
+                                
+
+                                {/* 🔥 NEW PHONE LOGIN */}
+                                <button
+                                    onClick={() => router.push("/phone-signup")}
+                                    className="px-5 py-2 border border-[#1D1D1F] text-[#1D1D1F] text-sm font-semibold rounded-full hover:bg-gray-100 transition"
                                 >
-                                Login
+                                    Use Phone
                                 </button>
+                                </div>
                             ) : (
                                 <div className="hover:scale-105 transition-transform">
                                 <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
@@ -316,12 +322,16 @@ useEffect(() => {
                                         </UserButton>
                                     
                                 ) : (
+                                    <div className="flex gap-2">
+                                    
+
                                     <button
-                                        onClick={openSignIn}
-                                        className="ml-1 px-5 py-2 bg-[#1D1D1F] text-sm font-semibold text-white rounded-full transition-all duration-300 hover:bg-black hover:scale-105 shadow-sm"
+                                        onClick={() => router.push("/phone-login")}
+                                        className="px-4 py-2 border text-sm rounded-full"
                                     >
-                                        Login
+                                        Phone
                                     </button>
+                                    </div>
                                 )
                                 }
                             </div>

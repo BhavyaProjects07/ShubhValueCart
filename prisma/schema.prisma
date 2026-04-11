@@ -9,19 +9,20 @@ datasource db {
 
 // Required for creating a User: id, name, email, image, cart (optional JSON string)
 model User {
-  id    String @id
+  id    String @id   // Clerk ID
   name  String
   email String
-  image String
+  image String?
   cart  Json   @default("{}")
 
-  // Relations
+  phone String? @unique
+
   ratings        Rating[]
   Address        Address[]
   store          Store?
   buyerOrders    Order[]         @relation("BuyerRelation")
   returnRequests ReturnRequest[]
-  usedCoupons UserCoupon[]
+  usedCoupons    UserCoupon[]
 }
 
 // Required for creating a Product: name, description, mrp, price, images, category, storeId
@@ -223,4 +224,14 @@ model Store {
   Product Product[]
   Order   Order[]
   user    User      @relation(fields: [userId], references: [id])
+}
+
+
+model Otp {
+  id        String   @id @default(cuid())
+  phone     String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  attempts  Int      @default(0)
 }
