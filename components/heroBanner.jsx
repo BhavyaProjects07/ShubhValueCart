@@ -38,7 +38,7 @@ const HeroSlider = () => {
   const timerRef = useRef(null);
 
   useEffect(() => {
-  if (isHovered) return // ⛔ pause on hover
+  if (isHovered) return 
 
   const interval = setInterval(() => {
     setCurrent((prev) => (prev + 1) % heroBanners.length)

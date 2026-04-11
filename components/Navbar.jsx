@@ -1,5 +1,5 @@
 'use client'
-import { Search, ShoppingCart } from "lucide-react";
+import { Search, ShoppingCart , PhoneCallIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -146,6 +146,7 @@ useEffect(() => {
                             <NavLink href="/" delay={0}>Home</NavLink>
                             <NavLink href="/shop" delay={0.1}>Shop</NavLink>
                             <NavLink href="/about" delay={0.2}>About</NavLink>
+                            <NavLink href="/contact">Contact US</NavLink>
 
                             <form 
                                 onSubmit={handleSearch} 
@@ -215,6 +216,11 @@ useEffect(() => {
                                                     labelIcon={<PackageIcon size={16} />}
                                                     label="About Us"
                                                     onClick={() => router.push("/about")}
+                                                        />
+                                                        <UserButton.Action
+                                                    labelIcon={<PhoneCallIcon size={16} />}
+                                                    label="Contact US"
+                                                    onClick={() => router.push("/contact")}
                                                 />
                                                 {isSeller && (
                                                 <UserButton.Action
