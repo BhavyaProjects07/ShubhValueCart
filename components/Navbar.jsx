@@ -194,7 +194,7 @@ useEffect(() => {
                                     onClick={() => router.push("/phone-signup")}
                                     className="px-5 py-2 border border-[#1D1D1F] text-[#1D1D1F] text-sm font-semibold rounded-full hover:bg-gray-100 transition"
                                 >
-                                    Use Phone
+                                    Sign Up
                                 </button>
                                 </div>
                             ) : (
