@@ -33,60 +33,79 @@ const OrderSummary = ({ totalPrice, items }) => {
   const [couponError, setCouponError] = useState('')
 
   /* ================= APPLY COUPON ================= */
-  const handleCouponCode = async (e) => {
-    e.preventDefault()
-    setCouponError('')
+  /* ================= APPLY COUPON ================= */
+const handleCouponCode = async (e) => {
+  e.preventDefault()
+  setCouponError('')
 
-    try {
-      if (!user) {
-        toast.error('Please login to apply coupon')
-        return
+  try {
+    if (!user) {
+      toast.error('Please login to apply coupon')
+      return
+    }
+
+    if (!couponCodeInput.trim()) {
+      toast.error('Enter a coupon code')
+      return
+    }
+
+    const token = await getToken()
+
+    const { data } = await axios.post(
+      '/api/coupons',
+      { code: couponCodeInput.trim().toUpperCase() },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
+    )
 
-      const token = await getToken()
+    const couponData = data.coupon
 
-      const { data } = await axios.post(
-        '/api/coupons',
-        { code: couponCodeInput },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-
-      // 🔒 CLIENT-SIDE MIN ORDER VALIDATION
-      if (data.coupon.minOrderValue > totalPrice) {
-        setCoupon(null)
-        const msg = `Minimum order ${currency}${data.coupon.minOrderValue} required`
-        setCouponError(msg)
-        toast.error(msg)
-        return
-      }
-
-      setCoupon(data.coupon)
-      toast.success('Coupon applied successfully')
-
-    } catch (error) {
-      const msg =
-        error.response?.data?.message || 'Invalid or expired coupon'
+    // 🔥 STRICT VALIDATION (core fix)
+    if (!couponData?.minOrderValue || totalPrice < couponData.minOrderValue) {
       setCoupon(null)
+
+      const msg = `Minimum order ${currency}${couponData.minOrderValue} required`
       setCouponError(msg)
       toast.error(msg)
+
+      return
     }
+
+    // ✅ APPLY ONLY IF VALID
+    setCoupon(couponData)
+    setCouponError('')
+    toast.success('Coupon applied successfully')
+
+  } catch (error) {
+    const msg =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      'Invalid or expired coupon'
+
+    setCoupon(null)
+    setCouponError(msg)
+    toast.error(msg)
   }
+}
 
-  /* ===== AUTO REMOVE COUPON IF CART VALUE DROPS ===== */
-  useEffect(() => {
-    if (!coupon) return
 
-    if (totalPrice < coupon.minOrderValue) {
-      setCoupon(null)
-      const msg = `Coupon removed — minimum ${currency}${coupon.minOrderValue} required`
-      setCouponError(msg)
-      toast.error('Coupon removed (cart value too low)')
-    }
-  }, [totalPrice])
+/* ===== AUTO REMOVE COUPON IF CART VALUE DROPS ===== */
+useEffect(() => {
+  if (!coupon) return
+
+  // 🔥 STRICT CHECK (prevents stale/invalid coupon UI)
+  if (!coupon.minOrderValue || totalPrice < coupon.minOrderValue) {
+    const msg = `Coupon removed — minimum ${currency}${coupon.minOrderValue} required`
+
+    setCoupon(null)
+    setCouponError(msg)
+
+    toast.error(msg)
+  }
+}, [totalPrice, coupon])
 
   useEffect(() => {
   const script = document.createElement("script");

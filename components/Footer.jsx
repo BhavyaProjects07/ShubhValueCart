@@ -47,7 +47,7 @@ const Footer = () => {
       links: [
         { text: "Home", path: "/", icon: null },
         { text: "Privacy Policy", path: "/privacy-policy", icon: null },
-        { text: "Become Plus Member", path: "/pricing", icon: null },
+        { text: "Terms & Conditions", path: "/terms", icon: null },
       ],
     },
     {
@@ -55,7 +55,7 @@ const Footer = () => {
       links: [
         { text: "+918955497322", path: "/", icon: PhoneIcon },
         { text: "shubhvaluecart@gmail.com", path: "/", icon: MailIcon },
-        { text: "0,M/S BAJRANG AGENCY,SHREERAM MANDIR KE PASS, GADARPURA ROAD,Dholpur , India", path: "/", icon: MapPinIcon },
+        { text: "Infront of Kalimai Temple, Defence Colony, Dholpur, Rajasthan 328001 , India", path: "#", icon: MapPinIcon },
       ],
     },
   ]

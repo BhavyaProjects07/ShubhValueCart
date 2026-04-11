@@ -38,118 +38,103 @@ const HeroSlider = () => {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    if (isHovered) return;
+  if (isHovered) return // ⛔ pause on hover
 
-    timerRef.current = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % heroBanners.length);
-    }, 5000);
+  const interval = setInterval(() => {
+    setCurrent((prev) => (prev + 1) % heroBanners.length)
+  }, 4000) // 4 sec (adjust if needed)
 
-    return () => clearInterval(timerRef.current);
-  }, [isHovered]);
+  return () => clearInterval(interval)
+}, [isHovered, heroBanners.length])
 
   return (
-    <div 
-      className="relative w-full h-[350px] sm:h-[500px] lg:h-[600px] overflow-hidden bg-gray-900 group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <AnimatePresence initial={false} mode="wait">
-        <motion.div
-          key={current}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }} // 🔥 reduced from 0.8
-          className="absolute inset-0"
+    <div
+  className="relative w-full h-[350px] sm:h-[500px] lg:h-[600px] overflow-hidden bg-gray-900 group"
+  onMouseEnter={() => setIsHovered(true)}
+  onMouseLeave={() => setIsHovered(false)}
+>
+  {/* IMAGE */}
+  <img
+    key={current}
+    src={heroBanners[current].image}
+    alt="Banner"
+    loading="eager"
+    decoding="async"
+    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+  />
+
+  {/* OVERLAY */}
+  <div
+    className={`absolute inset-0 bg-gradient-to-r ${heroBanners[current].color} flex items-center`}
+  >
+    <div className="max-w-[1600px] w-full mx-auto px-6 lg:px-12 relative z-10">
+      
+      {/* CONTENT */}
+      <div className="max-w-2xl text-white">
+
+        <span
+          className={`inline-block ${heroBanners[current].accent} text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider`}
         >
-          {/* Image */}
-          <motion.img 
-            initial={{ scale: 1.05 }}   // 🔥 reduced from 1.1
-            animate={{ scale: 1 }}
-            transition={{ duration: 4, ease: "easeOut" }} // 🔥 reduced duration
-            src={heroBanners[current].image} 
-            alt="Banner" 
-            loading="eager"
-            decoding="async"
-            className="w-full h-full object-cover will-change-transform"
-          />
+          {heroBanners[current].badge}
+        </span>
 
-          {/* Overlay */}
-          <div className={`absolute inset-0 bg-gradient-to-r ${heroBanners[current].color} flex items-center`}>
-            <div className="max-w-[1600px] w-full mx-auto px-6 lg:px-12 relative z-10">
-              
-              {/* Content */}
-              <motion.div 
-                initial={{ y: 30, opacity: 0 }} // 🔥 reduced movement
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.4 }}
-                className="max-w-2xl text-white"
-              >
-                <motion.span 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className={`inline-block ${heroBanners[current].accent} text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider`}
-                >
-                  {heroBanners[current].badge}
-                </motion.span>
+        <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black mb-4 leading-tight drop-shadow-2xl">
+          {heroBanners[current].title}
+        </h2>
 
-                <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black mb-4 leading-tight drop-shadow-2xl">
-                  {heroBanners[current].title}
-                </h2>
+        <p className="text-lg sm:text-2xl font-medium mb-8 drop-shadow-lg text-white/90">
+          {heroBanners[current].subtitle}
+        </p>
 
-                <p className="text-lg sm:text-2xl font-medium mb-8 drop-shadow-lg text-white/90">
-                  {heroBanners[current].subtitle}
-                </p>
+        <div className="flex flex-wrap gap-4">
+          <button className="bg-[#ff9900] hover:bg-[#e68a00] active:scale-95 transition-all duration-150 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-lg flex items-center gap-2">
+            Shop Now <ChevronRight className="w-5 h-5" />
+          </button>
 
-                <div className="flex flex-wrap gap-4">
-                  <button 
-                    className="bg-[#ff9900] hover:bg-[#e68a00] text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-xl transition-all duration-200 hover:scale-105 flex items-center gap-2 will-change-transform"
-                  >
-                    Shop Now <ChevronRight className="w-5 h-5" />
-                  </button>
+          <button className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-lg hover:bg-white/20 active:scale-95 transition-all duration-150">
+            View Offers
+          </button>
+        </div>
 
-                  <button 
-                    className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-xl transition-all duration-200 hover:scale-105 will-change-transform"
-                  >
-                    View Offers
-                  </button>
-                </div>
-              </motion.div>
-
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Indicators */}
-      <div className="absolute bottom-6 sm:bottom-10 left-0 right-0 flex justify-center gap-3 z-20">
-        {heroBanners.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrent(idx)}
-            className={`h-2 rounded-full transition-all duration-200 ${
-              current === idx ? 'w-10 bg-[#ff9900]' : 'w-3 bg-white/50 hover:bg-white/80'
-            }`}
-          />
-        ))}
       </div>
-
-      {/* Arrows */}
-      <button 
-        onClick={() => setCurrent((prev) => (prev - 1 + heroBanners.length) % heroBanners.length)}
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-200 z-20 shadow-lg"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-
-      <button 
-        onClick={() => setCurrent((prev) => (prev + 1) % heroBanners.length)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-200 z-20 shadow-lg"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
     </div>
+  </div>
+
+  {/* INDICATORS */}
+  <div className="absolute bottom-6 sm:bottom-10 left-0 right-0 flex justify-center gap-3 z-20">
+    {heroBanners.map((_, idx) => (
+      <button
+        key={idx}
+        onClick={() => setCurrent(idx)}
+        className={`h-2 rounded-full transition-all duration-200 ${
+          current === idx
+            ? 'w-10 bg-[#ff9900]'
+            : 'w-3 bg-white/50 hover:bg-white/80'
+        }`}
+      />
+    ))}
+  </div>
+
+  {/* LEFT ARROW */}
+  <button
+    onClick={() =>
+      setCurrent((prev) => (prev - 1 + heroBanners.length) % heroBanners.length)
+    }
+    className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition duration-200 z-20 shadow-md"
+  >
+    <ChevronLeft className="w-5 h-5" />
+  </button>
+
+  {/* RIGHT ARROW */}
+  <button
+    onClick={() =>
+      setCurrent((prev) => (prev + 1) % heroBanners.length)
+    }
+    className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition duration-200 z-20 shadow-md"
+  >
+    <ChevronRight className="w-5 h-5" />
+  </button>
+</div>
   );
 };
 
