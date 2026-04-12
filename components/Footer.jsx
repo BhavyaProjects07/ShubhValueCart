@@ -36,10 +36,12 @@ const Footer = () => {
     {
       title: "PRODUCTS",
       links: [
-        { text: "mens", path: "/", icon: null },
-        { text: "womens", path: "/", icon: null },
-        { text: "accessories", path: "/", icon: null },
-        { text: "footwear", path: "/", icon: null },
+        { text: "food & groceries", path: "/", icon: null },
+        { text: "Home Cleaning", path: "/", icon: null },
+        { text: "Personal Care", path: "/", icon: null },
+        { text: "Daily essentials", path: "/", icon: null },
+        { text: "Staples & Cooking", path: "/", icon: null },
+        { text: "Kids Toys", path: "/", icon: null },
       ],
     },
     {
@@ -150,8 +152,8 @@ const Footer = () => {
             © 2026 <span className="text-[#1D1D1F] font-semibold">Shubh Value Cart</span>. All Rights Reserved.
           </p>
           <div className="flex items-center gap-6 text-sm">
-            <Link href="/" className="text-gray-500 hover:text-[#1D1D1F] transition-colors font-medium">
-              Terms & Conditions
+            <Link href="https://www.linkedin.com/in/bhavya-sharma-b34179315" className="text-gray-500 hover:text-[#1D1D1F] transition-colors font-medium">
+              Developed by Bhavya Sharma DIT University
             </Link>
             <div className="w-1 h-1 rounded-full bg-gray-300"></div>
             <Link href="/privacy-policy" className="text-gray-500 hover:text-[#1D1D1F] transition-colors font-medium">

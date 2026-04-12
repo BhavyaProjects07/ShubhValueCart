@@ -217,11 +217,7 @@ useEffect(() => {
                                                     label="About Us"
                                                     onClick={() => router.push("/about")}
                                                         />
-                                                <UserButton.Action
-                                                    labelIcon={<PhoneCallIcon size={16} />}
-                                                    label="Contact US"
-                                                    onClick={() => router.push("/contact")}
-                                                />
+                                                
                                                 {isSeller && (
                                                 <UserButton.Action
                                                     labelIcon={<Store size={16} />}
@@ -309,6 +305,12 @@ useEffect(() => {
                                                     labelIcon={<PackageIcon size={16} />}
                                                     label="About Us"
                                                     onClick={() => router.push("/about")}
+                                                />
+
+                                                <UserButton.Action
+                                                    labelIcon={<PhoneCallIcon size={16} />}
+                                                    label="Contact US"
+                                                    onClick={() => router.push("/contact")}
                                                 />
                                                 {isSeller && (
                                                 <UserButton.Action
