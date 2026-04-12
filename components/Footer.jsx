@@ -50,6 +50,7 @@ const Footer = () => {
         { text: "Home", path: "/", icon: null },
         { text: "Privacy Policy", path: "/privacy-policy", icon: null },
         { text: "Terms & Conditions", path: "/terms", icon: null },
+        { text: "About Us", path: "/about", icon: null },
       ],
     },
     {
