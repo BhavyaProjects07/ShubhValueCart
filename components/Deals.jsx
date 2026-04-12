@@ -3,7 +3,7 @@ import DealsStrip from "./home/Dealstrip"
 
 export default function Deals() {
   return (
-    <div>
+    <div className="mt-9">
       <DealsStrip />
     </div>
   )

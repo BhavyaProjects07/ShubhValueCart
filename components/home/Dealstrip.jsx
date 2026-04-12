@@ -85,7 +85,7 @@ const dispatch = useDispatch()
   }
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
+    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12 mt-10">
   <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 p-4 sm:p-8 border border-gray-200 relative">
 
     {/* HEADER */}

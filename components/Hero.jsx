@@ -12,6 +12,7 @@ import Dealstrip from "@/components/home/Dealstrip"
 import { useRouter } from "next/navigation";
 import GridBanners from './GridBanners';
 import HeroSlider from './heroBanner';
+import Advertisement from './Advertisement';
 // --- DATA ---
 
 
@@ -377,6 +378,9 @@ const CategoryGrid = React.memo(({ categories = [] }) => {
 
 
 
+
+
+
 const ProductCard = ({ product, isScrollable = false }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -442,29 +446,7 @@ const ProductCard = ({ product, isScrollable = false }) => {
   );
 };
 
-const CountdownTimer = () => {
-  const [timeLeft, setTimeLeft] = useState({ hours: 5, minutes: 42, seconds: 10 });
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return prev;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const format = (num) => num.toString().padStart(2, '0');
-
-  return (
-    <span className="text-red-600 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
-      Ends in {format(timeLeft.hours)}:{format(timeLeft.minutes)}:{format(timeLeft.seconds)}
-    </span>
-  );
-};
 
 <Deals/>
 
@@ -688,7 +670,8 @@ export default function Hero2() {
       <CustomNavbar categories={categories}/>
       <div className="pt-[110px] md:pt-[170px]">
         <HeroSlider />
-        <CategoryGrid categories={cats}  />
+        <CategoryGrid categories={cats} />
+        <Advertisement/>
         <Dealstrip deals={deals} />
         <GridBanners />
         <SplitBanners />

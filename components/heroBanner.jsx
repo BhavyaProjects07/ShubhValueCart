@@ -5,11 +5,11 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const heroBanners = [
   {
     id: 1,
-    image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop',
+    image: 'https://ik.imagekit.io/rsjsqdge7/Screenshot%202026-04-12%20195306.png',
     badge: 'Mega Sale',
     title: 'Shubh Value Cart',
     subtitle: 'Up to 10% OFF on Groceries and SkinCare',
-    color: 'from-blue-900/95 via-blue-900/80 to-transparent',
+    color: 'from-black/70 via-black/70 to-black/70',
     accent: 'bg-blue-500'
   },
   {
@@ -29,6 +29,15 @@ const heroBanners = [
     subtitle: 'Upgrade Your Living Space Today',
     color: 'from-purple-900/95 via-purple-900/80 to-transparent',
     accent: 'bg-purple-500'
+  },
+  {
+    id: 4,
+    image: 'https://ik.imagekit.io/rsjsqdge7/Shubh%20Value%20Cart%20cosmetic%20_20251223_225607_0000.png?q=80&w=2070&auto=format&fit=crop',
+    badge: 'Cosmetics Sale',
+    title: 'Beauty Bliss',
+    subtitle: 'Discover Your Perfect Look with 10% OFF',
+    color: 'from-red-900/95 via-red-900/80 to-transparent',
+    accent: 'bg-red-500'
   }
 ];
 
