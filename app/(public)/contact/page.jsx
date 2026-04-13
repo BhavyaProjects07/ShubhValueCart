@@ -209,7 +209,10 @@ const Contact = () => {
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#2874f0]/20 focus:border-[#2874f0] outline-none transition-all font-medium resize-none"
                     placeholder="Write your message here..."
                   ></textarea>
-                </div>
+                  </div>
+                  <div className="py-4">
+                    <p>Stay Informed, We'd love to keep you updated with the latest news, exclusive offers, and valuable insights. Please give your consent to receive messages and emails from us.</p>
+                  </div>
 
                 <button 
                   type="submit" 

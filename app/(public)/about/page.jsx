@@ -1,22 +1,113 @@
+'use client'
 import React from 'react';
-import { MapPin, Mail, Phone, ShoppingBag, Package, Shirt } from 'lucide-react';
+import { MapPin, Mail, Phone, ShoppingBag, Package, Shirt, Award, TrendingUp, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-[#FDFBF7] py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#FDFBF7] py-16 px-4 sm:px-6 lg:px-8 pt-[100px] md:pt-[140px]">
+      <div className="max-w-6xl mx-auto">
+        
+        {/* Founder Biography Section - Eye Catching */}
+        <div className="mb-24">
+          <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
+              
+              {/* Image Side */}
+              <div className="lg:col-span-5 relative h-[400px] lg:h-auto bg-gray-900">
+                {/* Note: Replace this placeholder with the actual image of Shubham Goyal */}
+                <img 
+                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop" 
+                  alt="Shubham Goyal - Founder" 
+                  className="w-full h-full object-cover object-top opacity-90"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div className="absolute bottom-8 left-8 right-8">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl text-white"
+                  >
+                    <h3 className="text-2xl font-bold mb-1">Shubham Goyal</h3>
+                    <p className="text-white/80 text-sm font-medium uppercase tracking-wider">Founder & Visionary Leader</p>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Content Side */}
+              <div className="lg:col-span-7 p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-[#2874f0] text-xs font-bold uppercase tracking-widest mb-6">
+                    <Award size={14} /> The Journey
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-6 leading-tight">
+                    From Struggle to Success, From Responsibility to Leadership.
+                  </h2>
+                  
+                  <div className="space-y-5 text-gray-600 leading-relaxed text-sm md:text-base">
+                    <p>
+                      <strong className="text-gray-900">Shubham Goyal</strong> is a dynamic entrepreneur whose journey reflects resilience, vision, and unwavering determination. At a very young age, life tested him with immense responsibilities. After the untimely loss of his father, Shubham stepped forward to manage his family and transform adversity into opportunity.
+                    </p>
+                    <p>
+                      With consistent hard work, integrity, and a sharp business mindset, he has emerged as the largest and most trusted trader of Gatter and TMT steel bars in the Dholpur district. His strong presence in the cement industry, especially as one of the biggest partners of Wonder Cement in Dholpur, has further strengthened his reputation as a dependable industry leader.
+                    </p>
+                    <p>
+                      Driven by a clear long-term vision, Shubham believes not just in building businesses, but in creating institutions that generate employment, trust, and lasting value. Expanding beyond construction materials, he has successfully launched <strong>Shubh Value Cart 🛒</strong>, the largest open-format retail store in Dholpur, spread across an impressive 4000 sq. ft. area. The store stands as a symbol of modern retail, customer-centric service, and affordable quality for the people of the region.
+                    </p>
+                    <p>
+                      Recently, he celebrated his sister's wedding with grand celebrations and pride, marking another milestone in his inspiring journey. Today, Shubham Goyal's business ventures collectively hold a valuation exceeding INR 20 Crores, supported by a dedicated team of 25+ employees working across his enterprises.
+                    </p>
+                    <p className="font-medium text-gray-800 italic border-l-4 border-[#ff9900] pl-4 py-1">
+                      "Shubham Goyal is more than a successful businessman — he is a visionary leader and a source of inspiration for young entrepreneurs, proving that with courage, clarity of vision, and relentless effort, even the most challenging beginnings can lead to remarkable success."
+                    </p>
+                  </div>
+
+                  {/* Stats/Highlights */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-10 pt-8 border-t border-gray-100">
+                    <div>
+                      <div className="flex items-center gap-2 text-[#2874f0] mb-2">
+                        <TrendingUp size={20} />
+                        <span className="font-bold text-xl">₹20Cr+</span>
+                      </div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">Business Valuation</p>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 text-[#2874f0] mb-2">
+                        <ShoppingBag size={20} />
+                        <span className="font-bold text-xl">4000 sq.ft</span>
+                      </div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">Retail Space</p>
+                    </div>
+                    <div className="col-span-2 md:col-span-1">
+                      <div className="flex items-center gap-2 text-[#2874f0] mb-2">
+                        <Users size={20} />
+                        <span className="font-bold text-xl">25+</span>
+                      </div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">Dedicated Team</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">About Shubh Value Cart</h1>
-          <div className="w-24 h-1 bg-black mx-auto mb-6"></div>
+          <div className="w-24 h-1 bg-[#2874f0] mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Your one-stop destination for quality products. We take pride in offering a diverse range of items to meet all your daily needs under one roof.
           </p>
         </div>
 
         {/* What We Sell Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-serif text-gray-900 mb-10 text-center">What We Offer</h2>
+        <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Groceries */}
             <div className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
@@ -76,69 +167,65 @@ export default function About() {
 
         {/* Contact & Location Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-black text-white rounded-2xl p-8">
-            <h2 className="text-2xl font-serif mb-6">Contact Us</h2>
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <Phone className="w-6 h-6 mt-1 text-gray-300" />
+          <div className="bg-gray-900 text-white rounded-2xl p-8 md:p-10">
+            <h2 className="text-2xl font-serif mb-8">Contact Us</h2>
+            <div className="space-y-8">
+              <div className="flex items-start gap-5">
+                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                  <Phone className="w-5 h-5 text-white" />
+                </div>
                 <div>
-                  <p className="text-sm text-gray-400 uppercase tracking-wider mb-1">Phone</p>
-                  <a href="tel:+918955497322" className="text-lg hover:text-gray-300 transition-colors">
+                  <p className="text-xs text-gray-400 uppercase tracking-widest mb-1 font-bold">Phone</p>
+                  <a href="tel:+918955497322" className="text-lg font-medium hover:text-[#ff9900] transition-colors block">
                     +91 89554 97322
+                  </a>
+                  <a href="tel:+918445695011" className="text-lg font-medium hover:text-[#ff9900] transition-colors block">
+                    +91 84456 95011
                   </a>
                 </div>
               </div>
               
-              <div className="flex items-start gap-4">
-                <Mail className="w-6 h-6 mt-1 text-gray-300" />
+              <div className="flex items-start gap-5">
+                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                  <Mail className="w-5 h-5 text-white" />
+                </div>
                 <div>
-                  <p className="text-sm text-gray-400 uppercase tracking-wider mb-1">Email</p>
-                  <a href="mailto:shubhvaluecart@gmail.com" className="text-lg hover:text-gray-300 transition-colors">
+                  <p className="text-xs text-gray-400 uppercase tracking-widest mb-1 font-bold">Email</p>
+                  <a href="mailto:shubhvaluecart@gmail.com" className="text-lg font-medium hover:text-[#ff9900] transition-colors">
                     shubhvaluecart@gmail.com
                   </a>
-                  
                 </div>
-                
               </div>
             </div>
-            
           </div>
 
-          
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            <h2 className="text-2xl font-serif text-gray-900 mb-6">Visit Our Store</h2>
-            <div className="flex items-start gap-4">
-              <MapPin className="w-6 h-6 mt-1 text-gray-900" />
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-10">
+            <h2 className="text-2xl font-serif text-gray-900 mb-8">Visit Our Store</h2>
+            <div className="flex items-start gap-5">
+              <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                <MapPin className="w-5 h-5 text-[#2874f0]" />
+              </div>
               <div>
-                <p className="text-sm text-gray-500 uppercase tracking-wider mb-2">Address</p>
-                <address className="not-italic text-lg text-gray-900 leading-relaxed">
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-2 font-bold">Address</p>
+                <address className="not-italic text-base text-gray-700 leading-relaxed font-medium">
                   0, M/S BAJRANG AGENCY,<br />
                   SHREERAM MANDIR KE PASS,<br />
                   GADARPURA ROAD,<br />
-                  Dholpur
+                  Dholpur, Rajasthan 328001
                 </address>
+                <a 
+                  href="https://maps.app.goo.gl/ncwArcCqCxLmbBux8" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="inline-block mt-4 text-sm font-bold text-[#2874f0] hover:underline"
+                >
+                  Get Directions →
+                </a>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-start bg-white text-gray-500 shadow-[0px_1px_4px_0px] shadow-black/20 rounded-xl p-6 mt-20">
-            <div className="bg-blue-600/20 p-3 rounded">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 34 34" height="28" width="28">
-                    <path strokeLinejoin="round" strokeWidth="2.5" stroke="#115DFC" d="m7.084 9.917-1.727 1.15c-1.238.826-1.856 1.239-2.192 1.868-.335.629-.333 1.368-.328 2.848.006 1.78.023 3.594.069 5.43.108 4.356.163 6.534 1.764 8.135 1.601 1.602 3.809 1.657 8.223 1.767 2.747.069 5.469.069 8.215 0 4.414-.11 6.622-.165 8.223-1.767s1.656-3.779 1.764-8.135c.046-1.836.063-3.65.069-5.43.005-1.48.007-2.219-.328-2.848-.336-.63-.954-1.042-2.192-1.867l-1.727-1.151"/>
-                    <path strokeLinejoin="round" strokeWidth="2.5" stroke="#115DFC" d="m2.833 14.167 9.794 5.876c2.13 1.278 3.196 1.917 4.373 1.917s2.243-.639 4.373-1.917l9.794-5.876"/>
-                    <path strokeWidth="2.5" stroke="#115DFC" d="M7.083 17V8.5c0-2.671 0-4.007.83-4.837s2.166-.83 4.837-.83h8.5c2.671 0 4.007 0 4.837.83s.83 2.166.83 4.837V17"/>
-                    <path strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" stroke="#115DFC" d="M14.167 14.167h5.666M14.167 8.5h5.666"/>
-                </svg>
-            </div>
-            <h1 className="text-xl font-semibold mt-4 text-gray-800">Subscribe for updates</h1>
-            <h1 className="text-sm mt-3">Stay Informed, We'd love to keep you updated with the latest news, exclusive offers, and valuable insights. Please give your consent to receive messages and emails from us.
-</h1>
-            <input type="email" placeholder="Enter your email id" className="text-sm border border-gray-500/30 max-w-80 w-full px-3 h-10 outline-none rounded mt-4" />
-            <button type="button" className="bg-black hover:bg-indigo-600/90 transition text-white w-full h-10 mt-3 rounded text-sm">Submit</button>
-        </div>
       </div>
-      
     </div>
   );
 }

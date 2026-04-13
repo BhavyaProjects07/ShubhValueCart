@@ -25,6 +25,7 @@ export async function GET(request) {
     const page = Number(searchParams.get("page")) || 1;
     const limit = Number(searchParams.get("limit")) || 50;
     const skip = (page - 1) * limit;
+    const recommendedFor = searchParams.get("recommendedFor")
 
     const minPrice = Number(searchParams.get("minPrice")) || 0
 const maxPrice = Number(searchParams.get("maxPrice")) || 0
@@ -47,6 +48,140 @@ const minDiscount = Number(searchParams.get("minDiscount")) || 0
       const normalized = rawCategory.toLowerCase();
       category = CATEGORY_SLUG_MAP[normalized] || rawCategory;
     }
+
+    // ==========================================================
+// 🚀 RECOMMENDATION MODE
+// ==========================================================
+if (recommendedFor) {
+  const product = await prisma.product.findUnique({
+    where: { id: recommendedFor },
+    include: {
+      rating: true,
+      store: true
+    }
+  })
+
+  if (!product) {
+    return NextResponse.json({ products: [] })
+  }
+
+  // ==========================================================
+// 🚀 PAGINATION SETUP
+// ==========================================================
+const limit = Number(searchParams.get("limit")) || 50
+const page = Number(searchParams.get("page")) || 1
+const skip = (page - 1) * limit
+
+// ---------- EXTRACT CHILD CATEGORY ----------
+const extractChildCategory = (desc) => {
+  if (!desc) return null
+  const match = desc.match(/Child category\s*:\s*(.+)/i)
+  return match ? match[1].trim().toLowerCase() : null
+}
+
+const childCategory = extractChildCategory(product.description)
+
+// ---------- NAME WORDS ----------
+const words = product.name
+  ?.toLowerCase()
+  .split(" ")
+  .filter(w => w.length > 3) || []
+
+// ==========================================================
+// 🚀 SINGLE OPTIMIZED QUERY
+// ==========================================================
+const recommendedRaw = await prisma.product.findMany({
+  where: {
+    AND: [
+      { id: { not: recommendedFor } },
+      { inStock: { not: false } },
+      { store: { isActive: true } },
+
+      {
+        OR: [
+          // 🟢 LEVEL 1 → CHILD CATEGORY
+          ...(childCategory
+            ? [{
+                description: {
+                  contains: childCategory,
+                  mode: "insensitive"
+                }
+              }]
+            : []),
+
+          // 🟡 LEVEL 2 → CATEGORY
+          {
+            category: product.category
+          },
+
+          // 🔵 LEVEL 3 → NAME MATCH
+          ...(words.length
+            ? words.map(word => ({
+                name: {
+                  contains: word,
+                  mode: "insensitive"
+                }
+              }))
+            : [])
+        ]
+      }
+    ]
+  },
+  include: {
+    rating: true,
+    store: true
+  }
+})
+
+// ==========================================================
+// 🚀 SCORING SYSTEM (IMPORTANT)
+// ==========================================================
+const scored = recommendedRaw.map((p) => {
+  let score = 0
+
+  const desc = p.description?.toLowerCase() || ""
+  const name = p.name?.toLowerCase() || ""
+
+  // 🟢 Strong: child category
+  if (childCategory && desc.includes(childCategory)) {
+    score += 50
+  }
+
+  // 🟡 Medium: category
+  if (p.category === product.category) {
+    score += 20
+  }
+
+  // 🔵 Weak: name match
+  words.forEach(word => {
+    if (name.includes(word)) score += 10
+  })
+
+  return { ...p, score }
+})
+
+// ==========================================================
+// 🚀 SORT + PAGINATE
+// ==========================================================
+const sorted = scored
+  .filter(p => p.score > 0)
+  .sort((a, b) => b.score - a.score)
+
+const paginated = sorted.slice(skip, skip + limit)
+
+// ==========================================================
+// 🚀 RESPONSE
+// ==========================================================
+return NextResponse.json({
+  products: paginated,
+  pagination: {
+    total: sorted.length,
+    page,
+    limit,
+    totalPages: Math.ceil(sorted.length / limit)
+  }
+})
+}
 
     const searchKeywords = words;
 

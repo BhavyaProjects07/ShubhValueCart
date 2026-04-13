@@ -1,5 +1,5 @@
 'use client'
-
+import Recommended from "./Recommended"
 import { addToCart } from "@/lib/features/cart/cartSlice"
 import {
   StarIcon,
@@ -258,6 +258,8 @@ const ProductDetails = ({ product }) => {
           </div>
         </motion.div>
       </div>
+
+      <Recommended productId={product.id} />
     </div>
   )
 }
