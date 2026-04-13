@@ -17,7 +17,7 @@ export default function About() {
               <div className="lg:col-span-5 relative h-[400px] lg:h-auto bg-gray-900">
                 {/* Note: Replace this placeholder with the actual image of Shubham Goyal */}
                 <img 
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop" 
+                  src="https://ik.imagekit.io/rsjsqdge7/IMG_8116.JPEG?q=80&w=1000&auto=format&fit=crop" 
                   alt="Shubham Goyal - Founder" 
                   className="w-full h-full object-cover object-top opacity-90"
                 />
