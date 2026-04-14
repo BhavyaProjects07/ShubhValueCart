@@ -60,7 +60,7 @@ export async function POST(request) {
     try {
       await sendBrevoEmail({
         to: order.user.email,
-        subject: `Your FrostWayne order is now ${statusLabel}`,
+        subject: `Your ShubhValueCart order is now ${statusLabel}`,
         htmlContent: `
           <p>Hello ${order.user.name || "Customer"},</p>
 
@@ -94,20 +94,20 @@ export async function POST(request) {
 
           <p>
             If you have any questions, feel free to contact us at
-            <a href="mailto:support@frostwayne.shop">
-              support@frostwayne.shop
+            <a href="mailto:shubhvaluecart@gmail.com">
+              shubhvaluecart@gmail.com
             </a>.
           </p>
 
           <p>
-            Thank you for shopping with <strong>FrostWayne</strong>.
+            Thank you for shopping with <strong>ShubhValueCart</strong>.
           </p>
 
           <p>
             Warm regards,<br/>
-            <strong>Team FrostWayne</strong><br/>
-            <a href="https://www.frostwayne.shop">
-              https://www.frostwayne.shop
+            <strong>Team ShubhValueCart</strong><br/>
+            <a href="https://www.shubhvaluecart.com">
+              https://www.shubhvaluecart.com
             </a>
           </p>
         `,
@@ -145,17 +145,128 @@ export async function GET(request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const orders = await prisma.order.findMany({
-      where: { storeId },
-      include: {
-        user: true,
-        address: true,
-        orderItems: { include: { product: true } },
+    const { searchParams } = new URL(request.url);
+
+    // ---------------- PAGINATION ----------------
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 20;
+    const skip = (page - 1) * limit;
+
+    // ---------------- FILTERS ----------------
+    const search = searchParams.get("search") || "";
+    const status = searchParams.get("status");
+    const paymentMethod = searchParams.get("paymentMethod");
+    const isPaid = searchParams.get("isPaid");
+    const coupon = searchParams.get("coupon");
+
+    const minTotal = Number(searchParams.get("minTotal")) || 0;
+    const maxTotal = Number(searchParams.get("maxTotal")) || 1000000;
+
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
+
+    const sort = searchParams.get("sort") || "latest";
+
+    // ---------------- WHERE ----------------
+    let where = {
+      storeId,
+      total: {
+        gte: minTotal,
+        lte: maxTotal,
       },
-      orderBy: { createdAt: "desc" },
+    };
+
+    // 🔍 SEARCH (customer name / email / order id)
+    if (search) {
+      where.OR = [
+        {
+          id: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          user: {
+            name: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          user: {
+            email: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        },
+      ];
+    }
+
+    // 📦 STATUS
+    if (status) {
+      where.status = status;
+    }
+
+    // 💳 PAYMENT METHOD
+    if (paymentMethod) {
+      where.paymentMethod = paymentMethod;
+    }
+
+    // 💰 PAID FILTER
+    if (isPaid === "true") {
+      where.isPaid = true;
+    } else if (isPaid === "false") {
+      where.isPaid = false;
+    }
+
+    // 🎟 COUPON
+    if (coupon === "true") {
+      where.couponId = { not: null };
+    }
+
+    // 📅 DATE RANGE
+    if (startDate || endDate) {
+      where.createdAt = {};
+      if (startDate) where.createdAt.gte = new Date(startDate);
+      if (endDate) where.createdAt.lte = new Date(endDate);
+    }
+
+    // ---------------- SORT ----------------
+    let orderBy = { createdAt: "desc" };
+
+    if (sort === "oldest") orderBy = { createdAt: "asc" };
+    if (sort === "total_high_low") orderBy = { total: "desc" };
+    if (sort === "total_low_high") orderBy = { total: "asc" };
+
+    // ---------------- QUERY ----------------
+    const [orders, total] = await Promise.all([
+      prisma.order.findMany({
+        where,
+        include: {
+  user: true,
+  address: true,
+  orderItems: { include: { product: true } },
+},
+        orderBy,
+        skip,
+        take: limit,
+      }),
+
+      prisma.order.count({ where }),
+    ]);
+
+    return NextResponse.json({
+      orders,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
     });
 
-    return NextResponse.json({ orders });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
+import Link from 'next/link';
 const heroBanners = [
   {
     id: 1,
@@ -96,13 +96,17 @@ const HeroSlider = () => {
         </p>
 
         <div className="flex flex-wrap gap-4">
-          <button className="bg-[#ff9900] hover:bg-[#e68a00] active:scale-95 transition-all duration-150 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-lg flex items-center gap-2">
-            Shop Now <ChevronRight className="w-5 h-5" />
-          </button>
+          <Link href="/shop">
+            <button className="bg-[#ff9900] hover:bg-[#e68a00] active:scale-95 transition-all duration-150 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-lg flex items-center gap-2">
+              Shop Now <ChevronRight className="w-5 h-5" />
+            </button>
+          </Link>
 
-          <button className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-lg hover:bg-white/20 active:scale-95 transition-all duration-150">
+              <Link href="#deals">
+          <button className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-lg hover:bg-white/20 active:scale-95 transition-all duration-150"            >
             View Offers
-          </button>
+                </button>
+              </Link>
         </div>
 
       </div>

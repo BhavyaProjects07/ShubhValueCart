@@ -128,28 +128,80 @@ export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
 
+    // ---------------- QUERY PARAMS ----------------
     const page = Number(searchParams.get("page")) || 1;
-    const limit = 50;
+    const limit = Number(searchParams.get("limit")) || 20;
     const skip = (page - 1) * limit;
 
-    const stores = await prisma.store.findMany();
-    const storeId = stores[0]?.id;
+    const search = searchParams.get("search") || "";
+    const category = searchParams.get("category");
+    const minPrice = Number(searchParams.get("minPrice")) || 0;
+    const maxPrice = Number(searchParams.get("maxPrice")) || 1000000;
+    const inStock = searchParams.get("inStock");
+    const sort = searchParams.get("sort") || "latest";
+    const hasSizes = searchParams.get("hasSizes");
+
+    // ---------------- STORE ----------------
+    const store = await prisma.store.findFirst();
+    const storeId = store?.id;
 
     if (!storeId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // ---------------- FILTER OBJECT ----------------
+    let where = {
+      storeId,
+      price: {
+        gte: minPrice,
+        lte: maxPrice,
+      },
+    };
+
+    // 🔍 SEARCH (LIKE)
+    if (search) {
+      where.name = {
+        contains: search,
+        mode: "insensitive",
+      };
+    }
+
+    // 📂 CATEGORY
+    if (category) {
+      where.category = category;
+    }
+
+    // 📦 STOCK
+    if (inStock === "true") {
+      where.inStock = true;
+    }
+
+    // 📏 SIZES
+    if (hasSizes === "true") {
+      where.hasSizes = true;
+    }
+
+    // ---------------- SORTING ----------------
+    let orderBy = { createdAt: "desc" };
+
+    if (sort === "price_low_high") {
+      orderBy = { price: "asc" };
+    } else if (sort === "price_high_low") {
+      orderBy = { price: "desc" };
+    } else if (sort === "oldest") {
+      orderBy = { createdAt: "asc" };
+    }
+
+    // ---------------- QUERY ----------------
     const [products, total] = await Promise.all([
       prisma.product.findMany({
-        where: { storeId },
-        orderBy: { createdAt: "desc" },
+        where,
+        orderBy,
         skip,
         take: limit,
       }),
 
-      prisma.product.count({
-        where: { storeId },
-      }),
+      prisma.product.count({ where }),
     ]);
 
     return NextResponse.json({
@@ -163,6 +215,7 @@ export async function GET(req) {
     });
 
   } catch (error) {
+    console.error("GET PRODUCTS ERROR:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
