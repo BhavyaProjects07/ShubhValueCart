@@ -1,18 +1,26 @@
-'use client'
+"use client"
 
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { useRouter, useSearchParams } from "next/navigation"
+import { X } from "lucide-react"
 
-export default function FilterSidebar({ filters, setFilters }) {
-
+export default function FilterSidebar({
+  filters,
+  setFilters,
+  isOpen = false,
+  setIsOpen = () => {}
+}) {
   const [categories, setCategories] = useState([])
+
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const currentCategory = searchParams.get("category") || ""
 
-  // ✅ FETCH CATEGORIES
+  // =========================
+  // FETCH CATEGORIES
+  // =========================
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -26,26 +34,32 @@ export default function FilterSidebar({ filters, setFilters }) {
     fetchCategories()
   }, [])
 
-  /* ---------------- CATEGORY CLICK ---------------- */
+  // =========================
+  // CATEGORY CLICK
+  // =========================
   const handleCategoryClick = (slug) => {
-    const url = `/shop?page=1&category=${slug}`
-    router.push(url)
+    router.push(`/shop?page=1&category=${slug}`)
+    setIsOpen(false)
   }
 
-  return (
-    <aside className="w-full sm:w-64 border border-[#ede6dd] rounded-lg p-4 bg-gray-100 sticky top-28 h-fit">
-      
-      <h3 className="font-semibold text-[#6b5d52] mb-5 text-base">
-        Filters
-      </h3>
+  // =========================
+  // SIDEBAR CONTENT
+  // =========================
+  const SidebarContent = () => (
+    <div className="p-4 space-y-6">
+
+      {/* HEADER */}
+      <div className="flex items-center justify-between border-b pb-3">
+        <h3 className="font-semibold text-lg">Filters</h3>
+        <button onClick={() => setIsOpen(false)}>
+          <X size={20} />
+        </button>
+      </div>
 
       {/* CATEGORY */}
-      <div className="mb-6">
-        <h4 className="text-sm font-medium mb-3 text-[#6b5d52]">
-          Category
-        </h4>
-
-        <div className="space-y-2">
+      <div>
+        <h4 className="text-sm font-semibold mb-3">Category</h4>
+        <div className="space-y-2 max-h-40 overflow-y-auto">
           {categories.map(cat => (
             <div
               key={cat.slug}
@@ -63,15 +77,13 @@ export default function FilterSidebar({ filters, setFilters }) {
       </div>
 
       {/* PRICE */}
-      <div className="mb-6">
-        <h4 className="text-sm font-medium mb-3 text-[#6b5d52]">
-          Price
-        </h4>
+      <div>
+        <h4 className="text-sm font-semibold mb-3">Price</h4>
 
         <input
           type="range"
           min={100}
-          max={10000} // ✅ FIXED (10K)
+          max={10000}
           step={100}
           value={filters.maxPrice}
           onChange={(e) =>
@@ -80,33 +92,26 @@ export default function FilterSidebar({ filters, setFilters }) {
               maxPrice: Number(e.target.value),
             }))
           }
-          className="w-full accent-[#6b5d52]"
+          className="w-full accent-black"
         />
 
-        <p className="text-xs text-slate-500 mt-2">
+        <p className="text-xs mt-2">
           Up to ₹{filters.maxPrice.toLocaleString()}
         </p>
       </div>
 
       {/* RATING */}
-      <div className="mb-6">
-        <h4 className="text-sm font-medium mb-3 text-[#6b5d52]">
-          Customer Rating
-        </h4>
+      <div>
+        <h4 className="text-sm font-semibold mb-3">Customer Rating</h4>
 
         {[4, 3, 2].map(r => (
           <label key={r} className="flex items-center gap-2 text-sm">
             <input
               type="radio"
-              name="rating"
               checked={filters.minRating === r}
               onChange={() =>
-                setFilters(prev => ({
-                  ...prev,
-                  minRating: r,
-                }))
+                setFilters(prev => ({ ...prev, minRating: r }))
               }
-              className="accent-[#6b5d52]"
             />
             {r}★ & above
           </label>
@@ -123,24 +128,17 @@ export default function FilterSidebar({ filters, setFilters }) {
       </div>
 
       {/* DISCOUNT */}
-      <div className="mb-6">
-        <h4 className="text-sm font-medium mb-3 text-[#6b5d52]">
-          Discount
-        </h4>
+      <div>
+        <h4 className="text-sm font-semibold mb-3">Discount</h4>
 
         {[10, 20, 30, 40, 50].map(d => (
           <label key={d} className="flex items-center gap-2 text-sm">
             <input
               type="radio"
-              name="discount"
               checked={filters.minDiscount === d}
               onChange={() =>
-                setFilters(prev => ({
-                  ...prev,
-                  minDiscount: d,
-                }))
+                setFilters(prev => ({ ...prev, minDiscount: d }))
               }
-              className="accent-[#6b5d52]"
             />
             {d}% or more
           </label>
@@ -159,20 +157,46 @@ export default function FilterSidebar({ filters, setFilters }) {
       {/* CLEAR ALL */}
       <button
         onClick={() => {
-  setFilters({
-    minPrice: 0,
-    maxPrice: 10000,
-    minRating: 0,
-    minDiscount: 0,
-  })
-
-  router.push("/shop?page=1&maxPrice=10000")
-}}
-        className="w-full text-sm text-[#6b5d52] border border-[#ede6dd] rounded-md py-2 hover:bg-[#ede6dd]"
+          setFilters({
+            minPrice: 0,
+            maxPrice: 10000,
+            minRating: 0,
+            minDiscount: 0,
+          })
+          router.push("/shop?page=1&maxPrice=10000")
+          setIsOpen(false)
+        }}
+        className="w-full border py-2 rounded-md hover:bg-gray-100"
       >
         Clear All Filters
       </button>
+    </div>
+  )
 
-    </aside>
+  return (
+    <>
+      {/* DESKTOP SIDEBAR */}
+      <aside className="hidden md:block w-64 border rounded-lg p-4 bg-gray-100 sticky top-28 h-fit">
+        <SidebarContent />
+      </aside>
+
+      {/* MOBILE DRAWER */}
+      {isOpen && (
+        <div className="fixed inset-0 z-50">
+
+          {/* OVERLAY */}
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* DRAWER */}
+          <div className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-xl overflow-y-auto animate-slide-in">
+            <SidebarContent />
+          </div>
+
+        </div>
+      )}
+    </>
   )
 }

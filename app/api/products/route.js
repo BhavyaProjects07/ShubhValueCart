@@ -28,7 +28,7 @@ export async function GET(request) {
     const recommendedFor = searchParams.get("recommendedFor")
 
     const minPrice = Number(searchParams.get("minPrice")) || 0
-const maxPrice = Number(searchParams.get("maxPrice")) || 0
+const maxPrice = Number(searchParams.get("maxPrice")) || 10000
 const minRating = Number(searchParams.get("minRating")) || 0
 const minDiscount = Number(searchParams.get("minDiscount")) || 0
 
@@ -197,26 +197,18 @@ return NextResponse.json({
     category: { equals: category },
   }),
 
-  ...(minPrice || maxPrice
-    ? {
-        price: {
-          ...(minPrice && { gte: minPrice }),
-          ...(maxPrice && { lte: maxPrice }),
-        },
-      }
-    : {}),
-
-  ...(minDiscount && {
-    discount: { gte: minDiscount },
-  }),
-
-  ...(minRating && {
-    rating: {
-      some: {
-        value: { gte: minRating },
+  ...(minPrice > 0 || maxPrice > 0
+  ? {
+      price: {
+        ...(minPrice > 0 && { gte: minPrice }),
+        ...(maxPrice > 0 && { lte: maxPrice }),
       },
-    },
-  }),
+    }
+  : {}),
+
+  
+
+  
 
   ...(searchKeywords.length > 0 && {
   OR: searchKeywords.map((word) => ({
@@ -231,12 +223,16 @@ return NextResponse.json({
       prisma.product.findMany({
         where: whereClause,
         include: {
-          rating: true,
-          store: true,
-        },
+  rating: {
+    include: {
+      user: true, // ✅ THIS IS THE FIX
+    },
+  },
+  store: true,
+},
         orderBy: { createdAt: "desc" },
         skip,
-        take: limit,
+        take: Math.min(limit * 4, 200),
       }),
 
       prisma.product.count({
@@ -248,10 +244,41 @@ return NextResponse.json({
 // ---------- LEVEL 2: RELEVANCE SCORING ----------
 let finalProducts = products;
 
+// =========================
+// 🔥 DISCOUNT FILTER (FIX)
+// =========================
+if (minDiscount > 0) {
+  finalProducts = finalProducts.filter(p => {
+    if (!p.mrp || p.mrp === 0) return false;
+
+    const discount =
+      ((p.mrp - p.price) / p.mrp) * 100;
+
+    return discount >= minDiscount;
+  });
+}
+
+   if (minRating > 0) {
+  finalProducts = finalProducts.filter(p => {
+    if (!p.rating || p.rating.length === 0) return false;
+
+    const validRatings = p.rating.filter(r =>
+      typeof r.rating === "number"
+    );
+
+    if (validRatings.length === 0) return false;
+
+    const avg =
+      validRatings.reduce((sum, r) => sum + r.rating, 0) /
+      validRatings.length;
+
+    return avg >= minRating;
+  });
+}
 if (searchKeywords.length > 0) {
   const searchText = search.toLowerCase();
 
-  finalProducts = products
+  finalProducts = finalProducts
     .map((product) => {
       let score = 0;
 
@@ -305,15 +332,15 @@ if (searchKeywords.length > 0) {
 }
     
     // ---------- RESPONSE ----------
-    return NextResponse.json({
-      products: finalProducts,
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
+   return NextResponse.json({
+  products: finalProducts.slice(0, limit), // ✅ FIX
+  pagination: {
+    total: finalProducts.length,
+    page,
+    limit,
+    totalPages: Math.ceil(finalProducts.length / limit),
+  },
+});
 
   } catch (error) {
     console.error("SEARCH ERROR:", error);

@@ -50,26 +50,26 @@ function ShopContent() {
 
   /* ---------------- FETCH PRODUCTS ---------------- */
   useEffect(() => {
-    dispatch(fetchProducts({
-      search,
-      category,
-      page,
-      minPrice,
-      maxPrice,
-      minRating,
-      minDiscount
-    }))
-  }, [
+  dispatch(fetchProducts({
     search,
     category,
     page,
-    minPrice,
-    maxPrice,
-    minRating,
-    minDiscount,
-    dispatch
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice,
+    minRating: filters.minRating,
+    minDiscount: filters.minDiscount
+  }))
+}, [
+  search,
+  category,
+  page,
+  filters.minPrice,
+  filters.maxPrice,
+  filters.minRating,
+  filters.minDiscount,
+  dispatch
   ])
-
+  
   /* ---------------- APPLY FILTER → UPDATE URL ---------------- */
   useEffect(() => {
     const url =
@@ -129,18 +129,26 @@ function ShopContent() {
 
           <h1 className="text-4xl font-bold">{heading}</h1>
 
-          <button onClick={() => setShowFilters(true)} className="md:hidden mt-4">
-            Filters
-          </button>
+          <button
+  onClick={() => setShowFilters(true)}
+  className="md:hidden mt-4 px-4 py-2 bg-black text-white rounded-lg"
+>
+  Filters
+</button>
 
         </motion.div>
 
         <div className="flex gap-10">
 
           {/* SIDEBAR */}
-          <div className="hidden md:block w-64">
-            <FilterSidebar filters={filters} setFilters={setFilters} />
-          </div>
+          
+            <FilterSidebar
+  filters={filters}
+  setFilters={setFilters}
+  isOpen={showFilters}
+  setIsOpen={setShowFilters}
+/>
+          
 
           {/* PRODUCTS */}
           <div className="flex-1">
@@ -200,16 +208,7 @@ function ShopContent() {
         </div>
 
         {/* MOBILE FILTER */}
-        <AnimatePresence>
-          {showFilters && (
-            <div className="fixed inset-0 bg-black/40 z-50">
-              <div className="bg-white p-6">
-                <FilterSidebar filters={filters} setFilters={setFilters} />
-                <button onClick={() => setShowFilters(false)}>Close</button>
-              </div>
-            </div>
-          )}
-        </AnimatePresence>
+        
 
       </div>
     </div>
