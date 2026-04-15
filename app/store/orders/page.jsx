@@ -192,15 +192,7 @@ export default function StoreOrders() {
           <option value="total_low_high">Low → High</option>
         </select>
 
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            onChange={(e) =>
-              setFilters({ ...filters, coupon: e.target.checked })
-            }
-          />
-          Coupon Applied
-        </label>
+        
 
       </div>
 

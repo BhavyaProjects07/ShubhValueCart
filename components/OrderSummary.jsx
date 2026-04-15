@@ -163,18 +163,52 @@ useEffect(() => {
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: data.amount, // ✅ already in paise from backend
+        amount: data.amount * 100, // ✅ already in paise from backend
         currency: "INR",
         order_id: data.razorpayOrderId,
 
         name: "Shubh Value Cart",
         description: "Order Payment",
 
-        handler: function (response) {
-          // ❌ DO NOT call /api/orders again
-          toast.success("Payment successful!");
-          router.push("/orders");
+        handler: async function (response) {
+  try {
+    const token = await getToken();
+
+    // 🔥 VERIFY PAYMENT + CREATE ORDER
+    await axios.post(
+      "/api/verify-payment",
+      {
+        ...response,
+        orderData: {
+          addressId: selectedAddress.id,
+          paymentMethod: "RAZORPAY",
+          items: items.map(item => ({
+            id: item.id,
+            quantity: item.quantity,
+            hasSize: item.hasSize || false,
+            size: item.size || null,
+          })),
+          couponCode: coupon?.code || null,
         },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success("Order placed successfully!");
+
+    router.push("/orders");
+
+    dispatch(fetchCart({ getToken }));
+
+  } catch (error) {
+    console.error("VERIFY ERROR:", error);
+    toast.error("Payment verified but order failed!");
+  }
+},
 
         modal: {
           ondismiss: function () {
