@@ -3,16 +3,16 @@ import axios from "axios";
 import FormData from "form-data";
 
 // ---------------- LOAD EXCEL ----------------
-const workbook = XLSX.readFile("./product.xlsx");
+const workbook = XLSX.readFile("./output.xlsx");
 const sheet = workbook.Sheets[workbook.SheetNames[0]];
 const data = XLSX.utils.sheet_to_json(sheet);
 
 console.log("📦 Total Products:", data.length);
 
-// ---------------- GET TOP 5 VALID PRODUCTS ----------------
+// ---------------- FILTER VALID PRODUCTS ----------------
 const products = data
-  .filter(p => p.Name && p["Selling Price"])
-  .slice(1001, 2735);
+  .filter(p => p.Products && p.price)
+  .slice(0, 2631);
 
 if (products.length === 0) {
   console.log("❌ No valid products found");
@@ -25,42 +25,34 @@ async function uploadProducts() {
     const product = products[i];
 
     try {
-      console.log(`\n🚀 Uploading (${i + 1}/5):`, product.Name);
+      console.log(`\n🚀 Uploading (${i + 1}/${products.length}):`, product.Products);
 
       const formData = new FormData();
 
       // ---------------- CLEAN DATA ----------------
-      const name = product.Name?.trim() || "Test Product";
+      const name = product.Products?.trim() || "Test Product";
 
-      // ✅ FIXED DESCRIPTION
-      let description = "";
-      if (product.Description && product.Description.trim() !== "") {
-        description = product.Description.trim();
-      } else if (product["Variant Name"]) {
-        description = `${product.Name} - ${product["Variant Name"]}`;
-      } else {
-        description = `${product.Name} - High quality product`;
-      }
+      const description =
+        product.description?.trim() ||
+        `${name} - High quality product`;
 
-      const price = Number(product["Selling Price"]) || 0;
-      const mrp = Number(product.MRP) || 0;
+      const price = Number(product.price) || 0;
+      const mrp = Number(product.mrp) || 0;
 
-      const category = product.Parent_Category || "Food & Grocery";
+      const category = product.category || "General";
 
       // ---------------- IMAGE HANDLING ----------------
       let imageUrl = "";
 
       if (
-        product.Image &&
-        typeof product.Image === "string" &&
-        product.Image.trim().startsWith("http")
+        product.images &&
+        typeof product.images === "string" &&
+        product.images.trim().startsWith("http")
       ) {
-        imageUrl = product.Image.trim();
+        imageUrl = product.images.trim();
         console.log("🖼️ Using Excel Image:", imageUrl);
       } else {
-        imageUrl = `https://source.unsplash.com/800x800/?${encodeURIComponent(
-          product.Name || "product"
-        )}`;
+        imageUrl = `https://source.unsplash.com/800x800/?${encodeURIComponent(name)}`;
         console.log("⚠️ Fallback Image Used:", imageUrl);
       }
 
@@ -76,14 +68,16 @@ async function uploadProducts() {
       formData.append("price", price);
       formData.append("mrp", mrp);
       formData.append("category", category);
-
       formData.append("imageUrl", imageUrl);
 
       formData.append("hasSizes", "false");
       formData.append("sizes", JSON.stringify({}));
-
-      // ✅ IMPORTANT (FOR PRODUCT VISIBILITY)
       formData.append("inStock", "true");
+
+      // OPTIONAL (if required by backend)
+      if (product.storeId) {
+        formData.append("storeId", product.storeId);
+      }
 
       // ---------------- API CALL ----------------
       const res = await axios.post(
@@ -100,13 +94,13 @@ async function uploadProducts() {
 
     } catch (err) {
       console.error(
-        `❌ ERROR (${product.Name}):`,
+        `❌ ERROR (${product.Products}):`,
         err.response?.data || err.message
       );
     }
   }
 
-  console.log("\n🎉 TOP 5 PRODUCTS UPLOADED");
+  console.log("\n🎉 PRODUCTS UPLOADED");
 }
 
 // ---------------- RUN ----------------

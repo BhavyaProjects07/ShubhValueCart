@@ -175,32 +175,33 @@ useEffect(() => {
     const token = await getToken();
 
     // 🔥 VERIFY PAYMENT + CREATE ORDER
-    await axios.post(
-      "/api/verify-payment",
-      {
-        ...response,
-        orderData: {
-          addressId: selectedAddress.id,
-          paymentMethod: "RAZORPAY",
-          items: items.map(item => ({
-            id: item.id,
-            quantity: item.quantity,
-            hasSize: item.hasSize || false,
-            size: item.size || null,
-          })),
-          couponCode: coupon?.code || null,
-        },
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    
+await axios.post(
+  "/api/payment/verify",
+  {
+    ...response,
+    orderData: {
+      addressId: selectedAddress.id,
+      paymentMethod: "RAZORPAY",
+      items: items.map(item => ({
+        id: item.id,
+        quantity: item.quantity,
+        hasSize: item.hasSize || false,
+        size: item.size || null,
+      })),
+      couponCode: coupon?.code || null,
+    },
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${token}`, // 🔥 CRITICAL
+    },
+  }
+);
 
-    toast.success("Order placed successfully!");
+    
 
-    router.push("/orders");
+    router.push("/order-success");
 
     dispatch(fetchCart({ getToken }));
 
@@ -230,8 +231,8 @@ useEffect(() => {
     // =============================
     // 📦 COD FLOW
     // =============================
-    toast.success("Order placed successfully!");
-    router.push("/orders");
+   
+    router.push("/orders-success");
     dispatch(fetchCart({ getToken }));
 
   } catch (error) {

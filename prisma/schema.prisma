@@ -71,7 +71,7 @@ model UserCoupon {
 
 enum PaymentMethod {
   COD
-  STRIPE
+  RAZORPAY
 }
 
 // Required for creating an Order: total, userId, storeId, addressId, isPaid, paymentMethod, isCouponUsed, coupon (JSON), orderItems (nested)

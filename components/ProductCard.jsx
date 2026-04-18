@@ -78,7 +78,7 @@ if (Array.isArray(product?.rating)) {
                     Signature
                 </span>
                 
-                <h3 className="font-serif text-lg sm:text-xl text-gray-900 line-clamp-1 mb-2 font-medium tracking-tight group-hover:text-[#2874f0] transition-colors">
+                <h3 className="font-serif text-lg sm:text-xl text-gray-900 line-clamp-2 mb-2 font-medium tracking-tight group-hover:text-[#2874f0] transition-colors">
                     {productName}
                 </h3>
 
@@ -92,6 +92,7 @@ if (Array.isArray(product?.rating)) {
                         {productPrice}
                     </span>
                 </div>
+                
                 
                 {/* Minimalist Rating */}
                 <div className="flex items-center justify-center gap-1.5 mt-4 opacity-70 group-hover:opacity-100 transition-opacity duration-500">
