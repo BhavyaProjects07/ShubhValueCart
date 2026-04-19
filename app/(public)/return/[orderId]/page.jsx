@@ -1,4 +1,3 @@
-'use client'
 import React, { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
@@ -14,7 +13,6 @@ import {
   X,
   PackageOpen
 } from "lucide-react"
-
 
 export default function ReturnPage() {
   // Try to get orderId from URL, falback just for UI purposes
