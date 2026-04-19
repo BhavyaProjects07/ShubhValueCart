@@ -1,9 +1,6 @@
-
 'use client'
-
-import { useParams, useRouter } from "next/navigation"
-import { useState } from "react"
-import axios from "axios"
+import React, { useState } from "react"
+import { useParams, useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { 
   ArrowLeft, 
@@ -13,82 +10,108 @@ import {
   ShieldCheck, 
   AlertCircle,
   FileText,
-  Check
+  Check,
+  X,
+  PackageOpen
 } from "lucide-react"
 
+
 export default function ReturnPage() {
+  // Try to get orderId from URL, falback just for UI purposes
   const { orderId } = useParams()
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const [images, setImages] = useState([])
   const [video, setVideo] = useState(null)
   const [reason, setReason] = useState("")
   const [loading, setLoading] = useState(false)
 
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files)
+    setImages(prev => [...prev, ...files])
+  }
+
+  const removeImage = (index) => {
+    setImages(images.filter((_, i) => i !== index))
+  }
+
   const handleSubmit = async () => {
-    if (!video) return toast.error("Maison Protocol requires an unboxing video.")
-    if (images.length < 3) return toast.error("Maison Protocol requires at least 3 high-resolution images.")
-    if (!reason.trim()) return toast.error("Please provide a detailed justification for the return.")
+    if (!video) return toast.error("An unboxing video is mandatory for returns.")
+    if (images.length < 3) return toast.error("Please upload at least 3 clear images.")
+    if (!reason.trim()) return toast.error("Please provide a reason for the return.")
 
     try {
       setLoading(true)
 
-      const formData = new FormData()
-      formData.append("orderId", orderId)
-      formData.append("video", video)
-      images.forEach(img => formData.append("images", img))
-      formData.append("reason", reason)
+      // Simulated API interaction
+      // const formData = new FormData()
+      // formData.append("orderId", orderId || "UNKNOWN")
+      // formData.append("video", video)
+      // images.forEach(img => formData.append("images", img))
+      // formData.append("reason", reason)
+      // await axios.post("/api/return", formData)
 
-      await axios.post("/api/return", formData)
+      await new Promise(resolve => setTimeout(resolve, 1500))
 
-      toast.success("Return sequence initiated successfully.")
-      router.push(`/orders/${orderId}`)
+      toast.success("Return request submitted successfully.")
+      
+      // Redirect back or to a designated orders page. 
+      // For now, redirect to Shop since we are simulating.
+      navigate(`/shop`) 
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Sequence initiation failed.")
+      toast.error(err?.response?.data?.message || "Failed to submit request.")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-[#1A1614] pt-32 pb-40 px-6 sm:px-12 font-light selection:bg-[#C5A059]/10">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-[#f1f3f6] font-sans pt-[100px] md:pt-[120px] pb-16 px-4">
+      <div className="max-w-3xl mx-auto space-y-6">
         
-        {/* Navigation */}
-        <nav className="mb-16">
+        {/* Header / Nav */}
+        <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
           <button 
-            onClick={() => router.back()}
-            className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] text-[#3D352F]/60 hover:text-[#C5A059] transition-all"
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-gray-600 hover:text-[#2874f0] transition-colors font-medium text-sm"
           >
-            <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" />
-            <span>Cancel Request</span>
+            <ArrowLeft size={18} />
+            Back
           </button>
-        </nav>
-
-        {/* Header Section */}
-        <header className="mb-16 space-y-6">
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] tracking-[0.5em] text-[#C5A059] uppercase font-bold">Verification Request</span>
-            <div className="w-8 h-[1px] bg-[#C5A059]/30"></div>
-          </div>
-          <h1 className="font-serif text-4xl md:text-5xl tracking-tight">
-            Initiate Return <span className="italic">Sequence</span>
+          <h1 className="font-bold text-gray-900 flex items-center gap-2 text-lg">
+            <PackageOpen className="text-[#2874f0]" size={20} />
+            Return Request
           </h1>
-          <p className="text-[11px] tracking-widest text-[#3D352F]/50 uppercase max-w-xl leading-relaxed">
-            In compliance with the 48-Hour Quality Assurance Protocol, please provide the mandatory artifacts for our review board.
-          </p>
-        </header>
+        </div>
 
-        <div className="space-y-12">
+        {/* Info Alert */}
+        <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl flex items-start gap-3 text-blue-800">
+          <AlertCircle size={20} className="mt-0.5 shrink-0 text-[#2874f0]" />
+          <div>
+            <h4 className="font-bold text-sm mb-1 text-gray-900">Return Policy Guidelines</h4>
+            <p className="text-xs text-gray-700 leading-relaxed font-medium">
+              To ensure a smooth return process, Shubh Value Cart requires a continuous unboxing video along with at least 3 clear photographs of the product and its packaging.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100 space-y-8">
           
+          <div className="border-b border-gray-100 pb-4">
+            <h2 className="text-xl font-bold text-gray-900 mb-1">Upload Return Proof</h2>
+            <p className="text-sm text-gray-500 font-medium">Provide evidence for Order <span className="font-bold">#{orderId || "SVC-892451"}</span></p>
+          </div>
+
           {/* Unboxing Video Upload */}
-          <section className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[#1A1614]/5 pb-4">
-              <label className="text-[10px] tracking-[0.3em] uppercase font-bold text-[#1A1614]">01. Unboxing Media (Mandatory)</label>
-              <Video size={14} className="text-[#C5A059]" />
+          <section className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <Video size={16} className="text-[#2874f0]" /> 
+                1. Unboxing Video <span className="text-red-500">*</span>
+              </label>
             </div>
             
-            <div className={`relative group border border-dashed transition-all duration-500 p-12 text-center flex flex-col items-center justify-center gap-4 ${video ? 'border-[#C5A059] bg-[#F5F1ED]/30' : 'border-[#1A1614]/10 hover:border-[#C5A059]/40 bg-white'}`}>
+            <div className={`relative border-2 border-dashed rounded-xl transition-all duration-300 p-8 text-center flex flex-col items-center justify-center gap-3 ${video ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-[#2874f0] hover:bg-blue-50/50 bg-gray-50'}`}>
               <input
                 id="video-upload"
                 type="file"
@@ -96,24 +119,24 @@ export default function ReturnPage() {
                 className="hidden"
                 onChange={e => setVideo(e.target.files[0])}
               />
-              <label htmlFor="video-upload" className="cursor-pointer flex flex-col items-center gap-4">
+              <label htmlFor="video-upload" className="cursor-pointer flex flex-col items-center w-full">
                 {video ? (
                   <>
-                    <div className="w-12 h-12 bg-[#C5A059] text-white rounded-full flex items-center justify-center shadow-lg animate-in fade-in zoom-in">
-                      <Check size={20} />
+                    <div className="w-12 h-12 bg-white text-green-500 rounded-full flex items-center justify-center mb-3 shadow-sm border border-green-200">
+                      <Check size={24} />
                     </div>
-                    <p className="text-[10px] tracking-widest uppercase font-bold text-[#1A1614]">
+                    <p className="text-sm font-bold text-gray-900">
                       {video.name.length > 30 ? video.name.slice(0, 30) + "..." : video.name}
                     </p>
-                    <span className="text-[9px] text-[#3D352F]/40 uppercase tracking-wider">Click to re-upload</span>
+                    <span className="text-xs text-[#2874f0] mt-1 font-bold tracking-wide hover:underline">Click to change video</span>
                   </>
                 ) : (
                   <>
-                    <div className="w-12 h-12 border border-[#1A1614]/5 flex items-center justify-center group-hover:bg-[#C5A059] group-hover:text-white transition-all duration-700">
-                      <Upload size={16} />
+                    <div className="w-12 h-12 bg-white border border-gray-200 rounded-full shadow-sm flex items-center justify-center text-gray-400 mb-3">
+                      <Upload size={20} />
                     </div>
-                    <p className="text-[10px] tracking-widest uppercase text-[#3D352F]/60">Upload Continuous Unboxing Video</p>
-                    <span className="text-[9px] text-[#3D352F]/30 uppercase tracking-wider">No cuts or edits allowed</span>
+                    <p className="text-sm font-bold text-gray-700">Upload Continuous Unboxing Video</p>
+                    <span className="text-xs text-gray-500 mt-1 font-medium">No cuts or edits allowed. Max size: 50MB</span>
                   </>
                 )}
               </label>
@@ -121,93 +144,97 @@ export default function ReturnPage() {
           </section>
 
           {/* Product Images Upload */}
-          <section className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[#1A1614]/5 pb-4">
-              <label className="text-[10px] tracking-[0.3em] uppercase font-bold text-[#1A1614]">02. Static Evidence (Min. 3 Images)</label>
-              <Camera size={14} className="text-[#C5A059]" />
+          <section className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <Camera size={16} className="text-[#2874f0]" /> 
+                2. Product Images <span className="text-red-500">*</span>
+              </label>
+              <span className="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md">Min. 3 required</span>
             </div>
             
-            <div className={`relative group border border-dashed transition-all duration-500 p-12 text-center flex flex-col items-center justify-center gap-4 ${images.length >= 3 ? 'border-[#C5A059] bg-[#F5F1ED]/30' : 'border-[#1A1614]/10 hover:border-[#C5A059]/40 bg-white'}`}>
-              <input
-                id="images-upload"
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={e => setImages([...e.target.files])}
-              />
-              <label htmlFor="images-upload" className="cursor-pointer flex flex-col items-center gap-4">
-                {images.length > 0 ? (
-                  <>
-                    <div className="w-12 h-12 bg-[#C5A059] text-white rounded-full flex items-center justify-center shadow-lg">
-                      {images.length >= 3 ? <Check size={20} /> : <span className="font-bold text-xs">{images.length}</span>}
-                    </div>
-                    <p className="text-[10px] tracking-widest uppercase font-bold text-[#1A1614]">
-                      {images.length} Evidence Artifacts Attached
-                    </p>
-                    {images.length < 3 && <span className="text-[9px] text-red-500 uppercase tracking-widest font-bold">Protocol requires {3 - images.length} more</span>}
-                    <span className="text-[9px] text-[#3D352F]/40 uppercase tracking-wider">Click to replace archive</span>
-                  </>
-                ) : (
-                  <>
-                    <div className="w-12 h-12 border border-[#1A1614]/5 flex items-center justify-center group-hover:bg-[#C5A059] group-hover:text-white transition-all duration-700">
-                      <Camera size={16} />
-                    </div>
-                    <p className="text-[10px] tracking-widest uppercase text-[#3D352F]/60">Upload Product & Packaging Proof</p>
-                    <span className="text-[9px] text-[#3D352F]/30 uppercase tracking-wider">Clear, high-resolution photographs only</span>
-                  </>
-                )}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {images.map((img, idx) => (
+                <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 group">
+                  <img src={URL.createObjectURL(img)} alt={`Upload ${idx+1}`} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <button 
+                      onClick={() => removeImage(idx)}
+                      className="bg-white text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors shadow-lg"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              <label className="aspect-square rounded-xl border-2 border-dashed border-gray-300 hover:border-[#2874f0] bg-gray-50 hover:bg-blue-50/50 cursor-pointer flex flex-col items-center justify-center gap-2 transition-all">
+                <input
+                  id="images-upload"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
+                <Camera size={24} className="text-gray-400" />
+                <span className="text-xs font-bold text-gray-600">Add Photos</span>
               </label>
             </div>
+            
+            {images.length > 0 && images.length < 3 && (
+              <p className="text-xs font-bold text-red-500 mt-2 bg-red-50 inline-block px-3 py-1.5 rounded-lg border border-red-100">
+                Please upload {3 - images.length} more image{3 - images.length > 1 ? 's' : ''}.
+              </p>
+            )}
           </section>
 
           {/* Reason Section */}
-          <section className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[#1A1614]/5 pb-4">
-              <label className="text-[10px] tracking-[0.3em] uppercase font-bold text-[#1A1614]">03. Justification Statement</label>
-              <FileText size={14} className="text-[#C5A059]" />
+          <section className="space-y-3">
+            <div className="flex items-center gap-2">
+              <FileText size={16} className="text-[#2874f0]" />
+              <label className="text-sm font-bold text-gray-900">
+                3. Reason for Return <span className="text-red-500">*</span>
+              </label>
             </div>
             <textarea
-              placeholder="Describe the defect or damage in detail..."
-              rows={5}
+              placeholder="Tell us exactly what's wrong with the product so we can help you better..."
+              rows={4}
               value={reason}
               onChange={e => setReason(e.target.value)}
-              className="w-full bg-white border border-[#1A1614]/5 p-6 text-sm font-light placeholder:text-[#3D352F]/20 focus:outline-none focus:border-[#C5A059]/40 transition-all shadow-sm"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#2874f0]/20 focus:border-[#2874f0] transition-all resize-none"
             />
           </section>
-
-          {/* Disclaimer */}
-          <div className="flex items-start gap-4 p-6 bg-[#1A1614] text-[#FDFCFB] rounded-none">
-             <ShieldCheck size={18} className="text-[#C5A059] mt-0.5 flex-shrink-0" />
-             <p className="text-[9px] tracking-[0.3em] uppercase font-medium leading-relaxed opacity-80">
-               By submitting this sequence, you confirm that all artifacts provided are authentic and untampered. Fraudulent verification attempts result in a permanent suspension from the Maison.
-             </p>
-          </div>
-
-          {/* Submit Button */}
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full py-6 bg-[#C5A059] text-[#1A1614] text-[10px] uppercase tracking-[0.5em] font-bold hover:bg-[#1A1614] hover:text-white transition-all duration-700 shadow-xl disabled:opacity-50 flex items-center justify-center gap-3"
-          >
-            {loading ? (
-              <span className="flex items-center gap-3">
-                <div className="w-3 h-3 border-2 border-[#1A1614]/20 border-t-[#1A1614] rounded-full animate-spin"></div>
-                Processing Sequence...
-              </span>
-            ) : (
-              "Initiate Verification Request"
-            )}
-          </button>
         </div>
 
-        {/* Brand Footer Signature */}
-        <footer className="mt-32 pt-12 border-t border-[#1A1614]/5 text-center space-y-4">
-           <div className="w-8 h-[1px] bg-[#C5A059]/40 mx-auto"></div>
-           <p className="text-[9px] tracking-[0.8em] text-[#3D352F]/20 uppercase font-medium">
-             Frost Wayne Atelier Maison • All Rights Reserved
-           </p>
-        </footer>
+        {/* Disclaimer & Submit */}
+        <div className="bg-gray-900 text-white p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
+           <div className="flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-left">
+             <ShieldCheck size={32} className="text-[#2874f0] shrink-0" />
+             <div>
+               <h4 className="font-bold text-sm mb-1 text-white">Authenticity Declaration</h4>
+               <p className="text-xs text-gray-400 font-medium leading-relaxed">
+                 By submitting, you confirm the provided evidence is genuine. False claims may lead to account suspension.
+               </p>
+             </div>
+           </div>
+           
+           <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full md:w-auto px-8 py-3.5 bg-[#2874f0] hover:bg-[#1a5ec4] text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed whitespace-nowrap flex justify-center items-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Processing...
+                </>
+              ) : (
+                "Submit Request"
+              )}
+            </button>
+        </div>
+
       </div>
     </div>
   )

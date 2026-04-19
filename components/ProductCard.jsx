@@ -1,7 +1,7 @@
 import React from 'react';
 import { Star, ArrowUpRight } from 'lucide-react';
 import Link from "next/link"
-
+import Loading from './Loading';
 /**
  * Luxury Editorial Product Card
  * High-end, sophisticated, and elegant aesthetic.
@@ -9,7 +9,7 @@ import Link from "next/link"
 const ProductCard = ({ product }) => {
     const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '';
     const productName = product?.name || "Signature Collection";
-    
+    const loading = !product;
     const rawPrice = product?.price || "0.00";
     const productPrice = typeof rawPrice === 'string' && rawPrice.includes('₹') ? rawPrice : `${currency}${rawPrice}`;
     
@@ -38,6 +38,7 @@ if (Array.isArray(product?.rating)) {
 
     const isDiscounted = !!productMrp;
 
+    if (!product) return <Loading />
     return (
         <Link 
   href={`/product/${productId}`} prefetch

@@ -8,6 +8,7 @@ import { MoveLeftIcon } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import FilterSidebar from "@/components/store/FilterSidebar"
 import { motion, AnimatePresence } from "framer-motion"
+import Loading from "@/components/Loading"
 
 function ShopContent() {
 
