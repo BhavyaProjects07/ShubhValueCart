@@ -30,3 +30,24 @@ export default function Home() {
     </div>
   )
 }
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Store",
+      name: "Shubh Value Cart",
+      url: "https://shubhavaluecart.in",
+      telephone: "+91XXXXXXXXXX",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Infront of Kalimai Temple",
+        addressLocality: "Dholpur",
+        addressRegion: "Rajasthan",
+        postalCode: "328001",
+        addressCountry: "IN",
+      },
+    }),
+  }}
+/>
