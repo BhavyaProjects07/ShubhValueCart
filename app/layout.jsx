@@ -34,9 +34,47 @@ const outfit = Outfit({
   weight: ["400", "500", "600"],
 });
 
+
 export const metadata = {
-  title: "Shubh Value Cart",
-  description: "Shubh Value Cart",
+  metadataBase: new URL("https://shubhavaluecart.in"),
+
+  title: {
+    default: "Shubh Value Cart - Best Grocery Store in Dholpur",
+    template: "%s | Shubh Value Cart",
+  },
+
+  description:
+    "Shop groceries, clothing, toys & daily essentials at Shubh Value Cart, Dholpur. Best prices with fast delivery.",
+
+  keywords: [
+    "Shubh Value Cart",
+    "Grocery store Dholpur",
+    "Online shopping Dholpur",
+    "Daily essentials India",
+    "Best mart in Dholpur"
+  ],
+
+  openGraph: {
+    title: "Shubh Value Cart",
+    description:
+      "Best grocery & daily needs store in Dholpur with great prices.",
+    url: "https://shubhavaluecart.in",
+    siteName: "Shubh Value Cart",
+    images: [
+      {
+        url: "/logo.png", // make sure this exists
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({ children }) {
