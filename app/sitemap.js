@@ -1,15 +1,27 @@
 export default async function sitemap() {
-  const products = await fetch("https://shubhavaluecart.in/api/products")
-    .then(res => res.json());
+  const baseUrl = "https://shubhavaluecart.in";
+
+  const res = await fetch(`${baseUrl}/api/products`, {
+    cache: "no-store",
+  });
+
+  const data = await res.json();
+
+  // ✅ FIX: extract array properly
+  const products = data.products || [];
 
   const productUrls = products.map((p) => ({
-    url: `https://shubhavaluecart.in/product/${p.id}`,
+    url: `${baseUrl}/product/${p.id}`,
     lastModified: new Date(),
   }));
 
   return [
     {
-      url: "https://shubhavaluecart.in",
+      url: baseUrl,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/shop`,
       lastModified: new Date(),
     },
     ...productUrls,
