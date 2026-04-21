@@ -225,7 +225,3 @@ export default function Shop() {
 }
 
 
-export const metadata = {
-  title: "Shop Products - Shubh Value Cart",
-  description: "Explore latest products at best prices in Dholpur",
-};
