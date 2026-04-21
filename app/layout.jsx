@@ -1,4 +1,3 @@
-
 import { Outfit } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import StoreProvider from "@/app/StoreProvider";
@@ -6,34 +5,10 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 
-if (typeof window !== "undefined") {
-  window.onerror = function (msg, url, line, col, error) {
-    document.body.innerHTML = `
-      <pre style="
-        padding:16px;
-        background:#0f172a;
-        color:#ff4d4f;
-        white-space:pre-wrap;
-        font-size:14px;
-      ">
-ERROR:
-${msg}
-
-FILE:
-${url}:${line}:${col}
-
-STACK:
-${error?.stack}
-      </pre>
-    `
-  }
-}
-
 const outfit = Outfit({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
-
 
 export const metadata = {
   metadataBase: new URL("https://shubhavaluecart.in"),
@@ -51,8 +26,18 @@ export const metadata = {
     "Grocery store Dholpur",
     "Online shopping Dholpur",
     "Daily essentials India",
-    "Best mart in Dholpur"
+    "Best mart in Dholpur",
+    "cheap grocery India",
+    "best supermarket near me",
   ],
+
+  verification: {
+    google: "google4cb4a348cbc76d44",
+  },
+
+  alternates: {
+    canonical: "https://shubhavaluecart.in",
+  },
 
   openGraph: {
     title: "Shubh Value Cart",
@@ -62,13 +47,25 @@ export const metadata = {
     siteName: "Shubh Value Cart",
     images: [
       {
-        url: "/logo.png", // make sure this exists
+        url: "/logo.png",
         width: 800,
         height: 600,
       },
     ],
     locale: "en_IN",
     type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Shubh Value Cart",
+    description:
+      "Best grocery & daily needs store in Dholpur with great prices.",
+    images: ["/logo.png"],
+  },
+
+  icons: {
+    icon: "/favicon.ico",
   },
 
   robots: {
@@ -85,8 +82,6 @@ export default function RootLayout({ children }) {
           <StoreProvider>
             <Toaster />
             {children}
-
-            {/* Vercel Web Analytics */}
             <Analytics />
           </StoreProvider>
         </body>
