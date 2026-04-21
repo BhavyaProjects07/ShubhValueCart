@@ -95,14 +95,3 @@ export default function Product() {
   );
 }
 
-export async function generateMetadata({ params }) {
-  const product = await getProduct(params.productId);
-
-  return {
-    title: product.name,
-    description: product.description,
-    openGraph: {
-      images: [product.images[0]],
-    },
-  };
-}
