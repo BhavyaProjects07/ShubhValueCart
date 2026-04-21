@@ -69,9 +69,14 @@ export const metadata = {
   },
 
   robots: {
+  index: true,
+  follow: true,
+  nocache: false,
+  googleBot: {
     index: true,
     follow: true,
   },
+},
 };
 
 export default function RootLayout({ children }) {
