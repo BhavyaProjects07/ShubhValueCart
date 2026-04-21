@@ -31,9 +31,9 @@ export const metadata = {
     "best supermarket near me",
   ],
 
-  verification: {
-    google: "google4cb4a348cbc76d44",
-  },
+ verification: {
+  google: "ABkkgK6T2caUmUVZh8fG6gXk02XftfWPBeC8zyVQEkc",
+},
 
   alternates: {
     canonical: "https://shubhavaluecart.in",
