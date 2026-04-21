@@ -1,7 +1,7 @@
 import HomeClient from "@/components/HomeClient";
 
 export const metadata = {
-  title: "Shubh Value Cart - Official Website | Grocery Store in Dholpur",
+  title: "Shubh Value Cart (shubhavaluecart.in) | Grocery Store in Dholpur",
   description:
     "Shubh Value Cart is a trusted grocery and daily needs store in Dholpur offering best prices and fast delivery.",
 };
