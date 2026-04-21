@@ -1,53 +1,38 @@
-'use client'
+import HomeClient from "@/components/HomeClient";
 
-import { useEffect } from "react"
-import { useDispatch } from "react-redux"
-import { fetchProducts } from "@/lib/features/product/productSlice"
+export const metadata = {
+  title: "Shubh Value Cart - Official Website | Grocery Store in Dholpur",
+  description:
+    "Shubh Value Cart is a trusted grocery and daily needs store in Dholpur offering best prices and fast delivery.",
+};
 
-import BestSelling from "@/components/BestSelling"
-import Hero from "@/components/Hero"
-import Newsletter from "@/components/Newsletter"
-import OurSpecs from "@/components/OurSpec"
-import LatestProducts from "@/components/LatestProducts"
-import Lookbook from "@/components/ExtraUI"
-
-export default function Home() {
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    // ✅ Always load default products for Home
-    dispatch(fetchProducts({}))
-  }, [])
-
+export default function Page() {
   return (
-    <div>
-      <Hero />
-      
-      <LatestProducts />
-      <BestSelling />
-      
-      <Newsletter />
-    </div>
-  )
-}
+    <>
+      {/* ✅ Structured Data (SEO BOOST) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Store",
+            name: "Shubh Value Cart",
+            url: "https://shubhavaluecart.in",
+            telephone: "+91XXXXXXXXXX",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: "Infront of Kalimai Temple",
+              addressLocality: "Dholpur",
+              addressRegion: "Rajasthan",
+              postalCode: "328001",
+              addressCountry: "IN",
+            },
+          }),
+        }}
+      />
 
-<script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Store",
-      name: "Shubh Value Cart",
-      url: "https://shubhavaluecart.in",
-      telephone: "+91XXXXXXXXXX",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Infront of Kalimai Temple",
-        addressLocality: "Dholpur",
-        addressRegion: "Rajasthan",
-        postalCode: "328001",
-        addressCountry: "IN",
-      },
-    }),
-  }}
-/>
+      {/* ✅ Client Component */}
+      <HomeClient />
+    </>
+  );
+}

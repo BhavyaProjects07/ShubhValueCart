@@ -15,6 +15,9 @@ import HeroSlider from './heroBanner';
 import Advertisement from './Advertisement';
 // --- DATA ---
 
+<h1 className="hidden">
+  Shubh Value Cart - Grocery Store in Dholpur
+</h1>
 
 
 
