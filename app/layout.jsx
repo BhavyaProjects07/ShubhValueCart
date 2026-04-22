@@ -11,7 +11,7 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://shubhavaluecart.in"),
+  metadataBase: new URL("https://www.shubhavaluecart.in"),
 
   title: {
     default: "Shubh Value Cart - Best Grocery Store in Dholpur",
@@ -32,18 +32,18 @@ export const metadata = {
   ],
 
  verification: {
-  google: "ABkkgK6T2caUmUVZh8fG6gXk02XftfWPBeC8zyVQEkc",
+  google: "uPaS5EP9TRR7BAzZNK7IR6oR8BeJoh47xHoydYAFJXU",
 },
 
   alternates: {
-    canonical: "https://shubhavaluecart.in",
+    canonical: "https://www.shubhavaluecart.in",
   },
 
   openGraph: {
     title: "Shubh Value Cart",
     description:
       "Best grocery & daily needs store in Dholpur with great prices.",
-    url: "https://shubhavaluecart.in",
+    url: "https://www.shubhavaluecart.in",
     siteName: "Shubh Value Cart",
     images: [
       {
