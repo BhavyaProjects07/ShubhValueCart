@@ -24,6 +24,13 @@ export default async function sitemap() {
       url: `${baseUrl}/shop`,
       lastModified: new Date(),
     },
+
+    {
+  url: `${baseUrl}/about`,
+  lastModified: new Date(),
+  changeFrequency: "monthly",
+  priority: 0.7,
+},
     ...productUrls,
   ];
 }
