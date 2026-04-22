@@ -73,22 +73,27 @@ function ShopContent() {
   
   /* ---------------- APPLY FILTER → UPDATE URL ---------------- */
   useEffect(() => {
-    const url =
-      `/shop?page=1` +
-      (category ? `&category=${category}` : "") +
-      (search ? `&search=${search}` : "") +
-      (filters.minPrice ? `&minPrice=${filters.minPrice}` : "") +
-      (filters.maxPrice ? `&maxPrice=${filters.maxPrice}` : "") +
-      (filters.minRating ? `&minRating=${filters.minRating}` : "") +
-      (filters.minDiscount ? `&minDiscount=${filters.minDiscount}` : "")
+  // ONLY update URL when user changes filters manually
+  // NOT on initial load
 
-    router.push(url)
-  }, [
-    filters.minPrice,
-    filters.maxPrice,
-    filters.minRating,
-    filters.minDiscount
-  ])
+  if (!searchParams.toString()) return;
+
+  const url =
+    `/shop?page=1` +
+    (category ? `&category=${category}` : "") +
+    (search ? `&search=${search}` : "") +
+    (filters.minPrice ? `&minPrice=${filters.minPrice}` : "") +
+    (filters.maxPrice ? `&maxPrice=${filters.maxPrice}` : "") +
+    (filters.minRating ? `&minRating=${filters.minRating}` : "") +
+    (filters.minDiscount ? `&minDiscount=${filters.minDiscount}` : "");
+
+  router.replace(url);
+}, [
+  filters.minPrice,
+  filters.maxPrice,
+  filters.minRating,
+  filters.minDiscount
+]);
 
   /* ---------------- UI ---------------- */
 

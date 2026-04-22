@@ -18,7 +18,7 @@ export default function Product() {
   useEffect(() => {
     const loadProduct = async () => {
       try {
-        console.log("🔥 Product ID:", productId);
+        
 
         // ✅ 1. Try Redux first (fast)
         const reduxProduct = reduxProducts.find(p => p.id === productId);
@@ -31,14 +31,14 @@ export default function Product() {
         }
 
         // ✅ 2. Fallback to API (reliable)
-        console.log("🌐 Fetching from API...");
+       
         const res = await fetch(`/api/products/${productId}`);
 
         if (!res.ok) throw new Error("Failed to fetch product");
 
         const data = await res.json();
 
-        console.log("✅ API Product:", data);
+    
 
         setProduct(data.product);
 
