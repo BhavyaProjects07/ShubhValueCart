@@ -1,5 +1,5 @@
 export default async function sitemap() {
-  const baseUrl = "https://shubhavaluecart.in";
+  const baseUrl = "https://www.shubhavaluecart.in";
 
   const res = await fetch(`${baseUrl}/api/products`, {
     cache: "no-store",

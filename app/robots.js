@@ -4,6 +4,6 @@ export default function robots() {
       userAgent: "*",
       allow: "/",
     },
-    host: "https://shubhavaluecart.in",
+    sitemap: "https://www.shubhavaluecart.in/sitemap.xml",
   };
 }
