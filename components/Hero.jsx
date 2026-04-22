@@ -142,10 +142,75 @@ const CustomNavbar = ({ categories }) => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      
+      {/* Top bar */}
+      <div className="bg-[#2874f0] text-white text-xs py-1.5 px-4 flex justify-between items-center hidden md:flex">
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1 font-medium"><MapPin className="w-3 h-3" /> Deliver to Mumbai 400001</span>
+        </div>
+        <div className="flex items-center gap-4 font-medium">
+          <a href="/create-store" className="hover:underline">Sell on Shubh Value Cart</a>
+          <a href="/orders" className="hover:underline">Track Order</a>
+          <a href="/about" className="hover:underline">24/7 Customer Care</a>
+        </div>
+      </div>
 
       {/* Main Nav */}
-      
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+
+  {/* Logo */}
+  <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/")}>
+    <div className="bg-[#2874f0] text-white px-2 py-1 rounded-md font-black text-lg">
+      SV
+    </div>
+    <div className="flex flex-col leading-none">
+      <span className="text-lg md:text-xl font-black text-[#2874f0]">Shubh Value</span>
+      <span className="text-[10px] font-bold text-[#ff9900] tracking-widest">CART</span>
+    </div>
+  </div>
+
+  {/* 🔥 SEARCH BAR (NEW - VERY IMPORTANT) */}
+  <div className="hidden md:flex flex-1 max-w-xl mx-6">
+    <input
+      type="text"
+      placeholder="Search for products, brands..."
+      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#2874f0] text-sm"
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          router.push(`/shop?search=${e.target.value}`)
+        }
+      }}
+    />
+  </div>
+
+  {/* Actions */}
+  <div className="flex items-center gap-4 md:gap-6">
+
+    {/* Login */}
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700"
+    >
+      <User className="w-5 h-5" />
+      Login
+    </motion.button>
+
+    {/* Cart */}
+    <motion.button
+      whileHover={{ scale: 1.08 }}
+      onClick={() => router.push("/cart")}
+      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700 relative"
+    >
+      <div className="relative">
+        <ShoppingCart className="w-6 h-6" />
+        <span className="absolute -top-2 -right-2 bg-[#ff9900] text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">
+          3
+        </span>
+      </div>
+      <span className="hidden md:block">Cart</span>
+    </motion.button>
+
+  </div>
+      </div>
 
       {/* Mini Category Bar (Desktop) */}
      <div className="border-t border-gray-100 bg-white">
