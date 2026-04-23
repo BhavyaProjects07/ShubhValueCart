@@ -67,17 +67,15 @@ const HeroSlider = () => {
     >
       {/* ✅ OPTIMIZED IMAGE */}
       <Image
-    key={banner.id}
-    src={banner.image}
-    alt="Banner"
-    fill
-    priority={i === 0}
-    sizes="100vw"
-    quality={50}
-    className={`object-cover transition-opacity duration-500 ${
-      i === current ? "opacity-100" : "opacity-0"
-    }`}
-  />
+        key={heroBanners[current].id}
+        src={heroBanners[current].image}
+        alt={heroBanners[current].title}
+        fill
+        priority={current === 0}
+        sizes="100vw"
+        quality={50}
+        className="object-cover transition-opacity duration-500 opacity-100"
+      />
 
       {/* OVERLAY */}
       <div

@@ -1,97 +1,79 @@
-'use client'
+import { notFound } from "next/navigation";
+import prisma from "@/lib/prisma";
+import ProductClient from "./ProductClient";
 
-import ProductDescription from "@/components/ProductDescription";
-import ProductDetails from "@/components/ProductDetails";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+const baseUrl = "https://www.shubhavaluecart.in";
 
-export default function Product() {
-
-  const { productId } = useParams();
-
-  const reduxProducts = useSelector(state => state.product.list);
-
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadProduct = async () => {
-      try {
-        
-
-        // ✅ 1. Try Redux first (fast)
-        const reduxProduct = reduxProducts.find(p => p.id === productId);
-
-        if (reduxProduct) {
-          console.log("⚡ Loaded from Redux");
-          setProduct(reduxProduct);
-          setLoading(false);
-          return;
-        }
-
-        // ✅ 2. Fallback to API (reliable)
-       
-        const res = await fetch(`/api/products/${productId}`);
-
-        if (!res.ok) throw new Error("Failed to fetch product");
-
-        const data = await res.json();
-
-    
-
-        setProduct(data.product);
-
-      } catch (error) {
-        console.error("❌ Product Fetch Error:", error);
-        setProduct(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (productId) loadProduct();
-
-    // scroll to top
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-  }, [productId, reduxProducts]);
-
-  // ✅ Loading State
-  if (loading) {
-    return (
-      <div className="p-10 text-center text-gray-500">
-        Loading product...
-      </div>
-    );
-  }
-
-  // ✅ Not Found State
-  if (!product) {
-    return (
-      <div className="p-10 text-center text-red-500">
-        Product not found
-      </div>
-    );
-  }
-
-  return (
-    <div className="mx-6">
-      <div className="max-w-7xl mx-auto">
-
-        {/* Breadcrumb */}
-        <div className="text-gray-600 text-sm mt-8 mb-5">
-          Home / Products / {product.category}
-        </div>
-
-        {/* Product Details */}
-        <ProductDetails product={product} />
-
-        {/* Description */}
-        <ProductDescription product={product} />
-
-      </div>
-    </div>
-  );
+async function getProduct(productId) {
+  return prisma.product.findFirst({
+    where: {
+      id: productId,
+      inStock: { not: false },
+      store: { isActive: true },
+    },
+    include: {
+      rating: true,
+      store: true,
+    },
+  });
 }
 
+export async function generateMetadata({ params }) {
+  const { productId } = await params;
+  const product = await getProduct(productId);
+
+  if (!product) {
+    return {
+      title: "Product not found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const description =
+    product.description?.replace(/\s+/g, " ").slice(0, 155) ||
+    `Buy ${product.name} online from Shubh Value Cart in Dholpur.`;
+  const image = product.images?.[0] || "/logo.png";
+
+  return {
+    title: `${product.name} - Shubh Value Cart`,
+    description,
+    alternates: {
+      canonical: `${baseUrl}/product/${product.id}`,
+    },
+    openGraph: {
+      title: product.name,
+      description,
+      url: `${baseUrl}/product/${product.id}`,
+      images: [image],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description,
+      images: [image],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
+    },
+  };
+}
+
+export default async function Product({ params }) {
+  const { productId } = await params;
+  const product = await getProduct(productId);
+
+  if (!product) {
+    notFound();
+  }
+
+  return <ProductClient productId={productId} initialProduct={product} />;
+}
