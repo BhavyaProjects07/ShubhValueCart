@@ -64,11 +64,7 @@ const ExtraUI = () => {
       <div className="flex gap-6 px-6 md:px-12 xl:px-24 pb-12 overflow-x-auto hide-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing">
         {COLLECTIONS.map((collection, i) => (
           <motion.div 
-            key={i}
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
+            
             className="flex-shrink-0 w-[85vw] sm:w-[400px] lg:w-[450px] aspect-[4/5] relative rounded-[2rem] overflow-hidden snap-center group"
           >
             <img 

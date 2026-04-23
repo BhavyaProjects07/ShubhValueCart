@@ -137,10 +137,8 @@ const CustomNavbar = ({ categories }) => {
 
   return (
     <motion.header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-white/95 backdrop-blur-md shadow-sm'}`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 'bg-white shadow-md' : 'bg-white/95 backdrop-blur-md shadow-sm'}`}
+      
     >
       {/* Top bar */}
       <div className="bg-[#2874f0] text-white text-xs py-1.5 px-4 flex justify-between items-center hidden md:flex">
@@ -187,7 +185,7 @@ const CustomNavbar = ({ categories }) => {
 
     {/* Login */}
     <motion.button
-      whileHover={{ scale: 1.05 }}
+      
       className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700"
     >
       <User className="w-5 h-5" />
@@ -196,7 +194,7 @@ const CustomNavbar = ({ categories }) => {
 
     {/* Cart */}
     <motion.button
-      whileHover={{ scale: 1.08 }}
+     
       onClick={() => router.push("/cart")}
       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700 relative"
     >
@@ -348,18 +346,19 @@ const CategoryGrid = React.memo(({ categories = [] }) => {
                 <div
                   className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl ${
                     cat.color || "bg-gray-100"
-                  } overflow-hidden relative shadow-sm border border-gray-100 transition-shadow duration-200 group-hover:shadow-md`}
+                  } overflow-hidden relative shadow-sm border border-gray-100 `}
                 >
-                  <img
-                    src={
-                      cat.image ||
-                      "https://via.placeholder.com/150?text=Category"
-                    }
-                    alt={cat.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover will-change-transform transition-transform duration-300 group-hover:scale-105"
-                  />
+                  <Image
+  src={
+    cat.image
+      ? `${cat.image}?w=200&q=60`
+      : "https://via.placeholder.com/150?text=Category"
+  }
+  alt={cat.name}
+  fill
+  sizes="100px"
+  className="object-cover"
+/>
 
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-200" />
@@ -389,9 +388,7 @@ const ProductCard = ({ product, isScrollable = false }) => {
 
   return (
     <motion.div 
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ y: -5 }}
+     
       className={`${isScrollable ? 'min-w-[260px] sm:min-w-[280px]' : 'w-full'} bg-white border border-gray-200 rounded-2xl p-4 relative group hover:shadow-2xl transition-all duration-300 flex flex-col`}
     >
       <div className="absolute top-3 left-3 bg-[#ff9900] text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-md z-10 shadow-sm flex items-center gap-1">
@@ -403,20 +400,17 @@ const ProductCard = ({ product, isScrollable = false }) => {
 
       <div className="h-[200px] sm:h-[240px] w-full mb-4 overflow-hidden rounded-xl bg-gray-50 shimmer flex items-center justify-center relative">
         <motion.img 
-          animate={{ scale: isHovered ? 1.1 : 1 }}
-          transition={{ duration: 0.4 }}
+          
           src={product.image} 
           alt={product.name} 
-          loading="lazy"
+          
           className="max-h-full object-contain mix-blend-multiply p-4 relative z-10" 
         />
         {/* Quick Add Overlay */}
         <AnimatePresence>
           {isHovered && (
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
+             
               className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-white via-white/90 to-transparent"
             >
               <button className="w-full bg-[#ff9900] hover:bg-[#e68a00] text-white font-bold py-2.5 rounded-lg shadow-md transition-colors text-sm flex items-center justify-center gap-2">
@@ -457,25 +451,16 @@ const MidBanner = ({ banner }) => {
 
   const router = useRouter();
   
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
+  
 
   return (
     <motion.div 
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6 }}
+      
       className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12"
     >
       <div className="relative h-[200px] sm:h-[300px] lg:h-[350px] rounded-2xl overflow-hidden group cursor-pointer shadow-md hover:shadow-xl transition-shadow">
         <motion.img 
-          style={{ y }}
+          
           src={banner.image} 
           alt={banner.title} 
           loading="lazy"
@@ -514,10 +499,7 @@ const SplitBanners = () => {
         {splitBanners.map((banner, idx) => (
           <motion.div 
             key={idx}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
+            
             onClick={() => {
                     if (banner.cat) {
                         router.push(`/shop?page=1&category=${banner.cat}`)
@@ -561,7 +543,7 @@ const ProductGrid = ({ title, products, icon: Icon }) => {
               <span className="absolute -bottom-4 left-0 w-1/2 h-1 bg-[#2874f0] rounded-full" />
             </h2>
           </div>
-          <motion.button whileHover={{ x: 5 }} className="text-[#2874f0] font-bold flex items-center gap-1 text-sm sm:text-base hover:underline">
+          <motion.button  className="text-[#2874f0] font-bold flex items-center gap-1 text-sm sm:text-base hover:underline">
             View All <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.button>
         </div>
@@ -597,7 +579,7 @@ const MultiCarousel = ({ title, products, icon: Icon }) => {
               <span className="absolute -bottom-4 left-0 w-1/2 h-1 bg-[#ff9900] rounded-full" />
             </h2>
           </div>
-          <motion.button whileHover={{ x: 5 }} className="text-[#2874f0] font-bold flex items-center gap-1 text-sm sm:text-base hover:underline">
+          <motion.button  className="text-[#2874f0] font-bold flex items-center gap-1 text-sm sm:text-base hover:underline">
             View All <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.button>
         </div>
@@ -646,9 +628,7 @@ export default function Hero2() {
   }, []);
   return (
     <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      
       className="min-h-screen bg-[#f1f3f6] font-sans overflow-x-hidden"
     >
       <style dangerouslySetInnerHTML={{__html: `
