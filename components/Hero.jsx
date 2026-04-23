@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import GridBanners from './GridBanners';
 import HeroSlider from './heroBanner';
 import Advertisement from './Advertisement';
+import Image from "next/image";
 // --- DATA ---
 
 <h1 className="hidden">
