@@ -229,7 +229,7 @@ const PrivacyPolicy = () => {
                 <Mail className="text-[#ff9900]" size={28} />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">Need Support?</h3>
-            <p className="text-sm text-gray-500 mb-4">Ensure all unboxing media and Order ID are attached.</p>
+            <p className="text-sm text-gray-500 mb-4">Stay Informed, We'd love to keep you updated with the latest news, exclusive offers, and valuable insights. Please give your consent to receive messages & RCS messages and emails from us.</p>
             <a href="mailto:shubhvaluecart@gmail.com" className="inline-block text-2xl sm:text-3xl font-bold text-[#2874f0] hover:text-[#ff9900] transition-colors">
               shubhvaluecart@gmail.com
             </a>

@@ -278,7 +278,7 @@ const Terms = () => {
             <section id="contact" className="mb-4 scroll-mt-32">
               <h2 className="text-2xl font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">13. Contact</h2>
               <div className="space-y-4 text-gray-600 leading-relaxed text-sm md:text-base">
-                <p>If you have any questions, concerns, or feedback regarding these Terms & Conditions, please contact our legal and support team:</p>
+                <p>Stay Informed, We'd love to keep you updated with the latest news, exclusive offers, and valuable insights. Please give your consent to receive messages & RCS messages and emails from us.</p>
                 <div className="bg-blue-50 border border-blue-100 p-6 rounded-lg mt-4 inline-block w-full sm:w-auto">
                   <p className="font-bold text-gray-900 mb-1">Shubh Value Cart Legal Team</p>
                   <p className="flex items-center gap-2 text-[#2874f0] font-medium">

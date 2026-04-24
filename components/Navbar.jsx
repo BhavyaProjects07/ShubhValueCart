@@ -124,7 +124,7 @@ useEffect(() => {
                 }
             `}</style>
 
-            <nav className="fixed top-0 left-0 w-full z-[100] bg-white/80 backdrop-blur-xl border-b border-gray-200/50 pointer-events-auto font-inter">
+            <nav className="fixed top-0 left-0 w-full z-[100] bg-white border-b border-gray-200/50 pointer-events-auto font-inter">
                 <div className="mx-6">
                     <div className="flex items-center justify-between max-w-[1400px] mx-auto py-4 transition-all duration-500">
 

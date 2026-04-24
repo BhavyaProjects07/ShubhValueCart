@@ -14,6 +14,8 @@ import GridBanners from './GridBanners';
 import HeroSlider from './heroBanner';
 import Advertisement from './Advertisement';
 import Image from "next/image";
+import ProductCard from './ProductCard';
+import FashionProducts from './Fashion';
 // --- DATA ---
 
 <h1 className="hidden">
@@ -384,65 +386,7 @@ const CategoryGrid = React.memo(({ categories = [] }) => {
 
 
 
-const ProductCard = ({ product, isScrollable = false }) => {
-  const [isHovered, setIsHovered] = useState(false);
 
-  return (
-    <motion.div 
-     
-      className={`${isScrollable ? 'min-w-[260px] sm:min-w-[280px]' : 'w-full'} bg-white border border-gray-200 rounded-2xl p-4 relative group hover:shadow-2xl transition-all duration-300 flex flex-col`}
-    >
-      <div className="absolute top-3 left-3 bg-[#ff9900] text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-md z-10 shadow-sm flex items-center gap-1">
-        <Percent className="w-3 h-3" /> {product.discount}
-      </div>
-      <button className="absolute top-3 right-3 text-gray-400 hover:text-red-500 z-10 bg-white rounded-full p-2 shadow-sm opacity-0 group-hover:opacity-100 transition-all border border-gray-100">
-        <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
-      </button>
-
-      <div className="h-[200px] sm:h-[240px] w-full mb-4 overflow-hidden rounded-xl bg-gray-50 shimmer flex items-center justify-center relative">
-        <motion.img 
-          
-          src={product.image} 
-          alt={product.name} 
-          
-          className="max-h-full object-contain mix-blend-multiply p-4 relative z-10" 
-        />
-        {/* Quick Add Overlay */}
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div 
-             
-              className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-white via-white/90 to-transparent"
-            >
-              <button className="w-full bg-[#ff9900] hover:bg-[#e68a00] text-white font-bold py-2.5 rounded-lg shadow-md transition-colors text-sm flex items-center justify-center gap-2">
-                <ShoppingCart className="w-4 h-4" /> Add to Cart
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <div className="flex-grow flex flex-col">
-        <h3 className="font-bold text-gray-800 text-sm sm:text-base line-clamp-2 mb-2 group-hover:text-[#2874f0] transition-colors leading-tight">
-          {product.name}
-        </h3>
-        
-        <div className="flex items-center gap-2 mb-3">
-          <div className="flex text-[#ff9900] bg-orange-50 px-1.5 py-0.5 rounded">
-            <span className="text-xs font-bold mr-1">{product.rating}</span>
-            <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
-          </div>
-          <span className="text-xs font-medium text-gray-500">({product.reviews} reviews)</span>
-        </div>
-
-        <div className="mt-auto flex items-baseline gap-2">
-          <span className="text-xl sm:text-2xl font-black text-gray-900">{product.price}</span>
-          <span className="text-xs sm:text-sm font-medium text-gray-400 line-through">{product.original}</span>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
 
 
 
@@ -532,31 +476,7 @@ const SplitBanners = () => {
 
 <GridBanners />
 
-const ProductGrid = ({ title, products, icon: Icon }) => {
-  return (
-    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-8">
-        <div className="flex items-center justify-between mb-6 sm:mb-8 border-b border-gray-100 pb-4">
-          <div className="flex items-center gap-3">
-            {Icon && <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-[#2874f0]" />}
-            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 relative">
-              {title}
-              <span className="absolute -bottom-4 left-0 w-1/2 h-1 bg-[#2874f0] rounded-full" />
-            </h2>
-          </div>
-          <motion.button  className="text-[#2874f0] font-bold flex items-center gap-1 text-sm sm:text-base hover:underline">
-            View All <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-          </motion.button>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-          {products.map((product, idx) => (
-            <ProductCard key={idx} product={product} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+
 
 const MultiCarousel = ({ title, products, icon: Icon }) => {
   const scrollRef = useRef(null);
@@ -569,47 +489,10 @@ const MultiCarousel = ({ title, products, icon: Icon }) => {
     }
   };
 
-  return (
-    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12 relative group">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-8">
-        <div className="flex items-center justify-between mb-6 sm:mb-8 border-b border-gray-100 pb-4">
-          <div className="flex items-center gap-3">
-            {Icon && <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-[#ff9900]" />}
-            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 relative">
-              {title}
-              <span className="absolute -bottom-4 left-0 w-1/2 h-1 bg-[#ff9900] rounded-full" />
-            </h2>
-          </div>
-          <motion.button  className="text-[#2874f0] font-bold flex items-center gap-1 text-sm sm:text-base hover:underline">
-            View All <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-          </motion.button>
-        </div>
-
-        <button 
-          onClick={() => scroll('left')}
-          className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-900 opacity-0 group-hover:opacity-100 transition-all z-20 shadow-xl hidden md:flex hover:bg-gray-50"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-
-        <div ref={scrollRef} className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 pb-4 cursor-grab active:cursor-grabbing snap-x snap-mandatory">
-          {products.map((product, idx) => (
-            <div key={idx} className="snap-start shrink-0">
-              <ProductCard product={product} isScrollable={true} />
-            </div>
-          ))}
-        </div>
-
-        <button 
-          onClick={() => scroll('right')}
-          className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-900 opacity-0 group-hover:opacity-100 transition-all z-20 shadow-xl hidden md:flex hover:bg-gray-50"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-      </div>
-    </div>
-  );
+  
 };
+
+
 
 export default function Hero2() {
 
@@ -662,6 +545,7 @@ export default function Hero2() {
         
         <MidBanner banner={midBanners[0]} />
         <MultiCarousel title="Upcoming Electronics..Stay Tuned" products={deals} icon={Zap} />
+        <FashionProducts/>
         <MidBanner banner={midBanners[1]} />
         
       </div>
