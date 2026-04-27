@@ -1,232 +1,283 @@
-'use client'
+import ShopClient from "@/components/ShopClient";
 
-import { useEffect, Suspense, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { fetchProducts } from "@/lib/features/product/productSlice"
-import ProductCard from "@/components/ProductCard"
-import { MoveLeftIcon } from "lucide-react"
-import { useRouter, useSearchParams } from "next/navigation"
-import FilterSidebar from "@/components/store/FilterSidebar"
-import { motion, AnimatePresence } from "framer-motion"
-import Loading from "@/components/Loading"
+const BASE_URL = "https://shubhavaluecart.in";
 
-function ShopContent() {
+export const metadata = {
+  metadataBase: new URL(BASE_URL),
 
-  const router = useRouter()
-  const searchParams = useSearchParams()
+  title: {
+    default:
+      "Shop Grocery, Toys, Clothes & Cosmetics Online | Shubh Value Cart",
+    template: "%s | Shubh Value Cart",
+  },
 
-  // ✅ URL STATE (SOURCE OF TRUTH)
-  const search = searchParams.get("search") || ""
-  const category = searchParams.get("category") || ""
-  const page = Number(searchParams.get("page")) || 1
+  description:
+    "Buy groceries, toys, clothes, cosmetics and daily essentials online at best prices from Shubh Value Cart. Trusted shopping experience with quality products and smooth delivery.",
 
-  const minPrice = Number(searchParams.get("minPrice")) || 0
-  const maxPrice = Number(searchParams.get("maxPrice")) || 10000
-  const minRating = Number(searchParams.get("minRating")) || 0
-  const minDiscount = Number(searchParams.get("minDiscount")) || 0
+  keywords: [
+    "shop online india",
+    "buy grocery online",
+    "online grocery store",
+    "buy toys online",
+    "kids toys online",
+    "clothes shopping online",
+    "cosmetics online shopping",
+    "daily essentials online",
+    "best grocery prices",
+    "Shubh Value Cart",
+    "Shubh Value Cart shop",
+    "Dholpur grocery store",
+    "Dholpur online shopping",
+    "buy products in Dholpur",
+    "local online store Rajasthan",
+  ],
 
-  const dispatch = useDispatch()
-  const products = useSelector(state => state.product.list) || []
-  const pagination = useSelector(state => state.product.pagination) || {}
+  category: "shopping",
 
-  /* ---------------- LOCAL FILTER UI STATE ---------------- */
-  const [filters, setFilters] = useState({
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+
+  alternates: {
+    canonical: `${BASE_URL}/shop`,
+  },
+
+  openGraph: {
+    title: "Shop Grocery, Toys, Clothes & Cosmetics Online",
+    description:
+      "Explore groceries, toys, clothes, cosmetics and daily essentials online at Shubh Value Cart.",
+    url: `${BASE_URL}/shop`,
+    siteName: "Shubh Value Cart",
+    type: "website",
+    locale: "en_IN",
+    images: [
+      {
+        url: `${BASE_URL}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Shubh Value Cart Shop",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Shubh Value Cart Shop",
+    description:
+      "Buy groceries, toys, clothes, cosmetics and essentials online at best prices.",
+    images: [`${BASE_URL}/og-image.jpg`],
+  },
+
+  verification: {
+    google: "ADD_YOUR_GOOGLE_VERIFICATION_CODE",
+  },
+
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+};
+
+export default async function ShopPage({ searchParams }) {
+  const category = searchParams?.category || "";
+  const search = searchParams?.search || "";
+  const page = Number(searchParams?.page || 1);
+
+  const minPrice = Number(searchParams?.minPrice || 0);
+  const maxPrice = Number(searchParams?.maxPrice || 10000);
+  const minRating = Number(searchParams?.minRating || 0);
+  const minDiscount = Number(searchParams?.minDiscount || 0);
+
+  const initialFilters = {
+    category,
+    search,
+    page,
     minPrice,
     maxPrice,
     minRating,
     minDiscount,
-  })
+  };
 
-  const [showFilters, setShowFilters] = useState(false)
+  const canonicalUrl = `${BASE_URL}/shop`;
 
-  /* ---------------- SYNC URL → FILTER STATE ---------------- */
-  useEffect(() => {
-    setFilters({
-      minPrice,
-      maxPrice,
-      minRating,
-      minDiscount,
-    })
-  }, [minPrice, maxPrice, minRating, minDiscount])
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Shubh Value Cart Shop",
+    url: canonicalUrl,
+    description:
+      "Buy groceries, toys, clothes, cosmetics and daily essentials online.",
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Shubh Value Cart",
+      url: BASE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Shubh Value Cart",
+      url: BASE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${BASE_URL}/logo.png`,
+      },
+    },
+    inLanguage: "en-IN",
+  };
 
-  /* ---------------- FETCH PRODUCTS ---------------- */
-  useEffect(() => {
-  dispatch(fetchProducts({
-    search,
-    category,
-    page,
-    minPrice: filters.minPrice,
-    maxPrice: filters.maxPrice,
-    minRating: filters.minRating,
-    minDiscount: filters.minDiscount
-  }))
-}, [
-  search,
-  category,
-  page,
-  filters.minPrice,
-  filters.maxPrice,
-  filters.minRating,
-  filters.minDiscount,
-  dispatch
-  ])
-  
-  /* ---------------- APPLY FILTER → UPDATE URL ---------------- */
-  useEffect(() => {
-  // ONLY update URL when user changes filters manually
-  // NOT on initial load
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Shop",
+        item: canonicalUrl,
+      },
+    ],
+  };
 
-  if (!searchParams.toString()) return;
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Shubh Value Cart",
+    url: BASE_URL,
+    logo: `${BASE_URL}/logo.png`,
+    sameAs: [],
+  };
 
-  const url =
-    `/shop?page=1` +
-    (category ? `&category=${category}` : "") +
-    (search ? `&search=${search}` : "") +
-    (filters.minPrice ? `&minPrice=${filters.minPrice}` : "") +
-    (filters.maxPrice ? `&maxPrice=${filters.maxPrice}` : "") +
-    (filters.minRating ? `&minRating=${filters.minRating}` : "") +
-    (filters.minDiscount ? `&minDiscount=${filters.minDiscount}` : "");
-
-  router.replace(url);
-}, [
-  filters.minPrice,
-  filters.maxPrice,
-  filters.minRating,
-  filters.minDiscount
-]);
-
-  /* ---------------- UI ---------------- */
-
-  const totalPages = pagination?.totalPages || 1
-
-  const heading = search
-    ? `Search results for "${search}"`
-    : category
-    ? category.replace("-", " ").toUpperCase()
-    : "All Products"
-
-  /* ---------------- URL BUILDER ---------------- */
-
-  const buildUrl = (newPage) => {
-    let url = `/shop?page=${newPage}`
-
-    if (category) url += `&category=${category}`
-    if (search) url += `&search=${search}`
-
-    if (minPrice) url += `&minPrice=${minPrice}`
-    if (maxPrice) url += `&maxPrice=${maxPrice}`
-    if (minRating) url += `&minRating=${minRating}`
-    if (minDiscount) url += `&minDiscount=${minDiscount}`
-
-    return url
-  }
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What products are available at Shubh Value Cart?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "You can shop groceries, toys, clothes, cosmetics and daily essentials.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Why shop from Shubh Value Cart?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "We focus on value pricing, quality products and a smooth online shopping experience.",
+        },
+      },
+    ],
+  };
 
   return (
-    <div className="min-h-screen bg-white pt-24 pb-32">
+    <>
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionSchema),
+        }}
+      />
 
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 xl:px-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
 
-        {/* HEADER */}
-        <motion.div className="mb-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationSchema),
+        }}
+      />
 
-          <div onClick={() => router.push("/shop")} className="cursor-pointer mb-4">
-            {search && <MoveLeftIcon size={16} />}
-          </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
 
-          <h1 className="text-4xl font-bold">{heading}</h1>
+      {/* Semantic SEO Heading */}
+      <header className="sr-only">
+        <h1>Shop Grocery, Toys, Clothes & Cosmetics Online</h1>
+        <p>
+          Buy groceries, toys, clothing, cosmetics and daily essentials from
+          Shubh Value Cart.
+        </p>
+      </header>
 
-          <button
-  onClick={() => setShowFilters(true)}
-  className="md:hidden mt-4 px-4 py-2 bg-black text-white rounded-lg"
->
-  Filters
-</button>
+      {/* Main Shop UI */}
+      <ShopClient initialFilters={initialFilters} />
 
-        </motion.div>
+      {/* Rich SEO Content */}
+      <section className="max-w-[1400px] mx-auto px-6 md:px-12 xl:px-24 py-14">
+        <h2 className="text-3xl font-bold mb-5">
+          Buy Best Products Online at Shubh Value Cart
+        </h2>
 
-        <div className="flex gap-10">
+        <p className="text-gray-600 leading-8 mb-6">
+          Welcome to Shubh Value Cart, your trusted online destination for
+          groceries, toys, clothes, cosmetics and daily essentials. We aim to
+          provide affordable pricing, quality products and a smooth shopping
+          experience for every customer.
+        </p>
 
-          {/* SIDEBAR */}
-          
-            <FilterSidebar
-  filters={filters}
-  setFilters={setFilters}
-  isOpen={showFilters}
-  setIsOpen={setShowFilters}
-/>
-          
+        <p className="text-gray-600 leading-8 mb-6">
+          Browse multiple categories, compare products and shop with confidence.
+          Whether you need home essentials, kids toys, beauty products or
+          fashion items, our collection is designed for convenience and value.
+        </p>
 
-          {/* PRODUCTS */}
-          <div className="flex-1">
+        <h3 className="text-2xl font-semibold mb-4">
+          Why Choose Shubh Value Cart?
+        </h3>
 
-            {products.length === 0 ? (
-              <div className="text-center py-20">
-                No products found
-              </div>
-            ) : (
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                className="grid grid-cols-2 lg:grid-cols-3 gap-6"
-              >
-                {products.map(product => (
-                  <div key={product.id}>
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </motion.div>
-            )}
+        <ul className="list-disc pl-6 text-gray-600 leading-8 space-y-2">
+          <li>Affordable prices on daily essentials</li>
+          <li>Wide selection across categories</li>
+          <li>Trusted quality products</li>
+          <li>Simple and smooth online shopping</li>
+          <li>Growing local brand with customer focus</li>
+        </ul>
 
-            {/* PAGINATION */}
-            {totalPages > 1 && (
-              <div className="flex justify-center mt-10 gap-2">
+        <h3 className="text-2xl font-semibold mt-10 mb-4">
+          Popular Categories
+        </h3>
 
-                <button
-                  onClick={() => router.push(buildUrl(Math.max(1, page - 1)))}
-                  disabled={page === 1}
-                >
-                  Prev
-                </button>
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .slice(Math.max(page - 2, 0), page + 2)
-                  .map(p => (
-                    <button
-                      key={p}
-                      onClick={() => router.push(buildUrl(p))}
-                      className={p === page ? "font-bold text-blue-500" : ""}
-                    >
-                      {p}
-                    </button>
-                  ))}
-
-                <button
-                  onClick={() => router.push(buildUrl(Math.min(totalPages, page + 1)))}
-                  disabled={page === totalPages}
-                >
-                  Next
-                </button>
-
-              </div>
-            )}
-
-          </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <a href="/shop?category=grocery" className="underline">
+            Grocery Products
+          </a>
+           
+          <a href="/shop?category=toys" className="underline">
+            Toys Collection
+          </a>
+          <a href="/shop?category=clothes" className="underline">
+            Clothes & Fashion
+          </a>
+          <a href="/shop?category=cosmetics" className="underline">
+            Cosmetics & Beauty
+          </a>
         </div>
-
-        {/* MOBILE FILTER */}
-        
-
-      </div>
-    </div>
-  )
+      </section>
+    </>
+  );
 }
-
-export default function Shop() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ShopContent />
-    </Suspense>
-  )
-}
-
-

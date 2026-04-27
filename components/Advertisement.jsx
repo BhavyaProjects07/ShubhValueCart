@@ -177,7 +177,7 @@ export default function Advertisement() {
   return (
     <section
       className="relative w-full overflow-hidden group bg-gray-100"
-      style={{ height: "clamp(120px, 20vw, 220px)" }}
+      style={{ height: "clamp(160px, 28vw, 380px)" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       aria-label="Promotions"
