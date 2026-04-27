@@ -42,7 +42,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/ws": "^8.18.1",
-    "inngest": "^4.2.4",
+    "inngest": "^3.54.0",
     "tailwindcss": "^4.2.1"
   }
 }
