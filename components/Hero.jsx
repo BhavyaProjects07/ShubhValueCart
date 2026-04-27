@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+
 import { 
   Search, ShoppingCart, User, ChevronLeft, ChevronRight, 
   Star, Heart, Menu, MapPin, ChevronDown, Zap, Clock, Tag,
@@ -18,9 +18,7 @@ import ProductCard from './ProductCard';
 import FashionProducts from './Fashion';
 // --- DATA ---
 
-<h1 className="hidden">
-  Shubh Value Cart - Grocery Store in Dholpur
-</h1>
+
 
 
 
@@ -127,21 +125,20 @@ const CustomNavbar = ({ categories }) => {
   }, []);
 
   useEffect(() => {
-          axios.get('/api/public/coupons')
-              .then(res => {
-                  if (res.data?.length) {
-                      setCoupon(res.data[0])
-                  }
-              })
-              .catch(err => {
-                  console.error('COUPON FETCH ERROR:', err)
-              })
-      }, [])
+    axios.get('/api/public/coupons')
+      .then(res => {
+        if (res.data?.length) {
+          setCoupon(res.data[0])
+        }
+      })
+      .catch(err => {
+        console.error('COUPON FETCH ERROR:', err)
+      })
+  }, [])
 
   return (
-    <motion.header 
+    <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 'bg-white shadow-md' : 'bg-white/95 backdrop-blur-md shadow-sm'}`}
-      
     >
       {/* Top bar */}
       <div className="bg-[#2874f0] text-white text-xs py-1.5 px-4 flex justify-between items-center hidden md:flex">
@@ -158,170 +155,161 @@ const CustomNavbar = ({ categories }) => {
       {/* Main Nav */}
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
 
-  {/* Logo */}
-  <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/")}>
-    <div className="bg-[#2874f0] text-white px-2 py-1 rounded-md font-black text-lg">
-      SV
-    </div>
-    <div className="flex flex-col leading-none">
-      <span className="text-lg md:text-xl font-black text-[#2874f0]">Shubh Value</span>
-      <span className="text-[10px] font-bold text-[#ff9900] tracking-widest">CART</span>
-    </div>
-  </div>
+        {/* Logo */}
+        <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/")}>
+          <div className="bg-[#2874f0] text-white px-2 py-1 rounded-md font-black text-lg">
+            SV
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="text-lg md:text-xl font-black text-[#2874f0]">Shubh Value</span>
+            <span className="text-[10px] font-bold text-[#ff9900] tracking-widest">CART</span>
+          </div>
+        </div>
 
-  {/* 🔥 SEARCH BAR (NEW - VERY IMPORTANT) */}
-  <div className="hidden md:flex flex-1 max-w-xl mx-6">
-    <input
-      type="text"
-      placeholder="Search for products, brands..."
-      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#2874f0] text-sm"
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          router.push(`/shop?search=${e.target.value}`)
-        }
-      }}
-    />
-  </div>
+        {/* 🔥 SEARCH BAR (NEW - VERY IMPORTANT) */}
+        <div className="hidden md:flex flex-1 max-w-xl mx-6">
+          <input
+            type="text"
+            placeholder="Search for products, brands..."
+            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#2874f0] text-sm"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                router.push(`/shop?search=${e.target.value}`)
+              }
+            }}
+          />
+        </div>
 
-  {/* Actions */}
-  <div className="flex items-center gap-4 md:gap-6">
+        {/* Actions */}
+        <div className="flex items-center gap-4 md:gap-6">
 
-    {/* Login */}
-    <motion.button
+          {/* Login */}
+          <button
       
-      className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700"
-    >
-      <User className="w-5 h-5" />
-      Login
-    </motion.button>
+            className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700"
+          >
+            <User className="w-5 h-5" />
+            Login
+          </button>
 
-    {/* Cart */}
-    <motion.button
+          {/* Cart */}
+          <button
      
-      onClick={() => router.push("/cart")}
-      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700 relative"
-    >
-      <div className="relative">
-        <ShoppingCart className="w-6 h-6" />
-        <span className="absolute -top-2 -right-2 bg-[#ff9900] text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">
-          3
-        </span>
-      </div>
-      <span className="hidden md:block">Cart</span>
-    </motion.button>
+            onClick={() => router.push("/cart")}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition font-semibold text-gray-700 relative"
+          >
+            <div className="relative">
+              <ShoppingCart className="w-6 h-6" />
+              <span className="absolute -top-2 -right-2 bg-[#ff9900] text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">
+                3
+              </span>
+            </div>
+            <span className="hidden md:block">Cart</span>
+          </button>
 
-  </div>
+        </div>
       </div>
 
       {/* Mini Category Bar (Desktop) */}
-     <div className="border-t border-gray-100 bg-white">
-  <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-3 overflow-x-auto hide-scrollbar">
+      <div className="border-t border-gray-100 bg-white">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-3 overflow-x-auto hide-scrollbar">
 
-    {/* All Categories */}
-    <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-sm font-semibold shrink-0">
-      <Menu className="w-4 h-4" /> All
-    </button>
+          {/* All Categories */}
+          <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-sm font-semibold shrink-0">
+            <Menu className="w-4 h-4" /> All
+          </button>
 
-    {/* Categories */}
-    {categories.slice(0, 10).map((cat, idx) => (
-      <button
-        key={idx}
-        onClick={() => router.push(`/shop?category=${cat.slug}`)}
-        className="px-3 py-1.5 rounded-full text-sm font-semibold text-gray-700 bg-gray-50 hover:bg-[#2874f0] hover:text-white transition-all shrink-0"
-      >
-        {cat.name}
-      </button>
-    ))}
+          {/* Categories */}
+          {categories.slice(0, 10).map((cat, idx) => (
+            <button
+              key={idx}
+              onClick={() => router.push(`/shop?category=${cat.slug}`)}
+              className="px-3 py-1.5 rounded-full text-sm font-semibold text-gray-700 bg-gray-50 hover:bg-[#2874f0] hover:text-white transition-all shrink-0"
+            >
+              {cat.name}
+            </button>
+          ))}
 
-  </div>
+        </div>
       </div>
 
       {/* Bank Offer Strip */}
       {showOffer && (
-  <div className="bg-gradient-to-r from-[#2874f0] via-[#3b82f6] to-[#60a5fa] text-white border-b border-blue-300 shadow-sm">
+        <div className="bg-gradient-to-r from-[#2874f0] via-[#3b82f6] to-[#60a5fa] text-white border-b border-blue-300 shadow-sm">
     
-    <div className="px-4 py-2 flex items-center justify-between gap-3">
+          <div className="px-4 py-2 flex items-center justify-between gap-3">
 
-      {/* LEFT CONTENT */}
-      <div className="flex items-center gap-3 overflow-x-auto whitespace-nowrap hide-scrollbar">
+            {/* LEFT CONTENT */}
+            <div className="flex items-center gap-3 overflow-x-auto whitespace-nowrap hide-scrollbar">
 
-        {/* ICON */}
-        <div className="animate-pulse text-lg">💳</div>
+              {/* ICON */}
+              <div className="animate-pulse text-lg">💳</div>
 
-        {coupon ? (
-          <div className="flex items-center gap-2">
+              {coupon ? (
+                <div className="flex items-center gap-2">
 
-            {/* DESCRIPTION */}
-            <span className="text-[11px] sm:text-xs font-medium opacity-90">
-              {coupon.description}
-            </span>
+                  {/* DESCRIPTION */}
+                  <span className="text-[11px] sm:text-xs font-medium opacity-90">
+                    {coupon.description}
+                  </span>
 
-            {/* COUPON BADGE */}
-            <span className="bg-white text-[#2874f0] font-bold px-2.5 py-1 rounded-md text-[11px] sm:text-xs shadow-sm tracking-wide">
-              {coupon.code}
-            </span>
+                  {/* COUPON BADGE */}
+                  <span className="bg-white text-[#2874f0] font-bold px-2.5 py-1 rounded-md text-[11px] sm:text-xs shadow-sm tracking-wide">
+                    {coupon.code}
+                  </span>
 
-            {/* COPY BUTTON */}
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(coupon.code);
-              }}
-              className="text-[10px] sm:text-xs font-semibold bg-white/20 hover:bg-white/30 px-2 py-1 rounded transition-all"
-            >
-              Copy
-            </button>
+                  {/* COPY BUTTON */}
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(coupon.code);
+                    }}
+                    className="text-[10px] sm:text-xs font-semibold bg-white/20 hover:bg-white/30 px-2 py-1 rounded transition-all"
+                  >
+                    Copy
+                  </button>
+
+                </div>
+              ) : (
+                <span className="text-white/70 text-xs">Loading offers...</span>
+              )}
+
+            </div>
+
+            {/* RIGHT ACTIONS */}
+            <div className="flex items-center gap-2">
+
+              {/* CTA */}
+              {coupon && (
+                <button
+                  onClick={() => navigator.clipboard.writeText(coupon.code)}
+                  className="hidden sm:block bg-white text-[#2874f0] text-xs font-bold px-3 py-1.5 rounded-md hover:scale-105 active:scale-95 transition-all shadow"
+                >
+                  Apply Now
+                </button>
+              )}
+
+              {/* CLOSE BUTTON */}
+              <button
+                onClick={() => {
+                  setShowOffer(false);
+                  localStorage.setItem("hideOffer", "true");
+                }}
+                className="text-white/80 hover:text-white text-sm font-bold px-2"
+              >
+                ✕
+              </button>
+
+            </div>
 
           </div>
-        ) : (
-          <span className="text-white/70 text-xs">Loading offers...</span>
-        )}
-
-      </div>
-
-      {/* RIGHT ACTIONS */}
-      <div className="flex items-center gap-2">
-
-        {/* CTA */}
-        {coupon && (
-          <button
-            onClick={() => navigator.clipboard.writeText(coupon.code)}
-            className="hidden sm:block bg-white text-[#2874f0] text-xs font-bold px-3 py-1.5 rounded-md hover:scale-105 active:scale-95 transition-all shadow"
-          >
-            Apply Now
-          </button>
-        )}
-
-        {/* CLOSE BUTTON */}
-        <button
-          onClick={() => {
-            setShowOffer(false);
-            localStorage.setItem("hideOffer", "true");
-          }}
-          className="text-white/80 hover:text-white text-sm font-bold px-2"
-        >
-          ✕
-        </button>
-
-      </div>
-
-    </div>
-  </div>
+        </div>
       )}
       {/* Mobile Search */}
       
-    </motion.header>
+    </header>
   );
-  useEffect(() => {
-  const hidden = localStorage.getItem("hideOffer");
-  if (hidden === "true") {
-    setShowOffer(false);
-  }
-  }, []);
-  };
-
-
-<HeroSlider/>
-
+  
+}
 
 
 
@@ -390,7 +378,7 @@ const CategoryGrid = React.memo(({ categories = [] }) => {
 
 
 
-<Deals/>
+
 
 const MidBanner = ({ banner }) => {
 
@@ -399,12 +387,12 @@ const MidBanner = ({ banner }) => {
   
 
   return (
-    <motion.div 
+    <div 
       
       className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12"
     >
       <div className="relative h-[200px] sm:h-[300px] lg:h-[350px] rounded-2xl overflow-hidden group cursor-pointer shadow-md hover:shadow-xl transition-shadow">
-        <motion.img 
+        <img 
           
           src={banner.image} 
           alt={banner.title} 
@@ -430,7 +418,7 @@ const MidBanner = ({ banner }) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -442,7 +430,7 @@ const SplitBanners = () => {
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {splitBanners.map((banner, idx) => (
-          <motion.div 
+          <div 
             key={idx}
             
             onClick={() => {
@@ -467,34 +455,22 @@ const SplitBanners = () => {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
   );
 };
 
-<GridBanners />
 
 
 
-const MultiCarousel = ({ title, products, icon: Icon }) => {
-  const scrollRef = useRef(null);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const { current } = scrollRef;
-      const scrollAmount = direction === 'left' ? -current.offsetWidth : current.offsetWidth;
-      current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  
-};
 
 
 
 export default function Hero2() {
+
+  
 
   const [categories, setCategories] = useState([]);
 
@@ -511,7 +487,7 @@ export default function Hero2() {
     fetchCategories();
   }, []);
   return (
-    <motion.div 
+    <div 
       
       className="min-h-screen bg-[#f1f3f6] font-sans overflow-x-hidden"
     >
@@ -535,7 +511,7 @@ export default function Hero2() {
         }
       `}} />
       <CustomNavbar categories={categories}/>
-      <div className="pt-[110px] md:pt-[170px]">
+      <div className="pt-[70px] md:pt-[100px]">
         <HeroSlider />
         <CategoryGrid categories={cats} />
         <Advertisement/>
@@ -544,11 +520,11 @@ export default function Hero2() {
         <SplitBanners />
         
         <MidBanner banner={midBanners[0]} />
-        <MultiCarousel title="Upcoming Electronics..Stay Tuned" products={deals} icon={Zap} />
+        
         <FashionProducts/>
         <MidBanner banner={midBanners[1]} />
         
       </div>
-    </motion.div>
+    </div>
   );
 }

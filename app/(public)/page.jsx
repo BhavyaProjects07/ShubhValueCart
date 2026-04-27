@@ -1,24 +1,28 @@
 import HomeClient from "@/components/HomeClient";
 
 export const metadata = {
-  title: "Shubh Value Cart (shubhavaluecart.in) | Grocery Store in Dholpur",
+  title: "Shubh Value Cart | Grocery Store in Dholpur",
   description:
-    "Shubh Value Cart is a trusted grocery and daily needs store in Dholpur offering best prices and fast delivery.",
+    "Trusted grocery and daily needs store in Dholpur offering groceries, fashion, toys and essentials.",
+  alternates: {
+    canonical: "https://www.shubhavaluecart.in/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function Page() {
   return (
     <>
-      {/* ✅ SEO Content (SERVER SIDE) */}
-      <main>
-        <h1>Best Grocery Store in Dholpur</h1>
+      <main className="sr-only">
+        <h1>Shubh Value Cart – Best Grocery Store in Dholpur</h1>
         <p>
-          Shubh Value Cart is a trusted supermarket in Dholpur offering
-          groceries, clothing, toys, and daily essentials at affordable prices.
+          Buy groceries, clothing, toys and daily essentials online from Shubh Value Cart in Dholpur.
         </p>
       </main>
 
-      {/* ✅ Client UI */}
       <HomeClient />
     </>
   );
