@@ -511,7 +511,7 @@ export default function Hero2() {
         }
       `}} />
       <CustomNavbar categories={categories}/>
-      <div className="pt-[70px] md:pt-[100px]">
+      <div className="pt-[100px] md:pt-[130px]">
         <HeroSlider />
         <CategoryGrid categories={cats} />
         <Advertisement/>
