@@ -35,3 +35,20 @@
 .animate-scaleIn {
   animation: scaleIn 0.3s ease-out;
 }
+
+@keyframes shopslide {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-shopslide {
+  animation: shopslide 28s linear infinite;
+}
+
+.animate-shopslide:hover {
+  animation-play-state: paused;
+}

@@ -10,6 +10,7 @@ import FilterSidebar from "@/components/store/FilterSidebar"
 import { motion, AnimatePresence } from "framer-motion"
 import Loading from "@/components/Loading"
 import Advertisement from "@/components/Advertisement"
+import Deals from "./Deals"
 
 function ShopContent() {
 
@@ -218,7 +219,10 @@ function ShopContent() {
         {/* MOBILE FILTER */}
         
 
-      </div>
+          </div>
+
+         <Deals/> 
+
     </div>
   )
 }
