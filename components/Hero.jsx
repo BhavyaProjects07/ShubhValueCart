@@ -6,8 +6,7 @@ import {
   Gift, Percent, Truck
 } from 'lucide-react';
 import axios from 'axios';
-import Deals from "@/components/Deals"
-import Recommended from "@/components/Recommended"
+
 import Dealstrip from "@/components/home/Dealstrip"
 import { useRouter } from "next/navigation";
 import GridBanners from './GridBanners';

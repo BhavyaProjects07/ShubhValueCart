@@ -1,5 +1,5 @@
 import HomeClient from "@/components/HomeClient";
-import ExtraUI from "@/components/ExtraUI";
+
 
 const BASE_URL = "https://www.shubhavaluecart.in";
 
