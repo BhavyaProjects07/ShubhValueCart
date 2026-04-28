@@ -107,19 +107,19 @@ const Footer = () => {
               )}
             </Link>
 
-            <p className="text-gray-600 leading-8 max-w-md mb-8">
+            <p className="text-gray-400 leading-8 max-w-md mb-8">
               Shubh Value Cart is a trusted online shopping destination
               for groceries, toys, clothes, cosmetics and daily needs.
               Built for value, convenience and smart family shopping.
             </p>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-2xl bg-white border border-gray-200 p-4">
+              <div className="rounded-2xl bg-slate-500/10 border border-gray-200 p-4">
                 <p className="text-2xl font-black text-green-600">149+</p>
                 <p className="text-sm text-gray-500">Google Reviews</p>
               </div>
 
-              <div className="rounded-2xl bg-white border border-gray-200 p-4">
+              <div className="rounded-2xl bg-slate-500/10 border border-gray-200 p-4">
                 <p className="text-2xl font-black text-green-600">4.9★</p>
                 <p className="text-sm text-gray-500">Customer Rating</p>
               </div>
@@ -139,7 +139,7 @@ const Footer = () => {
                   <li key={i}>
                     <Link
                       href={item.path}
-                      className="text-gray-600 hover:text-green-600 transition-colors"
+                      className="text-gray-400 hover:text-white transition-colors"
                     >
                       {item.text}
                     </Link>
@@ -159,7 +159,7 @@ const Footer = () => {
                   <li key={i}>
                     <Link
                       href={item.path}
-                      className="text-gray-600 hover:text-green-600 transition-colors"
+                      className="text-gray-400 hover:text-white transition-colors"
                     >
                       {item.text}
                     </Link>
@@ -179,7 +179,7 @@ const Footer = () => {
                   <li key={i}>
                     <Link
                       href={item.path}
-                      className="text-gray-600 hover:text-green-600 transition-colors"
+                      className="text-gray-400 hover:text-white transition-colors"
                     >
                       {item.text}
                     </Link>
@@ -195,24 +195,24 @@ const Footer = () => {
           variants={fadeUp}
           className="grid md:grid-cols-3 gap-6 mb-14"
         >
-          <div className="rounded-2xl bg-white border border-gray-200 p-6">
+          <div className="rounded-2xl bg-slate-500/10 border border-gray-200 p-6">
             <h4 className="font-bold mb-2">Address</h4>
-            <p className="text-gray-600 text-sm leading-7">
+            <p className="text-gray-400 text-sm leading-7">
               Infront of Kalimai Temple, Defence Colony,
               Dholpur, Rajasthan 328001, India
             </p>
           </div>
 
-          <div className="rounded-2xl bg-white border border-gray-200 p-6">
+          <div className="rounded-2xl bg-slate-500/10 border border-gray-200 p-6">
             <h4 className="font-bold mb-2">Email</h4>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-400 text-sm">
               shubhvaluecart@gmail.com
             </p>
           </div>
 
-          <div className="rounded-2xl bg-white border border-gray-200 p-6">
+          <div className="rounded-2xl bg-slate-500/10 border border-gray-200 p-6">
             <h4 className="font-bold mb-2">Phone</h4>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-400 text-sm">
               +91 89554 97322
             </p>
           </div>
