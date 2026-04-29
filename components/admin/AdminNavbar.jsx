@@ -13,6 +13,9 @@ const AdminNavbar = () => {
         <Image src={assets.logo || "/placeholder.svg"} alt="Logo" className="w-36 " />
       </Link>
       <div className="flex items-center gap-3 text-[#6b5d52]">
+        <Link href="/store" className="text-lg font-medium hover:text-[#2874f0] transition-colors">
+        <p>Store Dashboard</p>
+        </Link>
         <p>Hi, {user?.firstName || "Admin"}</p>
         <UserButton />
       </div>
