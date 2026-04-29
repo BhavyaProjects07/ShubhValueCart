@@ -490,27 +490,9 @@ export default function Hero2() {
       
       className="min-h-screen bg-[#f1f3f6] font-sans overflow-x-hidden"
     >
-      <style dangerouslySetInnerHTML={{__html: `
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .shimmer {
-          background: #f6f7f8;
-          background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
-          background-repeat: no-repeat;
-          background-size: 800px 100%; 
-          animation-duration: 1.5s;
-          animation-fill-mode: forwards; 
-          animation-iteration-count: infinite;
-          animation-name: placeholderShimmer;
-          animation-timing-function: linear;
-        }
-        @keyframes placeholderShimmer {
-          0% { background-position: -468px 0; }
-          100% { background-position: 468px 0; }
-        }
-      `}} />
+      
       <CustomNavbar categories={categories}/>
-      <div className="pt-[100px] md:pt-[130px]">
+      <div className="pt-[120px] md:pt-[150px]">
         <HeroSlider />
         <CategoryGrid categories={cats} />
         <Advertisement/>

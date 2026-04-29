@@ -47,10 +47,7 @@ const dispatch = useDispatch()
 
   // ✅ Rotate every 24 hours
   useEffect(() => {
-    if (deals.length === 0) {
-      console.warn("⚠️ No deals available")
-      return
-    }
+    
 
     const getDailyDeals = () => {
       const now = new Date()
@@ -63,8 +60,7 @@ const dispatch = useDispatch()
 
       const sliced = deals.slice(start, end)
 
-      console.log("📅 Day Index:", dayIndex)
-      console.log("📊 Showing deals:", sliced)
+      
 
       setVisibleDeals(sliced)
     }
