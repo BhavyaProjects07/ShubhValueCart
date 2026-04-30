@@ -18,12 +18,15 @@ import {
   ShoppingBag
 } from "lucide-react"
 
+
+
 export default function OrderViewDetailsPage() {
   const { orderId } = useParams()
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(true)
   const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || "₹"
-  const router = useRouter()
+  const router = useRouter() // Use useRouter for navigation
+  
 
   const isReturnEligible = () => {
     if (!order || order.status !== "DELIVERED") return false
@@ -59,75 +62,78 @@ export default function OrderViewDetailsPage() {
   )
 
   return (
-    <div className="min-h-screen bg-[#f5f1e9] text-[#1A1614] pt-32 pb-40 px-6 mb-20 font-light">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#f1f3f6] font-sans pt-[100px] md:pt-[120px] pb-16 px-4">
+      <div className="max-w-4xl mx-auto space-y-6">
         
         {/* Navigation */}
-        <nav className="mb-12">
+        <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
           <button 
-            onClick={() => router.back()}
-            className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] text-[#3D352F]/50 hover:text-[#1A1614] transition-all"
+            onClick={() =>router.push(-1)}
+            className="flex items-center gap-2 text-gray-600 hover:text-[#2874f0] transition-colors font-medium text-sm"
           >
-            <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" />
-            <span>Order History</span>
+            <ArrowLeft size={18} />
+            Order History
           </button>
-        </nav>
+        </div>
 
         {/* Header Section */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
-          <div className="space-y-2">
-            <p className="text-[10px] tracking-[0.5em] text-[#C5A059] uppercase font-bold">Confirmation</p>
-            <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-[#1A1614]">
-              Order <span className="italic">#{order.id.slice(-8).toUpperCase()}</span>
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100">
+          <div>
+            <p className="text-sm font-bold text-[#2874f0] mb-2 uppercase tracking-wide">Order Confirmation</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
+              Order #{order.id?.slice(-8).toUpperCase()}
             </h1>
           </div>
           
-          <div className="flex flex-col md:items-end gap-3">
-            <span className="text-[9px] tracking-[0.3em] text-[#3D352F]/40 uppercase">Current Status</span>
-            <div className="px-6 py-2 border border-[#1A1614]/10 bg-white rounded-none shadow-sm flex items-center gap-3">
-               <div className={`w-1.5 h-1.5 rounded-full ${order.status === 'DELIVERED' ? 'bg-green-600' : 'bg-[#C5A059]'}`}></div>
-               <span className="text-[10px] tracking-[0.3em] font-bold uppercase text-[#1A1614]">
-                 {order.status.replace(/_/g, " ")}
+          <div className="flex flex-col items-start md:items-end gap-2 bg-gray-50 px-5 py-3 rounded-xl border border-gray-100 w-full md:w-auto">
+            <span className="text-xs text-gray-500 font-bold uppercase tracking-wider">Current Status</span>
+            <div className="flex items-center gap-2">
+               <div className={`w-2.5 h-2.5 rounded-full ${order.status === 'DELIVERED' ? 'bg-green-500' : 'bg-[#ff9900]'}`}></div>
+               <span className="text-sm font-bold text-gray-900 uppercase">
+                 {order.status?.replace(/_/g, " ")}
                </span>
             </div>
           </div>
         </header>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 border-t border-[#1A1614]/5 pt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Left Column: Items */}
-          <div className="lg:col-span-7 space-y-12">
-            <div className="space-y-8">
-              <div className="flex items-center justify-between border-b border-[#1A1614]/5 pb-4">
-                <h2 className="font-serif text-xl italic flex items-center gap-3">
-                  <ShoppingBag size={18} className="text-[#C5A059]/60" />
+          <div className="lg:col-span-2 space-y-6">
+            
+            {/* Purchased Items */}
+            <div className="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
+                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <ShoppingBag size={20} className="text-[#2874f0]" />
                   Purchased Items
                 </h2>
-                <span className="text-[10px] tracking-widest text-[#3D352F]/40 uppercase">{order.orderItems.length} {order.orderItems.length === 1 ? 'Item' : 'Items'}</span>
+                <span className="text-sm font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                  {order.orderItems?.length || 0} {(order.orderItems?.length === 1) ? 'Item' : 'Items'}
+                </span>
               </div>
               
-              <div className="divide-y divide-[#1A1614]/5">
-                {order.orderItems.map((item, index) => (
-                  <div key={index} className="flex gap-8 py-8 first:pt-0 group">
-                    <div className="w-24 h-32 bg-[#F5F1ED] overflow-hidden flex-shrink-0 relative border border-[#1A1614]/5">
-                      <Image
-                        src={item.product.images[0]}
-                        alt={item.product.name}
-                        fill
-                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
+              <div className="divide-y divide-gray-100">
+                {order.orderItems?.map((item, index) => (
+                  <div key={index} className="flex gap-4 py-6 first:pt-0">
+                    <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100">
+                      <img
+                        src={item.product?.images?.[0] || 'https://via.placeholder.com/150'}
+                        alt={item.product?.name || 'Product Image'}
+                        className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="flex-1 flex flex-col justify-between">
-                      <div className="space-y-1">
-                        <h3 className="font-serif text-xl text-[#1A1614] hover:text-[#C5A059] transition-colors cursor-pointer leading-tight">{item.product.name}</h3>
-                        <p className="text-[10px] tracking-[0.2em] text-[#3D352F]/50 uppercase">
+                      <div>
+                        <h3 className="font-bold text-gray-900 text-sm md:text-base mb-1">{item.product?.name}</h3>
+                        <p className="text-xs font-bold text-gray-500 uppercase">
                           Qty: {item.quantity}
                         </p>
                       </div>
-                      <div className="flex justify-between items-baseline pt-4">
-                        <span className="text-[10px] tracking-wider text-[#3D352F]/30 uppercase">Unit: {currency}{item.price}</span>
-                        <span className="font-serif text-2xl text-[#1A1614]">{currency}{item.price * item.quantity}</span>
+                      <div className="flex justify-between items-center mt-2">
+                        <span className="text-xs text-gray-500 font-medium">Unit: {currency}{item.price}</span>
+                        <span className="font-bold text-gray-900 text-lg">{currency}{item.price * item.quantity}</span>
                       </div>
                     </div>
                   </div>
@@ -136,86 +142,84 @@ export default function OrderViewDetailsPage() {
             </div>
 
             {/* Financial Summary */}
-            <div className="p-10 bg-white border border-[#1A1614]/5">
-               <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                  <div className="flex items-center gap-4 text-[#3D352F]/40">
-                    <CreditCard size={18} />
-                    <span className="text-[10px] tracking-[0.5em] uppercase font-bold">Total Investment</span>
+            <div className="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100">
+               <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-50 text-[#2874f0] rounded-full flex items-center justify-center">
+                      <CreditCard size={20} />
+                    </div>
+                    <span className="font-bold text-gray-700">Total Amount</span>
                   </div>
-                  <div className="text-right">
-                    <span className="font-serif text-5xl text-[#1A1614]">{currency}{order.total}</span>
+                  <div>
+                    <span className="text-3xl font-black text-[#2874f0]">{currency}{order.total}</span>
                   </div>
                </div>
             </div>
           </div>
 
           {/* Right Column: Information Sidebar */}
-          <div className="lg:col-span-5 space-y-16">
+          <div className="space-y-6">
             
             {/* Shipping Info */}
-            <section className="space-y-8 bg-white/50 p-8 border border-[#1A1614]/5">
-              <h3 className="text-[10px] tracking-[0.4em] text-[#C5A059] uppercase font-bold border-b border-[#C5A059]/10 pb-4 flex items-center gap-3">
-                <MapPin size={14} /> Shipping Destination
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-5">
+              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b border-gray-100 pb-3 flex items-center gap-2">
+                <MapPin size={16} className="text-[#2874f0]" /> 
+                Shipping Details
               </h3>
-              <div className="space-y-6 text-sm leading-relaxed text-[#3D352F]">
+              <div className="space-y-4">
                 <div>
-                  <p className="text-[9px] tracking-[0.2em] text-[#3D352F]/40 uppercase mb-1">Recipient</p>
-                  <p className="font-serif text-lg text-[#1A1614]">{order.address.name}</p>
+                  <p className="text-xs text-gray-500 font-bold mb-1 uppercase">Delivered To</p>
+                  <p className="font-bold text-gray-900">{order.address?.name}</p>
                 </div>
-                <div className="space-y-1 font-light opacity-80 italic">
-                  <p>{order.address.street}</p>
-                  <p>{order.address.city}, {order.address.state}</p>
+                <div className="text-sm text-gray-600 font-medium leading-relaxed bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <p>{order.address?.street}</p>
+                  <p>{order.address?.city}, {order.address?.state}</p>
                 </div>
-                <div className="pt-4 border-t border-[#1A1614]/5 flex items-center gap-3 text-[11px] tracking-widest uppercase opacity-60">
-                   <Truck size={14} className="text-[#C5A059]" />
-                   <span>{order.address.phone}</span>
+                <div className="flex items-center gap-2 text-sm text-gray-700 font-bold">
+                   <Truck size={16} className="text-[#2874f0]" />
+                   <span>{order.address?.phone}</span>
                 </div>
               </div>
-            </section>
+            </div>
 
-            {/* Verification Protocol */}
-            <section className="bg-white p-10 border border-[#1A1614]/5 shadow-sm space-y-8">
-               <div className="space-y-2">
-                 <div className="flex items-center gap-3">
-                    <ShieldCheck size={18} className="text-[#C5A059]" />
-                    <h3 className="font-serif text-xl italic">Verification Protocol</h3>
-                 </div>
-                 <p className="text-[9px] tracking-[0.2em] text-[#3D352F]/40 uppercase">Maison Quality Assurance</p>
+            {/* Verification / Returns */}
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-5">
+               <div className="flex gap-2 border-b border-gray-100 pb-3">
+                  <ShieldCheck size={20} className="text-[#2874f0]" />
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-sm">Return Policy</h3>
+                    <p className="text-xs text-gray-500 font-medium mt-0.5">Shubh Value Cart Protection</p>
+                  </div>
                </div>
                
                {isReturnEligible() ? (
-                 <div className="space-y-6">
-                    <p className="text-[11px] leading-relaxed text-[#3D352F]/70 uppercase tracking-widest font-light">
-                      The sequence is currently within the 48-hour inspection window. If artifacts are damaged, you may initiate a review.
+                 <div className="space-y-4">
+                    <p className="text-xs font-medium text-gray-600 leading-relaxed">
+                      You are within the 48-hour return window. If your product is damaged or incorrect, you may request a return.
                     </p>
                     <button
                       onClick={() => router.push(`/return/${order.id}`)}
-                      className="w-full py-5 bg-[#1A1614] text-white text-[10px] uppercase tracking-[0.4em] font-bold hover:bg-[#C5A059] transition-all duration-500 shadow-md hover:shadow-lg"
+                      className="w-full py-3 bg-[#2874f0] hover:bg-[#1a5ec4] text-white text-sm font-bold rounded-xl transition-all shadow-md mt-2"
                     >
                       Request Return
                     </button>
                  </div>
                ) : (
-                 <div className="space-y-6">
-                    <div className="flex items-start gap-4 p-4 border border-[#1A1614]/5 bg-[#FDFCFB]">
-                       <AlertCircle size={14} className="text-[#C5A059] mt-0.5 flex-shrink-0" />
-                       <p className="text-[10px] tracking-widest text-[#1A1614]/60 uppercase font-bold leading-relaxed">
+                 <div className="space-y-4 text-center pb-2">
+                    <div className="flex items-start gap-3 p-3 bg-red-50 text-red-800 rounded-lg border border-red-100 text-left">
+                       <AlertCircle size={16} className="text-red-500 mt-0.5 shrink-0" />
+                       <p className="text-xs font-bold leading-relaxed">
                          {order.returnRequest 
-                           ? "A verification request has already been logged." 
-                           : "The 48-hour verification window has concluded or order is in transit."}
+                           ? "A return request has already been submitted." 
+                           : "The 48-hour return window has closed or the order is not yet delivered."}
                        </p>
                     </div>
-                    <p className="text-[9px] tracking-[0.3em] text-[#3D352F]/30 uppercase text-center italic font-light">
-                      Refer to the Maison Policy for further details on quality standards.
-                    </p>
                  </div>
                )}
-            </section>
+            </div>
           </div>
-        </div>
 
-        {/* Footer Signature */}
-        
+        </div>
       </div>
     </div>
   )

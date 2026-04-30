@@ -44,7 +44,7 @@ export default function ReturnPage() {
       toast.success("Return sequence initiated successfully.")
       router.push(`/orders/${orderId}`)
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Sequence initiation failed.")
+      toast.error(err?.response?.data?.message || "Video must be less than 10MB.")
     } finally {
       setLoading(false)
     }
