@@ -18,6 +18,11 @@ const ProductCard = ({ product }) => {
     
     const productImage = product?.images?.[0] || product?.image || "https://picsum.photos/seed/luxury/800/1000";
     const productId = product?.id || "000";
+
+    const discountPercentage =
+        product.mrp > product.price
+            ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
+            : 0;
     
     // Calculate rating safely
     let avgRating = 0;
@@ -93,6 +98,12 @@ if (Array.isArray(product?.rating)) {
                         {productPrice}
                     </span>
                 </div>
+
+                {discountPercentage > 0 && (
+                    <div className="mt-2 px-2 py-1 bg-green-100 text-green-800 text-xs font-bold tracking-wide rounded">
+                        {discountPercentage}% OFF
+                    </div>
+                )}
                 
                 
                 {/* Minimalist Rating */}
