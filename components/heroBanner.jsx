@@ -11,7 +11,7 @@ const heroBanners = [
     image: "https://ik.imagekit.io/rsjsqdge7/Screenshot%202026-04-12%20195306.png?tr=w-1600,q-60",
     badge: "Mega Sale",
     title: "Shubh Value Cart",
-    subtitle: "Up to 10% OFF on Groceries and SkinCare",
+    subtitle: "Up to 20% OFF on Groceries and SkinCare",
     color: "from-black/70 via-black/70 to-black/70",
     accent: "bg-blue-500",
   },

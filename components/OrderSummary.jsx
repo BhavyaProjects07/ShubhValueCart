@@ -232,7 +232,7 @@ await axios.post(
     // 📦 COD FLOW
     // =============================
    
-    router.push("/orders-success");
+    router.push("/order-success");
     dispatch(fetchCart({ getToken }));
 
   } catch (error) {
