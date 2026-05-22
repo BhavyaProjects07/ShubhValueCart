@@ -75,7 +75,7 @@ const skip = (page - 1) * limit
 // ---------- EXTRACT CHILD CATEGORY ----------
 const extractChildCategory = (desc) => {
   if (!desc) return null
-  const match = desc.match(/Child category\s*:\s*(.+)/i)
+  const match = desc.match(/Category\s*:\s*(.+)/i)
   return match ? match[1].trim().toLowerCase() : null
 }
 

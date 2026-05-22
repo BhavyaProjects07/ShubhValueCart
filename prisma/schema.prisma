@@ -34,10 +34,16 @@ model Product {
   price       Float
   images      String[]
   category    String
+
+  // NEW
+  stock       Int      @default(0)
+
   inStock     Boolean  @default(true)
+
   storeId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
   hasSizes    Boolean  @default(false)
   sizes       Json? // { XS: true, S: false, ... }
 

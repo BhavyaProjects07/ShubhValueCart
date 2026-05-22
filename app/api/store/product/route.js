@@ -36,7 +36,7 @@ export async function POST(request) {
     const price = Number(formData.get("price") || 0);
     const mrp = Number(formData.get("mrp") || 0);
     const category = formData.get("category")?.trim();
-
+    const stock = Number(formData.get("stock") || 0);
     const hasSizes = formData.get("hasSizes") === "true";
     const sizesRaw = formData.get("sizes");
 
@@ -104,6 +104,7 @@ else {
         images: imagesUrl,
         category,
         storeId,
+        stock,
         hasSizes,
         sizes,
       },

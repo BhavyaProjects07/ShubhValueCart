@@ -2,106 +2,322 @@ import XLSX from "xlsx";
 import axios from "axios";
 import FormData from "form-data";
 
+// ---------------- SETTINGS ----------------
+const CONCURRENT_UPLOADS = 5;
+const BATCH_DELAY = 1500;
+const API_URL = "http://localhost:3000/api/store/product";
+
+// ---------------- HELPER ----------------
+const sleep = (ms) =>
+  new Promise((resolve) =>
+    setTimeout(resolve, ms)
+  );
+
 // ---------------- LOAD EXCEL ----------------
-const workbook = XLSX.readFile("./output.xlsx");
-const sheet = workbook.Sheets[workbook.SheetNames[0]];
-const data = XLSX.utils.sheet_to_json(sheet);
+const workbook = XLSX.readFile("./stocks2_with_images.xlsx");
 
-console.log("📦 Total Products:", data.length);
+const sheet =
+  workbook.Sheets[
+    workbook.SheetNames[0]
+  ];
 
-// ---------------- FILTER VALID PRODUCTS ----------------
+const data =
+  XLSX.utils.sheet_to_json(sheet);
+
+console.log(
+  "📦 Total Rows:",
+  data.length
+);
+
+// ---------------- NORMALIZE EXCEL DATA ----------------
 const products = data
-  .filter(p => p.Products && p.price)
-  .slice(0, 2631);
+  .map((p) => ({
+    name:
+      p.Products?.toString().trim() || "",
+
+    description:
+      p.Description?.toString().trim() || "",
+
+    price:
+      Number(
+        p["Selling Price"]
+      ) || 0,
+
+    mrp:
+      Number(
+        p.MRP
+      ) || 0,
+
+    parentCategory:
+      p.Parent_Category
+        ?.toString()
+        .trim() || "General",
+
+    childCategory:
+      p.Category
+        ?.toString()
+        .trim() || "Misc",
+
+    qty:
+      Number(
+        p.Qty
+      ) || 0,
+
+    stockValue:
+      Number(
+        p["Stock Value"]
+      ) || 0,
+
+    image:
+      p.images
+        ?.toString()
+        .trim() || "",
+
+    department:
+      p.Department
+        ?.toString()
+        .trim() || "",
+
+    branch:
+      p["Branch Name"]
+        ?.toString()
+        .trim() || "",
+
+    unit:
+      p.Unit
+        ?.toString()
+        .trim() || "",
+
+    itemCode:
+      p["Item Code"]
+        ?.toString()
+        .trim() || "",
+  }))
+  .filter(
+    (p) =>
+      p.name &&
+      p.price > 0
+  );
+
+console.log(
+  "✅ Valid Products:",
+  products.length
+);
 
 if (products.length === 0) {
-  console.log("❌ No valid products found");
+  console.log(
+    "❌ No valid products found"
+  );
+
   process.exit();
 }
 
-// ---------------- MAIN FUNCTION ----------------
-async function uploadProducts() {
-  for (let i = 0; i < products.length; i++) {
-    const product = products[i];
+// ---------------- SINGLE PRODUCT ----------------
+async function uploadSingleProduct(
+  product,
+  index
+) {
+  try {
 
-    try {
-      console.log(`\n🚀 Uploading (${i + 1}/${products.length}):`, product.Products);
+    console.log(
+      `🚀 Uploading (${index + 1}/${products.length}): ${product.name}`
+    );
 
-      const formData = new FormData();
+    const formData =
+      new FormData();
 
-      // ---------------- CLEAN DATA ----------------
-      const name = product.Products?.trim() || "Test Product";
+    const category = product.parentCategory;
 
-      const description =
-        product.description?.trim() ||
-        `${name} - High quality product`;
+    const description =
+      product.description ||
+      `${product.name} - Premium Quality Product`;
 
-      const price = Number(product.price) || 0;
-      const mrp = Number(product.mrp) || 0;
+      
+    // actual image only
+    const imageUrl =
+      product.image &&
+      product.image.startsWith(
+        "http"
+      )
+        ? product.image
+        : "";
 
-      const category = product.category || "General";
+    const stock =
+      product.stockValue;
 
-      // ---------------- IMAGE HANDLING ----------------
-      let imageUrl = "";
+    // validation
+    if (
+      !product.name ||
+      product.price <= 0 ||
+      product.mrp <= 0 ||
+      !imageUrl
+    ) {
+      console.log(
+        `⛔ Skipped: ${product.name}`
+      );
 
-      if (
-        product.images &&
-        typeof product.images === "string" &&
-        product.images.trim().startsWith("http")
-      ) {
-        imageUrl = product.images.trim();
-        console.log("🖼️ Using Excel Image:", imageUrl);
-      } else {
-        imageUrl = `https://source.unsplash.com/800x800/?${encodeURIComponent(name)}`;
-        console.log("⚠️ Fallback Image Used:", imageUrl);
-      }
+      return;
+    }
 
-      // ---------------- VALIDATION ----------------
-      if (!name || price <= 0 || mrp <= 0 || !category) {
-        console.log("⛔ Skipping invalid product");
-        continue;
-      }
+    formData.append(
+      "name",
+      product.name
+    );
 
-      // ---------------- APPEND DATA ----------------
-      formData.append("name", name);
-      formData.append("description", description);
-      formData.append("price", price);
-      formData.append("mrp", mrp);
-      formData.append("category", category);
-      formData.append("imageUrl", imageUrl);
+    formData.append(
+      "description",
+      description
+    );
 
-      formData.append("hasSizes", "false");
-      formData.append("sizes", JSON.stringify({}));
-      formData.append("inStock", "true");
+    formData.append(
+      "price",
+      product.price.toString()
+    );
 
-      // OPTIONAL (if required by backend)
-      if (product.storeId) {
-        formData.append("storeId", product.storeId);
-      }
+    formData.append(
+      "mrp",
+      product.mrp.toString()
+    );
 
-      // ---------------- API CALL ----------------
-      const res = await axios.post(
-        "http://localhost:3000/api/store/product",
+    formData.append(
+      "category",
+      category
+    );
+
+    formData.append(
+      "stock",
+      stock.toString()
+    );
+
+    formData.append(
+      "inStock",
+      stock > 0
+        ? "true"
+        : "false"
+    );
+
+    formData.append(
+      "hasSizes",
+      "false"
+    );
+
+    formData.append(
+      "sizes",
+      JSON.stringify({})
+    );
+
+    formData.append(
+      "imageUrl",
+      imageUrl
+    );
+
+    formData.append(
+      "department",
+      product.department
+    );
+
+    formData.append(
+      "branch",
+      product.branch
+    );
+
+    formData.append(
+      "unit",
+      product.unit
+    );
+
+    formData.append(
+      "itemCode",
+      product.itemCode
+    );
+
+    const res =
+      await axios.post(
+        API_URL,
         formData,
         {
           headers: {
             ...formData.getHeaders(),
           },
+          timeout: 30000,
+          maxBodyLength:
+            Infinity,
         }
       );
 
-      console.log("✅ SUCCESS:", res.data);
+    console.log(
+      `✅ Success: ${product.name}`
+    );
 
-    } catch (err) {
-      console.error(
-        `❌ ERROR (${product.Products}):`,
-        err.response?.data || err.message
-      );
-    }
+    return res.data;
+
+  } catch (err) {
+
+    console.error(
+      `❌ ERROR (${product.name})`
+    );
+
+    console.error(
+      err.response?.data ||
+      err.message
+    );
+
+    return null;
   }
-
-  console.log("\n🎉 PRODUCTS UPLOADED");
 }
 
-// ---------------- RUN ----------------
+// ---------------- BATCH UPLOAD ----------------
+async function uploadProducts() {
+
+  for (
+    let i = 0;
+    i < products.length;
+    i += CONCURRENT_UPLOADS
+  ) {
+
+    const batch =
+      products.slice(
+        i,
+        i +
+        CONCURRENT_UPLOADS
+      );
+
+    console.log(
+      `\n📦 Processing Batch ${
+        Math.floor(
+          i /
+          CONCURRENT_UPLOADS
+        ) + 1
+      }`
+    );
+
+    await Promise.all(
+      batch.map(
+        (
+          product,
+          index
+        ) =>
+          uploadSingleProduct(
+            product,
+            i +
+            index
+          )
+      )
+    );
+
+    console.log(
+      `⏳ Waiting ${BATCH_DELAY}ms`
+    );
+
+    await sleep(
+      BATCH_DELAY
+    );
+  }
+
+  console.log(
+    "\n🎉 ALL PRODUCTS UPLOADED"
+  );
+}
+
+// ---------------- START ----------------
 uploadProducts();
