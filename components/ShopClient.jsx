@@ -221,7 +221,7 @@ function ShopContent() {
 
           </div>
 
-         <Deals/> 
+         
 
     </div>
   )

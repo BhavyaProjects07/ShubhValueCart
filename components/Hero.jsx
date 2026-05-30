@@ -45,12 +45,12 @@ export const cats = [
   {
     name: "Baby Care",
     slug: "baby-care",
-    image: "https://images.unsplash.com/photo-1604917877934-07d8d248d396"
+    image: "https://softsensbaby.com/cdn/shop/files/wipes-1.png?v=1748797533"
   },
   {
     name: "Toys & Kids",
     slug: "toys-kids",
-    image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b"
+    image: "https://todaysparent.mblycdn.com/tp/resized/2017/11/900x900/how-many-toys-do-kids-really-need-1280x960.jpg"
   },
   {
     name: "Household Essentials",
@@ -60,7 +60,7 @@ export const cats = [
   {
     name: "Stationery",
     slug: "stationery",
-    image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4"
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGsCmJKI-Z8jkL6FaIlvwwAOxZo_bMxb_joQ&s"
   },
   {
     name: "Electronics",

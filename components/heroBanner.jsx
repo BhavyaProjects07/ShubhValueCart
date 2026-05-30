@@ -8,39 +8,44 @@ import Image from "next/image";
 const heroBanners = [
   {
     id: 1,
-    image: "https://ik.imagekit.io/rsjsqdge7/Screenshot%202026-04-12%20195306.png?tr=w-1600,q-60",
+    image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_dgamycdgamycdgam.png",
     badge: "Mega Sale",
     title: "Shubh Value Cart",
-    subtitle: "Up to 20% OFF on Groceries and SkinCare",
-    color: "from-black/70 via-black/70 to-black/70",
+    subtitle: "Up to 20% OFF on groceries",
+    color: "from-red-900/70 via-red-900/45 to-transparent",
     accent: "bg-blue-500",
+    url:"/shop?page=1&category=groceries&maxPrice=10000&minDiscount=20"
+
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=60",
+    image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_n7yp6un7yp6un7yp.png",
     badge: "Trending Now",
     title: "Fashion Carnival",
     subtitle: "Min 50% OFF on Premium Brands",
-    color: "from-orange-900/95 via-orange-900/80 to-transparent",
+    color: "from-orange-900/85 via-orange-900/50 to-transparent",
     accent: "bg-orange-500",
+    url:"/shop?page=1&category=fashion&maxPrice=10000&minDiscount=50"
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=1600&q=60",
+    image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_tmfkmftmfkmftmfk.png",
     badge: "New Arrivals",
     title: "Home Essentials",
     subtitle: "Upgrade Your Living Space Today",
-    color: "from-purple-900/95 via-purple-900/80 to-transparent",
+    color: "from-purple-900/75 via-purple-900/50 to-transparent",
     accent: "bg-purple-500",
+    url:"/shop?page=1&category=household"
   },
   {
     id: 4,
-    image: "https://ik.imagekit.io/rsjsqdge7/Shubh%20Value%20Cart%20cosmetic%20_20251223_225607_0000.png?tr=w-1600,q-60",
+    image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_2tqxiv2tqxiv2tqx.png",
     badge: "Cosmetics Sale",
     title: "Beauty Bliss",
     subtitle: "Discover Your Perfect Look with 10% OFF",
-    color: "from-red-900/95 via-red-900/80 to-transparent",
+    color: "from-red-900/75 via-red-900/55 to-transparent",
     accent: "bg-red-500",
+    url:"/shop?page=1&category=groceries&maxPrice=10000&minDiscount=10"
   },
 ];
 
@@ -98,13 +103,13 @@ const HeroSlider = () => {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Link href="/shop">
+              <Link href={heroBanners[current].url}>
                 <button className="bg-[#ff9900] hover:bg-[#e68a00] active:scale-95 transition-all duration-150 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-lg flex items-center gap-2">
                   Shop Now <ChevronRight className="w-5 h-5" />
                 </button>
               </Link>
 
-              <Link href="#deals">
+              <Link href={heroBanners[current].url}>
                 <button className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-3 sm:px-10 sm:py-4 rounded-lg font-bold text-lg shadow-lg hover:bg-white/20 active:scale-95 transition-all duration-150">
                   View Offers
                 </button>

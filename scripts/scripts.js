@@ -129,7 +129,7 @@ async function uploadSingleProduct(
     const category = product.parentCategory;
 
     const description =
-      product.description ||
+      product.Description ||
       `${product.name} - Premium Quality Product`;
 
       
@@ -309,6 +309,7 @@ async function uploadProducts() {
       `⏳ Waiting ${BATCH_DELAY}ms`
     );
 
+    
     await sleep(
       BATCH_DELAY
     );

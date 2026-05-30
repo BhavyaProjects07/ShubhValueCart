@@ -8,7 +8,7 @@ import Image from "next/image";
 const BANNERS = [
   {
     id: 1,
-    image: "https://ik.imagekit.io/rsjsqdge7/Shubh_Value_Cart_cosmetic_1600x366.png?q=80&w=2070&auto=format&fit=crop",
+    image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_n7yp6un7yp6un7yp.png",
     badge: "Limited Time",
     accentColor: "#F59E0B",
   },
