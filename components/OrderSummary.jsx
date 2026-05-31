@@ -241,11 +241,29 @@ await axios.post(
   }
 };
 
+  
+  const shippingFee =
+  totalPrice >= 1000
+    ? 0
+    : totalPrice >= 500
+    ? 25
+    : 60;
+
+const discount = coupon
+  ? (coupon.discount / 100) * totalPrice
+  : 0;
+
+const finalTotal = totalPrice - discount + shippingFee;
   /* ================= UI ================= */
   return (
     <div className="w-full max-w-lg lg:max-w-[340px] bg-slate-50/30 border border-slate-200 text-slate-500 text-sm rounded-xl p-7">
       <h2 className="text-xl font-medium text-slate-600">Payment Summary</h2>
 
+      <div className="mt-3 mb-2 bg-green-50 border border-green-200 rounded-lg p-3">
+        <p className="text-green-700 text-sm font-medium">
+          🚚 Get FREE Delivery on orders above ₹1000
+        </p>
+      </div>
       {/* PAYMENT METHOD */}
       <p className="text-slate-400 text-xs my-4">Payment Method</p>
       <div className="flex gap-2 items-center">
@@ -318,7 +336,15 @@ await axios.post(
           </div>
           <div className="text-right font-medium">
             <p>{currency}{totalPrice.toLocaleString()}</p>
-            <p>₹ 5</p>
+            <p>
+  {shippingFee === 0 ? (
+    <span className="text-green-600 font-semibold">
+      FREE
+    </span>
+  ) : (
+    `${currency}${shippingFee}`
+  )}
+            </p>
             {coupon && (
               <p>
                 -{currency}
@@ -374,11 +400,8 @@ await axios.post(
       <div className="flex justify-between py-4">
         <p>Total</p>
         <p className="font-medium">
-          {currency}
-          {coupon
-            ? (totalPrice - (coupon.discount / 100) * totalPrice + 5).toFixed(2)
-            : (totalPrice + 5).toLocaleString()}
-        </p>
+  {currency}{finalTotal.toFixed(2)}
+</p>
       </div>
 
       <button

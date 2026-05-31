@@ -89,26 +89,37 @@ export async function POST(request) {
 
   if (paymentMethod === "RAZORPAY" && !request.headers.get("x-verify")) {
 
-  let total = 0;
+  let subtotal = 0;
 
-  for (const item of items) {
-    const product = await prisma.product.findUnique({
-      where: { id: item.id },
-    });
+for (const item of items) {
+  const product = await prisma.product.findUnique({
+    where: { id: item.id },
+  });
 
-    // 🔥 FIX: check product existence
-    if (!product) {
-      return NextResponse.json(
-        { error: `Product not found: ${item.id}` },
-        { status: 404 }
-      );
-    }
-
-    total += product.price * item.quantity;
+  if (!product) {
+    return NextResponse.json(
+      { error: `Product not found: ${item.id}` },
+      { status: 404 }
+    );
   }
 
-  total += 5;
+  subtotal += product.price * item.quantity;
+}
 
+// Delivery Fee Logic
+let shippingFee = 0;
+
+if (subtotal >= 1000) {
+  shippingFee = 0;
+} else if (subtotal >= 500) {
+  shippingFee = 25;
+} else {
+  shippingFee = 60;
+}
+
+    const total = subtotal + shippingFee;
+    
+    
   const razorpayOrder = await razorpay.orders.create({
     amount: total * 100,
     currency: "INR",
