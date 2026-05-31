@@ -7,13 +7,14 @@ import { Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 export default function Cart() {
 
     const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$';
     
     const { cartItems } = useSelector(state => state.cart);
-    const products = useSelector(state => state.product.list);
+    const [products, setProducts] = useState([]);
 
     const dispatch = useDispatch();
 
@@ -60,6 +61,30 @@ console.log("Products IDs:", products.map(p => p.id));
             createCartArray();
         }
     }, [cartItems, products]);
+
+    useEffect(() => {
+  const fetchCartProducts = async () => {
+    try {
+      const ids = Object.keys(cartItems);
+
+      if (ids.length === 0) {
+        setProducts([]);
+        return;
+      }
+
+      const { data } = await axios.post(
+        "/api/cart/products",
+        { ids }
+      );
+
+      setProducts(data.products);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchCartProducts();
+}, [cartItems]);
 
     return cartArray.length > 0 ? (
         <div className="min-h-screen mx-6 text-slate-800">
