@@ -24,7 +24,9 @@ export default function Cart() {
     let total = 0;
     const arr = [];
 
-    for (const [key, value] of Object.entries(cartItems)) {
+        for (const [key, value] of Object.entries(cartItems)) {
+        console.log("Cart Key:", key);
+console.log("Products IDs:", products.map(p => p.id));
         const product = products.find(
   p =>
     String(p.id) === String(key) ||
