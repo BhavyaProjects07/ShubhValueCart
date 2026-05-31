@@ -10,7 +10,7 @@ import Newsletter from "@/components/Newsletter"
 import OurSpecs from "@/components/OurSpec"
 import LatestProducts from "@/components/LatestProducts"
 import Lookbook from "@/components/ExtraUI"
-
+import WhatsAppButton from "@/components/Whatsapp"
 export default function Home() {
   const dispatch = useDispatch()
 
@@ -27,6 +27,7 @@ export default function Home() {
       <BestSelling />
       
       <Newsletter />
+      <WhatsAppButton />
     </div>
   )
 }
