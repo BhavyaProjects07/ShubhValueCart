@@ -81,17 +81,14 @@ export default function MaintenancePage() {
         </h1>
 
         <p className="text-xl md:text-2xl text-slate-600 leading-relaxed mb-8">
-          This website is currently unavailable due to Payment not done to devloper
+          This website is currently unavailable due to some technical issues
         </p>
 
-        <p className="text-lg text-slate-500 leading-8 mb-12">
-          Pehle 8000Rs pay karo developer ko , fir website pehle jaise chalne lagegi
-        </p>
+        
 
         <div className="bg-slate-100 rounded-3xl p-8 border border-slate-200">
           <p className="text-slate-800 text-lg font-medium">
-            If you are the website owner, please contact the developer to
-            restore full access.
+            If you are the website owner, please contact the developer
           </p>
         </div>
       </div>
