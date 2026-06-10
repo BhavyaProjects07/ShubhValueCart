@@ -1,15 +1,6 @@
 import { clerkMiddleware } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
 
-export default clerkMiddleware((auth, req) => {
-  // Allow access to the maintenance page itself
-  if (req.nextUrl.pathname === '/maintenance') {
-    return NextResponse.next();
-  }
-
-  // Redirect every other route to /scam
-  return NextResponse.redirect(new URL('/maintenance', req.url));
-});
+export default clerkMiddleware();
 
 export const config = {
   matcher: [
