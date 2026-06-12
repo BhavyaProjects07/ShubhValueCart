@@ -6,8 +6,18 @@ import Link from "next/link";
 import Image from "next/image";
 
 const heroBanners = [
+
   {
     id: 1,
+    image: "https://ik.imagekit.io/rr50hbc3l/WhatsApp%20Image%202026-06-13%20at%2000.40.00.jpeg",
+    url: "/",
+    badge: "",
+    title: "",
+    subtitle: "",
+    color: "from-black/70 via-black/50 to-transparent"
+  },
+  {
+    id: 2,
     image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_dgamycdgamycdgam.png",
     badge: "Mega Sale",
     title: "Shubh Value Cart",
@@ -18,7 +28,7 @@ const heroBanners = [
 
   },
   {
-    id: 2,
+    id: 3,
     image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_n7yp6un7yp6un7yp.png",
     badge: "Trending Now",
     title: "Fashion Carnival",
@@ -28,7 +38,7 @@ const heroBanners = [
     url:"/shop?page=1&category=fashion&maxPrice=10000&minDiscount=50"
   },
   {
-    id: 3,
+    id: 4,
     image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_tmfkmftmfkmftmfk.png",
     badge: "New Arrivals",
     title: "Home Essentials",
@@ -38,7 +48,7 @@ const heroBanners = [
     url:"/shop?page=1&category=household"
   },
   {
-    id: 4,
+    id: 5,
     image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_2tqxiv2tqxiv2tqx.png",
     badge: "Cosmetics Sale",
     title: "Beauty Bliss",
@@ -59,7 +69,7 @@ const HeroSlider = () => {
 
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % heroBanners.length);
-    }, 4000);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [isHovered]);
