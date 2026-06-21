@@ -21,20 +21,18 @@ export async function GET() {
   );
 
   return {
-    id: p.id,
-    name: p.name,
-    price: p.price,
-    mrp: p.mrp,
-    images: p.images,
-    category: p.category,
-    storeId: p.storeId,
-    createdAt: p.createdAt,
-
-    // 🔥 CRITICAL FIX
-    rating: p.rating || [],
-
-    discount,
-  };
+  id: p.id,
+  name: p.name,
+  price: p.price,
+  mrp: p.mrp,
+  stock: p.stock,
+  images: p.images,
+  category: p.category,
+  storeId: p.storeId,
+  createdAt: p.createdAt,
+  rating: p.rating || [],
+  discount,
+};
 });
 
     // ✅ STRICT FILTER (CRITICAL FIX)
