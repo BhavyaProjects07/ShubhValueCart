@@ -101,20 +101,20 @@ if (Array.isArray(product?.rating)) {
                     
                 </div>
                 <div className="mt-2">
-  {product?.stock > 10 ? (
-    <span className="text-green-600 text-xs font-medium">
-      In Stock ({product.stock})
-    </span>
-  ) : product?.stock > 0 ? (
-    <span className="text-orange-600 text-xs font-medium">
-      Only {product.stock} left
-    </span>
-  ) : (
-    <span className="text-red-600 text-xs font-medium">
-      Out of Stock
-    </span>
-  )}
-</div>
+                    {product?.stock > 10 ? (
+                        <span className="text-green-600 text-xs font-medium">
+                        In Stock ({product.stock})
+                        </span>
+                    ) : product?.stock > 0 ? (
+                        <span className="text-orange-600 text-xs font-medium">
+                        Only {product.stock} left
+                        </span>
+                    ) : (
+                        <span className="text-red-600 text-xs font-medium">
+                        Out of Stock
+                        </span>
+                    )}
+                    </div>
 
                 {discountPercentage > 0 && (
                     <div className="mt-2 px-2 py-1 bg-green-100 text-green-800 text-xs font-bold tracking-wide rounded">

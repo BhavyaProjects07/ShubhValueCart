@@ -1,5 +1,15 @@
 'use client'
-import { Search, ShoppingCart , PhoneCallIcon } from "lucide-react";
+import {
+  Search,
+  ShoppingCart,
+  PhoneCallIcon,
+  Menu,
+    Gift,
+    X,
+  ShoppingBag,
+  Info,
+  ChevronRight,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -35,7 +45,9 @@ const Navbar = () => {
     const router = useRouter();
     const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
     const [search, setSearch] = useState('')
-    const [isVisible, setIsVisible] = useState(false)
+    const [isVisible, setIsVisible] = useState(false);
+const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     
     // Fallback for cartCount if redux is not set up in the environment
     const cartCount = useSelector(state => state?.cart?.total || 0)
@@ -235,115 +247,172 @@ useEffect(() => {
                                                         
                                     </UserButton.MenuItems>
                                 </UserButton>
+                                                
+                                                
                                 </div>
                             )
                             }
+                                                <div
+  className="relative"
+  onMouseEnter={() => setMenuOpen(true)}
+  onMouseLeave={() => setMenuOpen(false)}
+>
+  <button className="ml-3 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition">
+    <Menu size={20} />
+  </button>
+
+  {menuOpen && (
+    <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150">
+
+      <Link
+        href="/orders"
+        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
+      >
+        <div className="flex items-center gap-3">
+          <PackageIcon size={18} />
+          <span>My Orders</span>
+        </div>
+        <ChevronRight size={16} />
+      </Link>
+
+      <Link
+        href="/terms"
+        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
+      >
+        <div className="flex items-center gap-3">
+          <Gift size={18} />
+          <span>terms & conditions</span>
+        </div>
+        <ChevronRight size={16} />
+      </Link>
+
+      <Link
+        href="/about"
+        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
+      >
+        <div className="flex items-center gap-3">
+          <Info size={18} />
+          <span>About Us</span>
+        </div>
+        <ChevronRight size={16} />
+      </Link>
+
+      <Link
+        href="/contact"
+        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
+      >
+        <div className="flex items-center gap-3">
+          <PhoneCallIcon size={18} />
+          <span>Contact Us</span>
+        </div>
+        <ChevronRight size={16} />
+      </Link>
+
+      {isSeller && (
+        <Link
+          href="/store"
+          className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 border-t"
+        >
+          <div className="flex items-center gap-3">
+            <Store size={18} />
+            <span>Store Dashboard</span>
+          </div>
+          <ChevronRight size={16} />
+        </Link>
+      )}
+
+      {isAdmin && (
+        <Link
+          href="/admin"
+          className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
+        >
+          <div className="flex items-center gap-3">
+            <PackageIcon size={18} />
+            <span>Admin Panel</span>
+          </div>
+          <ChevronRight size={16} />
+        </Link>
+      )}
+    </div>
+  )}
+                                                </div>
                         </div>
 
                         {/* Mobile Nav */}
-                        <div
-                            className="sm:hidden flex items-center justify-between w-full opacity-0 animate-[fadeInUp_0.6s_ease-out_0.5s_forwards]"
-                            
-                        >
-                            {/* Mobile Logo (LEFT) */}
-                            <Link href="/" className="flex items-center font-extrabold tracking-tighter text-xl text-[#1D1D1F]">
-                                {assets?.logo ? (
-                                    <Image src={assets.logo} alt="FrostWayne" width={67} height={21} priority className="object-contain" />
-                                ) : (
-                                    <span>Shubh Value Cart</span>
-                                )}
-                            </Link>
+                        <div className="sm:hidden flex items-center justify-between w-full opacity-0 animate-[fadeInUp_0.6s_ease-out_0.5s_forwards]">
 
-                            {/* Mobile Actions (RIGHT) */}
-                            <div className="flex items-center gap-2">
-                                {/* Search Icon */}
-                                <button
-                                    onClick={() => setMobileSearchOpen((prev) => !prev)}
-                                    className="p-2.5 rounded-full bg-gray-100 text-[#1D1D1F] hover:bg-gray-200 transition-colors"
-                                >
-                                    <Search size={18} />
-                                </button>
+    {/* Logo */}
+    <Link
+        href="/"
+        className="flex items-center font-extrabold tracking-tighter text-xl text-[#1D1D1F]"
+    >
+        {assets?.logo ? (
+            <Image
+                src={assets.logo}
+                alt="Shubh Value Cart"
+                width={67}
+                height={21}
+                priority
+                className="object-contain"
+            />
+        ) : (
+            <span>Shubh Value Cart</span>
+        )}
+    </Link>
 
-                                {/* Shop Icon */}
-                                <button
-                                    onClick={() => router.push('/shop')}
-                                    className="p-2.5 rounded-full bg-gray-100 text-[#1D1D1F] hover:bg-gray-200 transition-colors"
-                                >
-                                    <Store size={18} />
-                                </button>
+    {/* Right Side */}
+    <div className="flex items-center gap-2">
 
-                                {/* Cart Icon */}
-                                <button
-                                    onClick={() => router.push('/cart')}
-                                    className="relative p-2.5 rounded-full bg-gray-100 text-[#1D1D1F] hover:bg-gray-200 transition-colors"
-                                >
-                                    <ShoppingCart size={18} />
-                                    {cartCount > 0 && (
-                                        <span className="absolute -top-1 -right-1 text-[10px] font-bold text-white bg-[#1D1D1F] size-4.5 rounded-full flex items-center justify-center shadow-sm">
-                                            {cartCount}
-                                        </span>
-                                    )}
-                                </button>
+        {/* Search */}
+        <button
+            onClick={() => setMobileSearchOpen((prev) => !prev)}
+            className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+        >
+            <Search size={18} />
+        </button>
 
-                                {/* Auth */}
-                                {
-                                user ? (
-                                    
-                                        <UserButton appearance={{ elements: { avatarBox: "w-9 h-9 shadow-sm" } }}>
-                                            <UserButton.MenuItems>
-                                                <UserButton.Action
-                                                    labelIcon={<ShoppingCart size={16} />}
-                                                    label="Cart"
-                                                    onClick={() => router.push("/cart")}
-                                                />
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="My Orders"
-                                                    onClick={() => router.push("/orders")}
-                                                />
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="About Us"
-                                                    onClick={() => router.push("/about")}
-                                                />
+        {/* Cart */}
+        <button
+            onClick={() => router.push("/cart")}
+            className="relative p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+        >
+            <ShoppingCart size={18} />
 
-                                                <UserButton.Action
-                                                    labelIcon={<PhoneCallIcon size={16} />}
-                                                    label="Contact US"
-                                                    onClick={() => router.push("/contact")}
-                                                />
-                                                {isSeller && (
-                                                <UserButton.Action
-                                                    labelIcon={<Store size={16} />}
-                                                    label="Store Dashboard"
-                                                    onClick={() => router.push("/store")}
-                                                />
-                                                )}
-                                                {isAdmin && (
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="Admin Panel"
-                                                    onClick={() => router.push("/admin")}
-                                                />
-                                                )}
-                                            </UserButton.MenuItems>
-                                        </UserButton>
-                                    
-                                ) : (
-                                    <div className="flex gap-2">
-                                    
+            {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#1D1D1F] text-white text-[10px] w-4.5 h-4.5 rounded-full flex items-center justify-center">
+                    {cartCount}
+                </span>
+            )}
+        </button>
 
-                                    <button
-                                        onClick={() => router.push("/phone-signup")}
-                                        className="px-4 py-2 border text-sm rounded-full"
-                                    >
-                                        Sign Up
-                                    </button>
-                                    </div>
-                                )
-                                }
-                            </div>
-                        </div>
+        {/* User */}
+        {user ? (
+            <UserButton
+                appearance={{
+                    elements: {
+                        avatarBox: "w-9 h-9 shadow-sm",
+                    },
+                }}
+            />
+        ) : (
+            <button
+                onClick={() => router.push("/phone-signup")}
+                className="px-4 py-2 border rounded-full text-sm"
+            >
+                Sign Up
+            </button>
+        )}
+
+        {/* Hamburger */}
+        <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+        >
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+        </button>
+
+    </div>
+</div>
 
                     </div>
                 </div>
@@ -377,6 +446,88 @@ useEffect(() => {
                         </div>
                     </form>
                 )}
+
+                {mobileMenuOpen && (
+    <div className="sm:hidden bg-white border-t border-gray-200 shadow-lg animate-[fadeInUp_0.25s_ease-out]">
+
+        <Link
+            href="/orders"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <PackageIcon size={18} />
+                <span>My Orders</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
+
+        <Link
+            href="/shop"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <ShoppingBag size={18} />
+                <span>Shop</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
+
+        <Link
+            href="/about"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <Info size={18} />
+                <span>About Us</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
+
+        <Link
+            href="/contact"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <PhoneCallIcon size={18} />
+                <span>Contact Us</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
+
+        {isSeller && (
+            <Link
+                href="/store"
+                className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
+            >
+                <div className="flex items-center gap-3">
+                    <Store size={18} />
+                    <span>Store Dashboard</span>
+                </div>
+                <ChevronRight size={16} />
+            </Link>
+        )}
+
+        {isAdmin && (
+            <Link
+                href="/admin"
+                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
+            >
+                <div className="flex items-center gap-3">
+                    <PackageIcon size={18} />
+                    <span>Admin Panel</span>
+                </div>
+                <ChevronRight size={16} />
+            </Link>
+        )}
+
+    </div>
+)}
             </nav>
         </>
     )

@@ -39,6 +39,11 @@ export async function POST(request) {
     const stock = Number(formData.get("stock") || 0);
     const hasSizes = formData.get("hasSizes") === "true";
     const sizesRaw = formData.get("sizes");
+    const itemCode = formData.get("itemCode")?.trim();
+
+    const offlineSoldQuantity = Number(
+      formData.get("offlineSoldQuantity") || 0
+    );
 
     let sizes = null;
     if (hasSizes && sizesRaw) {
@@ -92,22 +97,49 @@ else if (images.length > 0 && images[0]?.size > 0) {
 // 🔥 PRIORITY 3: Placeholder
 else {
   imagesUrl = ["/placeholder.png"];
+    }
+    
+
+    const existingProduct = await prisma.product.findUnique({
+  where: {
+    itemCode,
+  },
+});
+
+if (existingProduct) {
+  return NextResponse.json(
+    {
+      error: `Item Code ${itemCode} already exists.`,
+    },
+    { status: 409 }
+  );
 }
 
     // ---------------- DB INSERT ----------------
     await prisma.product.create({
       data: {
-        name,
-        description,
-        mrp,
-        price,
-        images: imagesUrl,
-        category,
-        storeId,
-        stock,
-        hasSizes,
-        sizes,
-      },
+  itemCode,
+
+  name,
+  description,
+
+  mrp,
+  price,
+
+  images: imagesUrl,
+
+  category,
+
+  stock,
+  offlineSoldQuantity,
+
+  inStock: stock > 0,
+
+  storeId,
+
+  hasSizes,
+  sizes,
+},
     });
 
     return NextResponse.json(

@@ -176,116 +176,121 @@ export default function Page() {
       <HomeClient />
 
       {/* GOD LEVEL INDEXABLE EXTRA SECTION */}
-      <section className="bg-white py-24 lg:py-32">
-        <div className="max-w-[1550px] mx-auto px-6 md:px-12 xl:px-24">
-          {/* Heading */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-14">
-            <div className="max-w-3xl">
-              <p className="uppercase tracking-[0.25em] text-sm font-bold text-slate-500 mb-4">
-                Discover Excellence
-              </p>
+      {/* SEO FAQ SECTION */}
+<section className="bg-gradient-to-b from-slate-50 to-white py-24 lg:py-32 border-t border-slate-200">
+  <div className="max-w-6xl mx-auto px-6 md:px-10">
 
-              <h2 className="text-4xl md:text-6xl font-black leading-tight text-slate-900">
-                Curated for the modern lifestyle.
-              </h2>
+    <div className="text-center mb-16">
+      <span className="inline-block bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-semibold">
+        Frequently Asked Questions
+      </span>
 
-              <p className="mt-5 text-slate-600 leading-8 text-lg">
-                Explore premium groceries, fashion, toys,
-                wellness and home essentials selected for
-                quality, convenience and value.
-              </p>
-            </div>
-          </div>
+      <h2 className="mt-6 text-4xl md:text-5xl font-black text-slate-900">
+        Everything You Need to Know About
+        <span className="text-[#ff6b00]"> Shubh Value Cart</span>
+      </h2>
 
-          {/* SEO Cards Grid */}
-          <div className="grid sm:grid-cols-2 xl:grid-cols-5 gap-6">
-            {[
-              {
-                title: "Heritage Textiles",
-                subtitle: "Authentic Indian Wear",
-                
-                image:
-                  "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=900&auto=format&fit=crop",
-              },
-              {
-                title: "The Spice Reserve",
-                subtitle: "Premium Groceries",
-               
-                image:
-                  "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=900&auto=format&fit=crop",
-              },
-              {
-                title: "Artisanal Play",
-                subtitle: "Kids Toys",
-               
-                image:
-                  "https://images.unsplash.com/photo-1558060370-d644479cb6f7?q=80&w=900&auto=format&fit=crop",
-              },
-              {
-                title: "Ayurvedic Wellness",
-                subtitle: "Natural Cosmetics",
-                
-                image:
-                  "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=900&auto=format&fit=crop",
-              },
-              {
-                title: "Festive Living",
-                subtitle: "Home Essentials",
-               
-                image:
-                  "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=900&auto=format&fit=crop",
-              },
-            ].map((item, index) => (
-              <a
-                key={index}
-               
-                className="group rounded-[2rem] overflow-hidden bg-slate-100 shadow-md hover:shadow-2xl transition-all duration-500"
-              >
-                <div className="relative h-[420px] overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
+      <p className="mt-5 text-lg text-slate-600 max-w-3xl mx-auto leading-8">
+        Find answers to the most common questions about grocery shopping,
+        fashion, cosmetics, toys, household essentials, delivery and online
+        shopping with Shubh Value Cart in Dholpur.
+      </p>
+    </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+    <div className="space-y-5">
 
-                  <div className="absolute bottom-0 left-0 w-full p-7">
-                    <p className="text-white/75 text-xs tracking-[0.2em] uppercase mb-2 font-bold">
-                      {item.subtitle}
-                    </p>
-
-                    <h3 className="text-white text-2xl font-bold">
-                      {item.title}
-                    </h3>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
-
-          {/* Bottom SEO Text */}
-          <div className="mt-16 max-w-5xl">
-            <h3 className="text-3xl font-bold text-slate-900 mb-5">
-              Shop Smart in Dholpur with Shubh Value Cart
+      {[
+  {
+    q: "Can I cancel my order after it has been shipped?",
+    a: "No. Orders can only be cancelled before they are shipped. Once an order is marked as 'Shipped', cancellation requests cannot be accepted under any circumstances."
+  },
+  {
+    q: "How many days do I have to report a damaged or defective product?",
+    a: "Customers must report any damaged, defective or incorrect product within 48 hours of delivery. Requests submitted after the 48-hour period are not eligible for return or replacement."
+  },
+  {
+    q: "Is an unboxing video required for return requests?",
+    a: "Yes. A continuous, unedited unboxing video along with clear photographs of the product, packaging and the reported issue is mandatory for verification. Claims without the required proof may be rejected."
+  },
+  {
+    q: "Which products are eligible for return or replacement?",
+    a: "Products that are damaged, defective or incorrectly delivered may qualify for return or replacement after successful verification. Eligibility is determined based on the evidence submitted by the customer."
+  },
+  {
+    q: "Which return requests are not accepted?",
+    a: "Returns are not accepted for change of mind, products that have been used, washed or altered, items without original tags or packaging, minor colour variations caused by lighting or display settings, or requests submitted after 48 hours."
+  },
+  {
+    q: "How long does Shubh Value Cart take to review a return request?",
+    a: "Our verification team generally reviews return and replacement requests within 24 to 48 hours after receiving all the required proof and supporting information."
+  },
+  {
+    q: "How will I receive my refund or replacement?",
+    a: "Approved refunds are processed to the original payment method used during checkout. Replacements are provided subject to product availability."
+  },
+  {
+    q: "What happens if someone submits false or fraudulent return requests?",
+    a: "To protect genuine customers, Shubh Value Cart reserves the right to reject fraudulent claims and restrict or suspend accounts involved in repeated misuse of the return policy."
+  }
+].map((faq, index) => (
+        <details
+          key={index}
+          className="group bg-white border border-slate-200 rounded-2xl shadow-sm open:shadow-md transition-all"
+        >
+          <summary className="cursor-pointer list-none flex justify-between items-center px-7 py-6">
+            <h3 className="text-lg font-bold text-slate-900 pr-8">
+              {faq.q}
             </h3>
 
-            <p className="text-slate-600 leading-8 mb-5">
-              Shubh Value Cart is a growing trusted local shopping
-              destination for groceries, fashion, toys, cosmetics
-              and daily essentials. We focus on affordable pricing,
-              quality products and customer convenience.
-            </p>
+            <span className="text-2xl text-[#ff6b00] transition-transform group-open:rotate-45">
+              +
+            </span>
+          </summary>
 
+          <div className="px-7 pb-6">
             <p className="text-slate-600 leading-8">
-              Whether you are searching for a grocery store in
-              Dholpur, toy shop, cosmetics store or online shopping
-              for family essentials, Shubh Value Cart brings trusted
-              value to your doorstep.
+              {faq.a}
             </p>
           </div>
-        </div>
-      </section>
+        </details>
+      ))}
+
+    </div>
+
+    {/* SEO Content */}
+
+    <div className="mt-20 bg-orange-50 border border-orange-100 rounded-3xl p-10 md:p-14">
+
+      <h3 className="text-3xl md:text-4xl font-black text-slate-900 mb-6">
+        Shop Smart in Dholpur with
+        <span className="text-[#ff6b00]">
+          {" "}Shubh Value Cart
+        </span>
+      </h3>
+
+      <p className="text-slate-700 text-lg leading-9 mb-6">
+        Shubh Value Cart is a growing trusted local shopping destination
+        for groceries, fashion, toys, cosmetics and daily essentials.
+        We focus on affordable pricing, quality products and customer
+        convenience. Whether you need fresh groceries, personal care
+        products, household essentials or fashion accessories, we aim
+        to provide a seamless shopping experience for every customer in
+        Dholpur.
+      </p>
+
+      <p className="text-slate-700 text-lg leading-9">
+        Whether you are searching for a grocery store in Dholpur,
+        toy shop, cosmetics store, fashion store or online shopping
+        for family essentials, Shubh Value Cart brings trusted value
+        to your doorstep. Our mission is to make everyday shopping
+        simple, affordable and reliable while offering a wide range
+        of quality products under one trusted local platform.
+      </p>
+
+    </div>
+
+  </div>
+</section>
 
       {/* Optional existing component */}
       
