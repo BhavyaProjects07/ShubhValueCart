@@ -60,7 +60,7 @@ const BannerSlide = memo(({ banner, isVisible, isPriority }) => (
       sizes="100vw"
       quality={70}
       priority={isPriority}
-      className="object-cover object-center select-none"
+      className="object-cover object-center select-none rounded-3xl"
       draggable={false}
     />
  
@@ -175,8 +175,10 @@ export default function Advertisement() {
   const accentColor = BANNERS[current].accentColor;
  
   return (
+    <div className="px-4 md:px-6 lg:px-8" >
+
     <section
-      className="relative w-full overflow-hidden group bg-gray-100"
+      className="relative w-full overflow-hidden rounded-3xl group bg-gray-100 shadow-sm "
       style={{ height: "clamp(160px, 28vw, 380px)" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -210,5 +212,6 @@ export default function Advertisement() {
         />
       </div>
     </section>
+    </div>
   );
 }
