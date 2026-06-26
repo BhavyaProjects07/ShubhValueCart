@@ -58,15 +58,11 @@ const products = data
         ?.toString()
         .trim() || "Misc",
 
-    qty:
-      Number(
-        p.Qty
-      ) || 0,
+    stock:
+  Number(p["Qty"]) || 0,
 
-    stockValue:
-      Number(
-        p["Stock Value"]
-      ) || 0,
+offlineSoldQuantity:
+  Number(p["Out Qty"]) || 0,
 
     image:
       p.images
@@ -96,7 +92,8 @@ const products = data
   .filter(
     (p) =>
       p.name &&
-      p.price > 0
+      p.price > 0 &&
+      p.itemCode
   );
 
 console.log(
@@ -129,8 +126,8 @@ async function uploadSingleProduct(
     const category = product.parentCategory;
 
     const description =
-      product.Description ||
-      `${product.name} - Premium Quality Product`;
+  product.description ||
+  `${product.name} - Premium Quality Product`;
 
       
     // actual image only
@@ -142,12 +139,12 @@ async function uploadSingleProduct(
         ? product.image
         : "";
 
-    const stock =
-      product.stockValue;
+    const stock = product.stock;
 
     // validation
     if (
       !product.name ||
+      !product.itemCode ||
       product.price <= 0 ||
       product.mrp <= 0 ||
       !imageUrl
@@ -188,6 +185,11 @@ async function uploadSingleProduct(
       "stock",
       stock.toString()
     );
+
+    formData.append(
+  "offlineSoldQuantity",
+  product.offlineSoldQuantity.toString()
+);
 
     formData.append(
       "inStock",

@@ -10,6 +10,7 @@ import { useAuth , useUser} from "@clerk/nextjs";
 import { fetchCart, uploadCart } from "@/lib/features/cart/cartSlice";
 import { fetchAddress } from "@/lib/features/address/addressSlice";
 import { fetchUserRatings } from "@/lib/features/rating/ratingSlice";
+import BottomBar from "@/components/BottomBar";
 
 export default function PublicLayout({ children }) {
 
@@ -53,7 +54,7 @@ export default function PublicLayout({ children }) {
             {children}
           
         
-        
+            <BottomBar/>
             
             <Footer />
         </>

@@ -12,7 +12,7 @@ export default function WhatsAppButton() {
         onClick={() => setIsOpen(true)}
         className="fixed bottom-5 right-5 z-50 bg-green-500 text-white p-3 rounded-full shadow-lg hover:scale-105 transition"
       >
-        <FaWhatsapp size={28} />
+        <FaWhatsapp size={20} />
       </button>
     );
   }
