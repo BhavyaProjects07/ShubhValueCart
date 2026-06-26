@@ -275,86 +275,87 @@ useEffect(() => {
     />
   </button>
 
-  {/* Dropdown */}
   <div
-    className={`absolute right-0 top-full pt-2 w-72 transition-all duration-200 ${
-      menuOpen
-        ? "opacity-100 translate-y-0 pointer-events-auto"
+  className={`absolute right-0 top-full pt-2 w-72 z-[9999] transition-all duration-200 ${
+    menuOpen
+      ? "opacity-100 translate-y-0 pointer-events-auto"
       : "opacity-0 -translate-y-2 pointer-events-none"
-    }`}
-  >
-    <div className="bg-white text-gray-900 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+  }`}
+>
+  <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden text-gray-800">
+
+    <Link
+      href="/orders"
+      className="flex items-center justify-between px-5 py-4 text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
+    >
+      <div className="flex items-center gap-3 text-gray-800">
+        <PackageIcon size={18} className="text-[#00a300]" />
+        <span>My Orders</span>
+      </div>
+      <ChevronRight size={16} className="text-gray-400" />
+    </Link>
+
+    <Link
+      href="/terms"
+      className="flex items-center justify-between px-5 py-4 text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
+    >
+      <div className="flex items-center gap-3 text-gray-800">
+        <Gift size={18} className="text-[#00a300]" />
+        <span>Terms & Conditions</span>
+      </div>
+      <ChevronRight size={16} className="text-gray-400" />
+    </Link>
+
+    <Link
+      href="/about"
+      className="flex items-center justify-between px-5 py-4 text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
+    >
+      <div className="flex items-center gap-3 text-gray-800">
+        <Info size={18} className="text-[#00a300]" />
+        <span>About Us</span>
+      </div>
+      <ChevronRight size={16} className="text-gray-400" />
+    </Link>
+
+    <Link
+      href="/contact"
+      className="flex items-center justify-between px-5 py-4 text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
+    >
+      <div className="flex items-center gap-3 text-gray-800">
+        <PhoneCallIcon size={18} className="text-[#00a300]" />
+        <span>Contact Us</span>
+      </div>
+      <ChevronRight size={16} className="text-gray-400" />
+    </Link>
+
+    {isSeller && (
       <Link
-        href="/orders"
-        className="flex items-center justify-between px-5 py-4 hover:bg-green-50 transition"
+        href="/store"
+        className="flex items-center justify-between px-5 py-4 border-t text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
       >
-        <div className="flex items-center gap-3">
-          <PackageIcon size={18} />
-          <span>My Orders</span>
+        <div className="flex items-center gap-3 text-gray-800">
+          <Store size={18} className="text-[#00a300]" />
+          <span>Store Dashboard</span>
         </div>
-        <ChevronRight size={16} />
+        <ChevronRight size={16} className="text-gray-400" />
       </Link>
+    )}
 
+    {isAdmin && (
       <Link
-        href="/terms"
-        className="flex items-center justify-between px-5 py-4 hover:bg-green-50 transition"
+        href="/admin"
+        className="flex items-center justify-between px-5 py-4 border-t text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
       >
-        <div className="flex items-center gap-3">
-          <Gift size={18} />
-          <span>Terms & Conditions</span>
+        <div className="flex items-center gap-3 text-gray-800">
+          <PackageIcon size={18} className="text-[#00a300]" />
+          <span>Admin Panel</span>
         </div>
-        <ChevronRight size={16} />
+        <ChevronRight size={16} className="text-gray-400" />
       </Link>
+    )}
 
-      <Link
-        href="/about"
-        className="flex items-center justify-between px-5 py-4 hover:bg-green-50 transition"
-      >
-        <div className="flex items-center gap-3">
-          <Info size={18} />
-          <span>About Us</span>
-        </div>
-        <ChevronRight size={16} />
-      </Link>
-
-      <Link
-        href="/contact"
-        className="flex items-center justify-between px-5 py-4 hover:bg-green-50 transition"
-      >
-        <div className="flex items-center gap-3">
-          <PhoneCallIcon size={18} />
-          <span>Contact Us</span>
-        </div>
-        <ChevronRight size={16} />
-      </Link>
-
-      {isSeller && (
-        <Link
-          href="/store"
-          className="flex items-center justify-between px-5 py-4 border-t hover:bg-green-50 transition"
-        >
-          <div className="flex items-center gap-3">
-            <Store size={18} />
-            <span>Store Dashboard</span>
-          </div>
-          <ChevronRight size={16} />
-        </Link>
-      )}
-
-      {isAdmin && (
-        <Link
-          href="/admin"
-          className="flex items-center justify-between px-5 py-4 hover:bg-green-50 transition"
-        >
-          <div className="flex items-center gap-3">
-            <PackageIcon size={18} />
-            <span>Admin Panel</span>
-          </div>
-          <ChevronRight size={16} />
-        </Link>
-      )}
-    </div>
   </div>
+</div>
 </div>
                             
 
@@ -459,85 +460,85 @@ useEffect(() => {
                 )}
 
                 {mobileMenuOpen && (
-    <div className="sm:hidden bg-white border-t border-gray-200 shadow-lg animate-[fadeInUp_0.25s_ease-out]">
+  <div className="sm:hidden bg-white text-gray-900 border-t border-gray-200 shadow-xl animate-[fadeInUp_0.25s_ease-out]">
 
-        <Link
-            href="/orders"
-            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-            onClick={() => setMobileMenuOpen(false)}
-        >
-            <div className="flex items-center gap-3">
-                <PackageIcon size={18} />
-                <span>My Orders</span>
-            </div>
-            <ChevronRight size={16} />
-        </Link>
+    <Link
+      href="/orders"
+      onClick={() => setMobileMenuOpen(false)}
+      className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
+    >
+      <div className="flex items-center gap-3">
+        <PackageIcon size={18} className="text-[#00a300] shrink-0" />
+        <span className="text-gray-800 font-medium">My Orders</span>
+      </div>
+      <ChevronRight size={18} className="text-gray-400" />
+    </Link>
 
-        <Link
-            href="/shop"
-            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-            onClick={() => setMobileMenuOpen(false)}
-        >
-            <div className="flex items-center gap-3">
-                <ShoppingBag size={18} />
-                <span>Shop</span>
-            </div>
-            <ChevronRight size={16} />
-        </Link>
+    <Link
+      href="/shop"
+      onClick={() => setMobileMenuOpen(false)}
+      className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
+    >
+      <div className="flex items-center gap-3">
+        <ShoppingBag size={18} className="text-[#00a300] shrink-0" />
+        <span className="text-gray-800 font-medium">Shop</span>
+      </div>
+      <ChevronRight size={18} className="text-gray-400" />
+    </Link>
 
-        <Link
-            href="/about"
-            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-            onClick={() => setMobileMenuOpen(false)}
-        >
-            <div className="flex items-center gap-3">
-                <Info size={18} />
-                <span>About Us</span>
-            </div>
-            <ChevronRight size={16} />
-        </Link>
+    <Link
+      href="/about"
+      onClick={() => setMobileMenuOpen(false)}
+      className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
+    >
+      <div className="flex items-center gap-3">
+        <Info size={18} className="text-[#00a300] shrink-0" />
+        <span className="text-gray-800 font-medium">About Us</span>
+      </div>
+      <ChevronRight size={18} className="text-gray-400" />
+    </Link>
 
-        <Link
-            href="/contact"
-            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-            onClick={() => setMobileMenuOpen(false)}
-        >
-            <div className="flex items-center gap-3">
-                <PhoneCallIcon size={18} />
-                <span>Contact Us</span>
-            </div>
-            <ChevronRight size={16} />
-        </Link>
+    <Link
+      href="/contact"
+      onClick={() => setMobileMenuOpen(false)}
+      className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
+    >
+      <div className="flex items-center gap-3">
+        <PhoneCallIcon size={18} className="text-[#00a300] shrink-0" />
+        <span className="text-gray-800 font-medium">Contact Us</span>
+      </div>
+      <ChevronRight size={18} className="text-gray-400" />
+    </Link>
 
-        {isSeller && (
-            <Link
-                href="/store"
-                className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-                onClick={() => setMobileMenuOpen(false)}
-            >
-                <div className="flex items-center gap-3">
-                    <Store size={18} />
-                    <span>Store Dashboard</span>
-                </div>
-                <ChevronRight size={16} />
-            </Link>
-        )}
+    {isSeller && (
+      <Link
+        href="/store"
+        onClick={() => setMobileMenuOpen(false)}
+        className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <Store size={18} className="text-[#00a300] shrink-0" />
+          <span className="text-gray-800 font-medium">Store Dashboard</span>
+        </div>
+        <ChevronRight size={18} className="text-gray-400" />
+      </Link>
+    )}
 
-        {isAdmin && (
-            <Link
-                href="/admin"
-                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
-                onClick={() => setMobileMenuOpen(false)}
-            >
-                <div className="flex items-center gap-3">
-                    <PackageIcon size={18} />
-                    <span>Admin Panel</span>
-                </div>
-                <ChevronRight size={16} />
-            </Link>
-        )}
+    {isAdmin && (
+      <Link
+        href="/admin"
+        onClick={() => setMobileMenuOpen(false)}
+        className="flex items-center justify-between px-6 py-4 hover:bg-green-50 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <PackageIcon size={18} className="text-[#00a300] shrink-0" />
+          <span className="text-gray-800 font-medium">Admin Panel</span>
+        </div>
+        <ChevronRight size={18} className="text-gray-400" />
+      </Link>
+    )}
 
-    </div>
+  </div>
 )}
             </nav>
         </>
