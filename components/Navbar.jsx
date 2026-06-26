@@ -283,7 +283,7 @@ useEffect(() => {
       : "opacity-0 -translate-y-2 pointer-events-none"
     }`}
   >
-    <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+    <div className="bg-white text-gray-900 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
       <Link
         href="/orders"
         className="flex items-center justify-between px-5 py-4 hover:bg-green-50 transition"
