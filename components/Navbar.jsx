@@ -6,8 +6,7 @@ import {
   Menu,
     Gift,
     X,
-    ShoppingBag,
-  ChevronDown,
+  ShoppingBag,
   Info,
   ChevronRight,
 } from "lucide-react";
@@ -25,14 +24,14 @@ const NavLink = ({ href, children, delay = 0 }) => {
     return (
         <Link
             href={href}
-            className="relative group text-sm font-semibold tracking-wide text-white hover:text-white transition-colors duration-300"
+            className="relative group text-sm font-semibold tracking-wide text-gray-600 hover:text-[#1D1D1F] transition-colors duration-300"
             style={{
                 animation: `fadeInUp 0.6s ease-out ${delay}s forwards`,
                 opacity: 0,
             }}
         >
             {children}
-            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white group-hover:w-full transition-all duration-300 ease-out rounded-full" />
+            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#1D1D1F] group-hover:w-full transition-all duration-300 ease-out rounded-full" />
         </Link>
     )
 }
@@ -137,14 +136,14 @@ useEffect(() => {
                 }
             `}</style>
 
-            <nav className="fixed top-0 left-0 w-full z-[100] bg-[#00a300] border-b border-green-700 text-white">
+            <nav className="fixed top-0 left-0 w-full z-[100] bg-white border-b border-gray-200/50 pointer-events-auto font-inter">
                 <div className="mx-6">
                     <div className="flex items-center justify-between max-w-[1400px] mx-auto py-4 transition-all duration-500">
 
                         {/* Desktop Logo */}
                         <Link
                             href="/"
-                            className="nav-logo relative text-2xl font-extrabold tracking-tighter text-white hover:scale-105 transition-transform duration-300 hidden sm:flex items-center gap-2"
+                            className="nav-logo relative text-2xl font-extrabold tracking-tighter text-[#1D1D1F] hover:scale-105 transition-transform duration-300 hidden sm:flex items-center gap-2"
                         >
                             {/* Assuming assets.FrostWayne is available, otherwise fallback to text */}
                             {assets?.logo ? (
@@ -163,11 +162,11 @@ useEffect(() => {
 
                             <form 
                                 onSubmit={handleSearch} 
-                                className="search-input-wrapper hidden xl:flex items-center w-64 text-sm gap-2 bg-white px-4 py-2.5 rounded-full hover:bg-gray-200/80 transition-all duration-300 border border-transparent focus-within:border-gray-300 focus-within:bg-white"
+                                className="search-input-wrapper hidden xl:flex items-center w-64 text-sm gap-2 bg-gray-100/80 px-4 py-2.5 rounded-full hover:bg-gray-200/80 transition-all duration-300 border border-transparent focus-within:border-gray-300 focus-within:bg-white"
                             >
                                 <Search size={16} className="text-gray-500 transition-transform duration-300 group-hover:rotate-90" />
                                 <input 
-                                    className="w-full bg-transparent outline-none placeholder-gray-500 text-white transition-colors duration-300" 
+                                    className="w-full bg-transparent outline-none placeholder-gray-500 text-[#1D1D1F] transition-colors duration-300" 
                                     type="text" 
                                     placeholder="Search products..." 
                                     value={search} 
@@ -178,21 +177,21 @@ useEffect(() => {
 
                             <Link 
                                 href="/cart" 
-                                className="relative flex items-center gap-2 text-white group transition-all duration-300 hover:scale-105"
+                                className="relative flex items-center gap-2 text-gray-600 group transition-all duration-300 hover:scale-105"
                                 style={{
                                     animation: `fadeInUp 0.6s ease-out 0.4s forwards`,
                                     opacity: 0,
                                 }}
                             >
-                                <div className="relative p-2 bg-white rounded-full group-hover:bg-gray-200 transition-colors">
-                                    <ShoppingCart size={18} className="text-black transition-transform duration-300 group-hover:rotate-12" />
+                                <div className="relative p-2 bg-gray-100 rounded-full group-hover:bg-gray-200 transition-colors">
+                                    <ShoppingCart size={18} className="text-[#1D1D1F] transition-transform duration-300 group-hover:rotate-12" />
                                     {cartCount > 0 && (
                                         <span className="absolute -top-1 -right-1 text-[10px] font-bold text-white bg-[#1D1D1F] size-4.5 flex items-center justify-center rounded-full shadow-sm">
                                             {cartCount}
                                         </span>
                                     )}
                                 </div>
-                                <span className="font-semibold text-sm group-hover:text-white transition-colors duration-300">Cart</span>
+                                <span className="font-semibold text-sm group-hover:text-[#1D1D1F] transition-colors duration-300">Cart</span>
                             </Link>
 
                             {
@@ -253,112 +252,90 @@ useEffect(() => {
                                 </div>
                             )
                             }
-
-                            {/* Menu button */}
-
-                            <div
+                                                <div
   className="relative"
   onMouseEnter={() => setMenuOpen(true)}
   onMouseLeave={() => setMenuOpen(false)}
 >
-  {/* More Button */}
-  <button
-    className="ml-3 flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black font-semibold hover:bg-gray-100 transition-all duration-200"
-  >
-    <span>More</span>
-
-    <ChevronDown
-      size={18}
-      className={`transition-transform duration-200 ${
-        menuOpen ? "rotate-180" : ""
-      }`}
-    />
+  <button className="ml-3 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition">
+    <Menu size={20} />
   </button>
 
-  <div
-  className={`absolute right-0 top-full pt-2 w-72 z-[9999] transition-all duration-200 ${
-    menuOpen
-      ? "opacity-100 translate-y-0 pointer-events-auto"
-      : "opacity-0 -translate-y-2 pointer-events-none"
-  }`}
->
-  <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden text-gray-800">
+  {menuOpen && (
+    <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150">
 
-    <Link
-      href="/orders"
-      className="flex items-center justify-between px-5 py-4 text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
-    >
-      <div className="flex items-center gap-3 text-gray-800">
-        <PackageIcon size={18} className="text-[#00a300]" />
-        <span>My Orders</span>
-      </div>
-      <ChevronRight size={16} className="text-gray-400" />
-    </Link>
-
-    <Link
-      href="/terms"
-      className="flex items-center justify-between px-5 py-4 text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
-    >
-      <div className="flex items-center gap-3 text-gray-800">
-        <Gift size={18} className="text-[#00a300]" />
-        <span>Terms & Conditions</span>
-      </div>
-      <ChevronRight size={16} className="text-gray-400" />
-    </Link>
-
-    <Link
-      href="/about"
-      className="flex items-center justify-between px-5 py-4 text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
-    >
-      <div className="flex items-center gap-3 text-gray-800">
-        <Info size={18} className="text-[#00a300]" />
-        <span>About Us</span>
-      </div>
-      <ChevronRight size={16} className="text-gray-400" />
-    </Link>
-
-    <Link
-      href="/contact"
-      className="flex items-center justify-between px-5 py-4 text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
-    >
-      <div className="flex items-center gap-3 text-gray-800">
-        <PhoneCallIcon size={18} className="text-[#00a300]" />
-        <span>Contact Us</span>
-      </div>
-      <ChevronRight size={16} className="text-gray-400" />
-    </Link>
-
-    {isSeller && (
       <Link
-        href="/store"
-        className="flex items-center justify-between px-5 py-4 border-t text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
+        href="/orders"
+        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
       >
-        <div className="flex items-center gap-3 text-gray-800">
-          <Store size={18} className="text-[#00a300]" />
-          <span>Store Dashboard</span>
+        <div className="flex items-center gap-3">
+          <PackageIcon size={18} />
+          <span>My Orders</span>
         </div>
-        <ChevronRight size={16} className="text-gray-400" />
+        <ChevronRight size={16} />
       </Link>
-    )}
 
-    {isAdmin && (
       <Link
-        href="/admin"
-        className="flex items-center justify-between px-5 py-4 border-t text-gray-800 hover:bg-green-50 hover:text-[#00a300]"
+        href="/terms"
+        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
       >
-        <div className="flex items-center gap-3 text-gray-800">
-          <PackageIcon size={18} className="text-[#00a300]" />
-          <span>Admin Panel</span>
+        <div className="flex items-center gap-3">
+          <Gift size={18} />
+          <span>terms & conditions</span>
         </div>
-        <ChevronRight size={16} className="text-gray-400" />
+        <ChevronRight size={16} />
       </Link>
-    )}
 
-  </div>
-</div>
-</div>
-                            
+      <Link
+        href="/about"
+        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
+      >
+        <div className="flex items-center gap-3">
+          <Info size={18} />
+          <span>About Us</span>
+        </div>
+        <ChevronRight size={16} />
+      </Link>
 
+      <Link
+        href="/contact"
+        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
+      >
+        <div className="flex items-center gap-3">
+          <PhoneCallIcon size={18} />
+          <span>Contact Us</span>
+        </div>
+        <ChevronRight size={16} />
+      </Link>
+
+      {isSeller && (
+        <Link
+          href="/store"
+          className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 border-t"
+        >
+          <div className="flex items-center gap-3">
+            <Store size={18} />
+            <span>Store Dashboard</span>
+          </div>
+          <ChevronRight size={16} />
+        </Link>
+      )}
+
+      {isAdmin && (
+        <Link
+          href="/admin"
+          className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
+        >
+          <div className="flex items-center gap-3">
+            <PackageIcon size={18} />
+            <span>Admin Panel</span>
+          </div>
+          <ChevronRight size={16} />
+        </Link>
+      )}
+    </div>
+  )}
+                                                </div>
                         </div>
 
                         {/* Mobile Nav */}
@@ -389,13 +366,24 @@ useEffect(() => {
         {/* Search */}
         <button
             onClick={() => setMobileSearchOpen((prev) => !prev)}
-            className="p-2.5 rounded-full text-black bg-gray-100 hover:bg-gray-200 transition"
+            className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
         >
             <Search size={18} />
         </button>
 
         {/* Cart */}
-        
+        <button
+            onClick={() => router.push("/cart")}
+            className="relative p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+        >
+            <ShoppingCart size={18} />
+
+            {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#1D1D1F] text-white text-[10px] w-4.5 h-4.5 rounded-full flex items-center justify-center">
+                    {cartCount}
+                </span>
+            )}
+        </button>
 
         {/* User */}
         {user ? (
@@ -418,7 +406,7 @@ useEffect(() => {
         {/* Hamburger */}
         <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2.5 text-black rounded-full bg-gray-100 hover:bg-gray-200 transition"
+            className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
         >
             {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
@@ -460,85 +448,85 @@ useEffect(() => {
                 )}
 
                 {mobileMenuOpen && (
-  <div className="sm:hidden bg-white text-gray-900 border-t border-gray-200 shadow-xl animate-[fadeInUp_0.25s_ease-out]">
+    <div className="sm:hidden bg-white border-t border-gray-200 shadow-lg animate-[fadeInUp_0.25s_ease-out]">
 
-    <Link
-      href="/orders"
-      onClick={() => setMobileMenuOpen(false)}
-      className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
-    >
-      <div className="flex items-center gap-3">
-        <PackageIcon size={18} className="text-[#00a300] shrink-0" />
-        <span className="text-gray-800 font-medium">My Orders</span>
-      </div>
-      <ChevronRight size={18} className="text-gray-400" />
-    </Link>
+        <Link
+            href="/orders"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <PackageIcon size={18} />
+                <span>My Orders</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
 
-    <Link
-      href="/shop"
-      onClick={() => setMobileMenuOpen(false)}
-      className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
-    >
-      <div className="flex items-center gap-3">
-        <ShoppingBag size={18} className="text-[#00a300] shrink-0" />
-        <span className="text-gray-800 font-medium">Shop</span>
-      </div>
-      <ChevronRight size={18} className="text-gray-400" />
-    </Link>
+        <Link
+            href="/shop"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <ShoppingBag size={18} />
+                <span>Shop</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
 
-    <Link
-      href="/about"
-      onClick={() => setMobileMenuOpen(false)}
-      className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
-    >
-      <div className="flex items-center gap-3">
-        <Info size={18} className="text-[#00a300] shrink-0" />
-        <span className="text-gray-800 font-medium">About Us</span>
-      </div>
-      <ChevronRight size={18} className="text-gray-400" />
-    </Link>
+        <Link
+            href="/about"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <Info size={18} />
+                <span>About Us</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
 
-    <Link
-      href="/contact"
-      onClick={() => setMobileMenuOpen(false)}
-      className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
-    >
-      <div className="flex items-center gap-3">
-        <PhoneCallIcon size={18} className="text-[#00a300] shrink-0" />
-        <span className="text-gray-800 font-medium">Contact Us</span>
-      </div>
-      <ChevronRight size={18} className="text-gray-400" />
-    </Link>
+        <Link
+            href="/contact"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <PhoneCallIcon size={18} />
+                <span>Contact Us</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
 
-    {isSeller && (
-      <Link
-        href="/store"
-        onClick={() => setMobileMenuOpen(false)}
-        className="flex items-center justify-between px-6 py-4 border-b border-gray-100 hover:bg-green-50 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <Store size={18} className="text-[#00a300] shrink-0" />
-          <span className="text-gray-800 font-medium">Store Dashboard</span>
-        </div>
-        <ChevronRight size={18} className="text-gray-400" />
-      </Link>
-    )}
+        {isSeller && (
+            <Link
+                href="/store"
+                className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
+            >
+                <div className="flex items-center gap-3">
+                    <Store size={18} />
+                    <span>Store Dashboard</span>
+                </div>
+                <ChevronRight size={16} />
+            </Link>
+        )}
 
-    {isAdmin && (
-      <Link
-        href="/admin"
-        onClick={() => setMobileMenuOpen(false)}
-        className="flex items-center justify-between px-6 py-4 hover:bg-green-50 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <PackageIcon size={18} className="text-[#00a300] shrink-0" />
-          <span className="text-gray-800 font-medium">Admin Panel</span>
-        </div>
-        <ChevronRight size={18} className="text-gray-400" />
-      </Link>
-    )}
+        {isAdmin && (
+            <Link
+                href="/admin"
+                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
+            >
+                <div className="flex items-center gap-3">
+                    <PackageIcon size={18} />
+                    <span>Admin Panel</span>
+                </div>
+                <ChevronRight size={16} />
+            </Link>
+        )}
 
-  </div>
+    </div>
 )}
             </nav>
         </>
