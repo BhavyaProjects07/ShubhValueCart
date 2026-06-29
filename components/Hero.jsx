@@ -210,7 +210,7 @@ const CustomNavbar = ({ categories }) => {
       </div>
 
       {/* Mini Category Bar (Desktop) */}
-      <div className="border-t border-gray-100 bg-[#00a300]">
+      <div className="border-t border-gray-100 bg-white">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-3 overflow-x-auto hide-scrollbar">
 
           {/* All Categories */}
@@ -502,7 +502,7 @@ export default function Hero2() {
         
         <MidBanner banner={midBanners[0]} />
         
-        
+        <FashionProducts/>
         <MidBanner banner={midBanners[1]} />
         
       </div>
