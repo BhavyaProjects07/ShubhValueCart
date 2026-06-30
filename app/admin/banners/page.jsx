@@ -427,7 +427,86 @@ const [deleting, setDeleting] = useState(false);
 
         ))}
 
+          </div>
+          
+          {editBanner && (
+  <div className="fixed inset-0 z-[999] bg-black/50 flex items-center justify-center p-5">
+
+    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-xl p-8">
+
+      <h2 className="text-2xl font-bold mb-6">
+        Edit Banner
+      </h2>
+
+      <label className="block font-semibold mb-2">
+        Title
+      </label>
+
+      <input
+        value={editBanner.title || ""}
+        onChange={(e) =>
+          setEditBanner({
+            ...editBanner,
+            title: e.target.value,
+          })
+        }
+        className="w-full border rounded-xl px-4 py-3 mb-5"
+      />
+
+      <label className="block font-semibold mb-2">
+        Redirect URL
+      </label>
+
+      <input
+        value={editBanner.link || ""}
+        onChange={(e) =>
+          setEditBanner({
+            ...editBanner,
+            link: e.target.value,
+          })
+        }
+        className="w-full border rounded-xl px-4 py-3 mb-5"
+      />
+
+      <label className="block font-semibold mb-2">
+        Replace Banner
+      </label>
+
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) =>
+          setEditBanner({
+            ...editBanner,
+            newImage: e.target.files[0],
+          })
+        }
+        className="mb-8"
+      />
+
+      <div className="flex justify-end gap-3">
+
+        <button
+          onClick={() => setEditBanner(null)}
+          className="px-6 py-3 rounded-xl border"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={updateBanner}
+          disabled={saving}
+          className="bg-green-600 hover:bg-green-700 text-white px-7 py-3 rounded-xl"
+        >
+          {saving ? "Saving..." : "Save Changes"}
+        </button>
+
       </div>
+
+    </div>
+
+  </div>
+)}
 
     </div>
   );

@@ -14,7 +14,7 @@ import HeroSlider from './heroBanner';
 import Advertisement from './Advertisement';
 import Image from "next/image";
 import ProductCard from './ProductCard';
-import FashionProducts from './Fashion';
+
 // --- DATA ---
 
 
@@ -502,7 +502,7 @@ export default function Hero2() {
         
         <MidBanner banner={midBanners[0]} />
         
-        <FashionProducts/>
+        
         <MidBanner banner={midBanners[1]} />
         
       </div>
