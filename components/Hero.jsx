@@ -14,7 +14,7 @@ import HeroSlider from './heroBanner';
 import Advertisement from './Advertisement';
 import Image from "next/image";
 import ProductCard from './ProductCard';
-
+import Newsletter from './Newsletter';
 // --- DATA ---
 
 
@@ -495,7 +495,7 @@ export default function Hero2() {
       <div className="pt-[120px] md:pt-[150px]">
         <HeroSlider />
         <CategoryGrid categories={cats} />
-        
+        <Newsletter />
         
         <GridBanners />
         <SplitBanners />

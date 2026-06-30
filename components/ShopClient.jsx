@@ -20,6 +20,7 @@ function ShopContent() {
   // ✅ URL STATE (SOURCE OF TRUTH)
   const search = searchParams.get("search") || ""
   const category = searchParams.get("category") || ""
+  const subCategory = searchParams.get("subCategory") || ""
   const page = Number(searchParams.get("page")) || 1
 
   const minPrice = Number(searchParams.get("minPrice")) || 0
@@ -54,18 +55,20 @@ function ShopContent() {
   /* ---------------- FETCH PRODUCTS ---------------- */
   useEffect(() => {
   dispatch(fetchProducts({
-    search,
-    category,
-    page,
-    minPrice: filters.minPrice,
-    maxPrice: filters.maxPrice,
-    minRating: filters.minRating,
-    minDiscount: filters.minDiscount
-  }))
+  search,
+  category,
+  subCategory,
+  page,
+  minPrice: filters.minPrice,
+  maxPrice: filters.maxPrice,
+  minRating: filters.minRating,
+  minDiscount: filters.minDiscount
+}))
 }, [
   search,
   category,
-  page,
+    page,
+  subCategory,
   filters.minPrice,
   filters.maxPrice,
   filters.minRating,
@@ -83,6 +86,7 @@ function ShopContent() {
   const url =
     `/shop?page=1` +
     (category ? `&category=${category}` : "") +
+     (subCategory ? `&subCategory=${encodeURIComponent(subCategory)}` : "") +
     (search ? `&search=${search}` : "") +
     (filters.minPrice ? `&minPrice=${filters.minPrice}` : "") +
     (filters.maxPrice ? `&maxPrice=${filters.maxPrice}` : "") +
@@ -102,18 +106,25 @@ function ShopContent() {
   const totalPages = pagination?.totalPages || 1
 
   const heading = search
-    ? `Search results for "${search}"`
-    : category
-    ? category.replace("-", " ").toUpperCase()
-    : "All Products"
-
+  ? `Search results for "${search}"`
+  : subCategory
+  ? subCategory
+  : category
+  ? category.replace("-", " ").toUpperCase()
+  : "All Products";
   /* ---------------- URL BUILDER ---------------- */
 
   const buildUrl = (newPage) => {
     let url = `/shop?page=${newPage}`
 
-    if (category) url += `&category=${category}`
-    if (search) url += `&search=${search}`
+    if (category)
+  url += `&category=${encodeURIComponent(category)}`;
+
+if (subCategory)
+  url += `&subCategory=${encodeURIComponent(subCategory)}`;
+
+if (search)
+  url += `&search=${encodeURIComponent(search)}`;
 
     if (minPrice) url += `&minPrice=${minPrice}`
     if (maxPrice) url += `&maxPrice=${maxPrice}`

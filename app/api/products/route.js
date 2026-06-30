@@ -34,6 +34,7 @@ const minDiscount = Number(searchParams.get("minDiscount")) || 0
 
     const search = searchParams.get("search") || "";
     const rawCategory = searchParams.get("category");
+    const subCategory = searchParams.get("subCategory");
 
     // ---------- CLEAN SEARCH ----------
     const words = search
@@ -194,28 +195,37 @@ return NextResponse.json({
   },
 
   ...(category && {
-    category: { equals: category },
+    category: {
+      equals: category,
+      mode: "insensitive",
+    },
+  }),
+
+  ...(subCategory && {
+    subCategory: {
+      equals: subCategory,
+      mode: "insensitive",
+    },
   }),
 
   ...(minPrice > 0 || maxPrice > 0
-  ? {
-      price: {
-        ...(minPrice > 0 && { gte: minPrice }),
-        ...(maxPrice > 0 && { lte: maxPrice }),
-      },
-    }
-  : {}),
-
-  
-
-  
+    ? {
+        price: {
+          ...(minPrice > 0 && { gte: minPrice }),
+          ...(maxPrice > 0 && { lte: maxPrice }),
+        },
+      }
+    : {}),
 
   ...(searchKeywords.length > 0 && {
-  OR: searchKeywords.map((word) => ({
-    name: { contains: word, mode: "insensitive" },
-  })),
-}),
-}
+    OR: searchKeywords.map((word) => ({
+      name: {
+        contains: word,
+        mode: "insensitive",
+      },
+    })),
+  }),
+};
 
     
     // ---------- PARALLEL QUERIES ----------
