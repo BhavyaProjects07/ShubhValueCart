@@ -4,38 +4,40 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import axios from "axios";
 
-const heroBanners = [
+const fallbackBanners = [
   {
     id: 1,
     image: "https://ik.imagekit.io/rr50hbc3l/WhatsApp%20Image%202026-06-13%20at%2000.40.00.jpeg",
-    url: "/",
+    link: "/",
   },
   {
     id: 2,
     image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_uug28luug28luug2.png",
-    url: "/shop?page=1&category=food-grocery&maxPrice=10000&minDiscount=20",
+    link: "/shop?page=1&category=food-grocery&maxPrice=10000&minDiscount=20",
   },
   {
     id: 3,
     image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_uug28luug28luug2.png",
-    url: "/shop?page=1&category=fashion&maxPrice=10000&minDiscount=50",
+    link: "/shop?page=1&category=fashion&maxPrice=10000&minDiscount=50",
   },
   {
     id: 4,
     image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_xtzkclxtzkclxtzk.png",
-    url: "/shop?page=1&category=household",
+    link: "/shop?page=1&category=household",
   },
   {
     id: 5,
     image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_1vddru1vddru1vdd.png",
-    url: "/shop?page=1&category=personal-care&minDiscount=10",
+    link: "/shop?page=1&category=personal-care&minDiscount=10",
   },
 ];
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [banners, setBanners] = useState(fallbackBanners);
 
   useEffect(() => {
     if (paused) return;
@@ -48,10 +50,33 @@ export default function HeroSlider() {
   }, [paused]);
 
   const next = () =>
-    setCurrent((prev) => (prev + 1) % heroBanners.length);
+    setCurrent((prev) => (prev + 1) % banners.length);
 
   const prev = () =>
-    setCurrent((prev) => (prev - 1 + heroBanners.length) % heroBanners.length);
+  setCurrent((prev) => (prev - 1 + banners.length) % banners.length);
+
+useEffect(() => {
+  const fetchBanners = async () => {
+    try {
+      const { data } = await axios.get("/api/store/banners");
+
+      const active = (data.banners || [])
+        .filter((b) => b.isActive)
+        .sort((a, b) => a.order - b.order);
+
+      if (active.length) {
+        setBanners(active);
+      }
+    } catch (err) {
+      console.log("Using fallback hero banners.");
+    }
+  };
+
+  fetchBanners();
+}, []);
+  
+  if (!banners.length) return null;
+
 
   return (
     <section
@@ -62,12 +87,12 @@ export default function HeroSlider() {
       <div className="relative h-[180px] sm:h-[260px] md:h-[360px] lg:h-[480px] xl:h-[560px]">
 
         <Link
-          href={heroBanners[current].url}
+          href={banners[current].link || "/"}
           className="absolute inset-0"
         >
           <Image
-            key={heroBanners[current].id}
-            src={heroBanners[current].image}
+            key={banners[current].id}
+            src={banners[current].image}
             alt="Banner"
             fill
             priority={current === 0}
@@ -96,7 +121,7 @@ export default function HeroSlider() {
 
         {/* Indicators */}
         <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-          {heroBanners.map((_, index) => (
+         {banners.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrent(index)}
