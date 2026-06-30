@@ -98,7 +98,87 @@ export default function AdminBanners() {
     } finally {
       setUploading(false);
     }
-  };
+    };
+    
+    const updateBanner = async () => {
+  try {
+    setSaving(true);
+
+    const token = await getToken();
+
+    const fd = new FormData();
+
+    fd.append("title", editBanner.title || "");
+    fd.append("link", editBanner.link || "");
+    fd.append("order", editBanner.order);
+    fd.append("isActive", editBanner.isActive);
+
+    if (editBanner.newImage) {
+      fd.append("image", editBanner.newImage);
+    }
+
+    await axios.put(
+      `/api/store/banners/${editBanner.id}`,
+      fd,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success("Banner updated.");
+
+    setEditBanner(null);
+
+    fetchBanners();
+
+  } catch (err) {
+    toast.error(
+      err?.response?.data?.error || "Update failed."
+    );
+  } finally {
+    setSaving(false);
+  }
+    };
+    
+
+    const deleteBanner = async (id) => {
+  if (!confirm("Delete this banner?")) return;
+
+  try {
+
+    setDeleting(true);
+
+    const token = await getToken();
+
+    await axios.delete(
+      `/api/store/banners/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success("Banner deleted.");
+
+    fetchBanners();
+
+  } catch (err) {
+
+    toast.error(
+      err?.response?.data?.error || "Delete failed."
+    );
+
+  } finally {
+
+    setDeleting(false);
+
+  }
+    };
+    
+
 
   if (loading)
     return (
@@ -319,17 +399,20 @@ export default function AdminBanners() {
 
               <div className="mt-5 flex items-center gap-3">
 
-                <button className="flex-1 bg-green-600 text-white rounded-xl py-2 font-semibold">
+                <button
+    onClick={() => setEditBanner(banner)}
+    className="flex-1 bg-green-600 hover:bg-green-700 text-white rounded-xl py-2 font-semibold transition"
+>
+    Edit
+</button>
 
-                  Edit
-
-                </button>
-
-                <button className="w-11 h-11 rounded-xl border flex items-center justify-center">
-
-                  <ExternalLink size={18} />
-
-                </button>
+                <button
+    onClick={() => deleteBanner(banner.id)}
+    disabled={deleting}
+    className="w-11 h-11 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 flex items-center justify-center transition"
+>
+    🗑️
+</button>
 
               </div>
 
