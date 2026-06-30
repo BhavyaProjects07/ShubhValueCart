@@ -19,7 +19,12 @@ export default function AdminBanners() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
 
-  const [banners, setBanners] = useState([]);
+    const [banners, setBanners] = useState([]);
+    const [editBanner, setEditBanner] = useState(null);
+
+const [saving, setSaving] = useState(false);
+
+const [deleting, setDeleting] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
