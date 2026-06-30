@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation"
 import { HomeIcon, ShieldCheckIcon, StoreIcon, TicketPercentIcon , ImagePlus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { assets } from "@/assets/assets"
+
 
 const AdminSidebar = () => {
   const pathname = usePathname()

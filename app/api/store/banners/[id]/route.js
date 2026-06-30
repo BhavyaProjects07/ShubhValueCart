@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import imagekit from "@/config/imageKit";
+import imagekit from "@/configs/imageKit";
 import { auth } from "@clerk/nextjs/server";
 
 // =========================
