@@ -41,6 +41,8 @@ model Product {
   images        String[]
   category      String
 
+  subCategory   String
+
   stock         Int      @default(0)
   inStock       Boolean  @default(true)
 

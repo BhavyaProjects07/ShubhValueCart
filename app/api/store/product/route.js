@@ -41,6 +41,8 @@ export async function POST(request) {
     const sizesRaw = formData.get("sizes");
     const itemCode = formData.get("itemCode")?.trim();
 
+    const subCategory =
+  formData.get("subCategory")?.trim() || "";
     const offlineSoldQuantity = Number(
       formData.get("offlineSoldQuantity") || 0
     );
@@ -128,7 +130,8 @@ if (existingProduct) {
 
   images: imagesUrl,
 
-  category,
+        category,
+        subCategory,
 
   stock,
   offlineSoldQuantity,
@@ -173,6 +176,8 @@ export async function GET(req) {
     const inStock = searchParams.get("inStock");
     const sort = searchParams.get("sort") || "latest";
     const hasSizes = searchParams.get("hasSizes");
+    const subCategory =
+  formData.get("subCategory")?.trim() || "";
 
     // ---------------- STORE ----------------
     const store = await prisma.store.findFirst();

@@ -3,7 +3,7 @@ import axios from "axios";
 import FormData from "form-data";
 
 // ---------------- SETTINGS ----------------
-const CONCURRENT_UPLOADS = 5;
+const CONCURRENT_UPLOADS = 8;
 const BATCH_DELAY = 1500;
 const API_URL = "http://localhost:3000/api/store/product";
 
@@ -53,10 +53,10 @@ const products = data
         ?.toString()
         .trim() || "General",
 
-    childCategory:
-      p.Category
-        ?.toString()
-        .trim() || "Misc",
+    subCategory:
+  p.Category
+    ?.toString()
+    .trim() || "",
 
     stock:
   Number(p["Qty"]) || 0,
@@ -181,6 +181,11 @@ async function uploadSingleProduct(
       category
     );
 
+
+    formData.append(
+  "subCategory",
+  product.subCategory
+);
     formData.append(
       "stock",
       stock.toString()

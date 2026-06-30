@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
-import Dealstrip from "@/components/home/Dealstrip"
+
 import { useRouter } from "next/navigation";
 import GridBanners from './GridBanners';
 import HeroSlider from './heroBanner';
@@ -495,8 +495,8 @@ export default function Hero2() {
       <div className="pt-[120px] md:pt-[150px]">
         <HeroSlider />
         <CategoryGrid categories={cats} />
-        <Advertisement/>
-        <Dealstrip deals={deals} />
+        
+        
         <GridBanners />
         <SplitBanners />
         
