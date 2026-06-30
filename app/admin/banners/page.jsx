@@ -79,7 +79,7 @@ const [deleting, setDeleting] = useState(false);
       fd.append("title", form.title);
       fd.append("link", form.link);
 
-      await axios.post("/api/store/banners", fd, {
+      await axios.post("/api/admin/banners", fd, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -123,7 +123,7 @@ const [deleting, setDeleting] = useState(false);
     }
 
     await axios.put(
-      `/api/store/banners/${editBanner.id}`,
+      `/api/admin/banners/${editBanner.id}`,
       fd,
       {
         headers: {
@@ -158,7 +158,7 @@ const [deleting, setDeleting] = useState(false);
     const token = await getToken();
 
     await axios.delete(
-      `/api/store/banners/${id}`,
+      `/api/admin/banners/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -6,49 +6,21 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 
-const fallbackBanners = [
-  {
-    id: 1,
-    image: "https://ik.imagekit.io/rr50hbc3l/WhatsApp%20Image%202026-06-13%20at%2000.40.00.jpeg",
-    link: "/",
-  },
-  {
-    id: 2,
-    image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_uug28luug28luug2.png",
-    link: "/shop?page=1&category=food-grocery&maxPrice=10000&minDiscount=20",
-  },
-  {
-    id: 3,
-    image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_uug28luug28luug2.png",
-    link: "/shop?page=1&category=fashion&maxPrice=10000&minDiscount=50",
-  },
-  {
-    id: 4,
-    image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_xtzkclxtzkclxtzk.png",
-    link: "/shop?page=1&category=household",
-  },
-  {
-    id: 5,
-    image: "https://ik.imagekit.io/rsjsqdge7/Gemini_Generated_Image_1vddru1vddru1vdd.png",
-    link: "/shop?page=1&category=personal-care&minDiscount=10",
-  },
-];
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [banners, setBanners] = useState(fallbackBanners);
+const [banners, setBanners] = useState([]);
 
-  useEffect(() => {
-    if (paused) return;
+ useEffect(() => {
+  if (paused || banners.length <= 1) return;
 
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % heroBanners.length);
-    }, 6000);
+  const interval = setInterval(() => {
+    setCurrent((prev) => (prev + 1) % banners.length);
+  }, 6000);
 
-    return () => clearInterval(interval);
-  }, [paused]);
-
+  return () => clearInterval(interval);
+}, [paused, banners.length]);
   const next = () =>
     setCurrent((prev) => (prev + 1) % banners.length);
 
@@ -64,11 +36,13 @@ useEffect(() => {
         .filter((b) => b.isActive)
         .sort((a, b) => a.order - b.order);
 
-      if (active.length) {
-        setBanners(active);
+      setBanners(active);
+
+      if (current >= active.length) {
+        setCurrent(0);
       }
     } catch (err) {
-      console.log("Using fallback hero banners.");
+      console.error("Failed to fetch hero banners:", err);
     }
   };
 
