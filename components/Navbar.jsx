@@ -578,7 +578,7 @@ useEffect(() => {
       </p>
 
       <button
-        onClick={() => router.push("/complete-registration")}
+        onClick={() => router.push("/phone-signup")}
         className="mt-8 w-full bg-[#00a300] text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition"
       >
         Complete Registration
