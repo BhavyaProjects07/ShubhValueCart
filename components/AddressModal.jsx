@@ -66,147 +66,158 @@ const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
             setShowAddressModal(false)
 
         } catch (error) {
-    console.log(error);
+    console.log("STATUS:", error.response?.status);
+    console.log("DATA:", error.response?.data);
 
     if (
-        error?.response?.status === 403 ||
-        error?.response?.data?.code === "ACCOUNT_INCOMPLETE"
-    ) {
-        setShowAddressModal(false);
-        setShowCompleteAccountModal(true);
-        return;
-    }
+    error.response?.status === 403 &&
+    error.response?.data?.code === "ACCOUNT_INCOMPLETE"
+) {
+    setShowCompleteAccountModal(true);
+    return;
+}
 
-    toast.error(
-        error?.response?.data?.error || "Something went wrong."
-    );
+    toast.error(error.response?.data?.error || "Something went wrong.");
 } finally {
             setLoading(false)
         }
     }
 
     return (
-  <>
-    {/* Address Modal */}
-    <form
-      onSubmit={handleSubmit}
-      className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center"
-    >
-      <div className="relative flex flex-col gap-5 text-slate-700 w-full max-w-sm mx-6 bg-white p-6 rounded-2xl shadow-2xl">
+  <form
+    onSubmit={handleSubmit}
+    className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
+  >
+    <div className="relative w-full max-w-md mx-5 rounded-3xl bg-white shadow-2xl p-7">
 
-        {/* Close */}
-        <button
-          type="button"
-          onClick={() => setShowAddressModal(false)}
-          className="absolute right-4 top-4 text-slate-400 hover:text-slate-700 transition"
-        >
-          <XIcon size={24} />
-        </button>
+      {/* Close */}
+      <button
+        type="button"
+        onClick={() => setShowAddressModal(false)}
+        className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 transition"
+      >
+        <XIcon size={24} />
+      </button>
 
-        <h2 className="text-3xl font-bold">
-          Add New <span className="text-[#00a300]">Address</span>
-        </h2>
+      {/* ===================================================== */}
+      {/* ADDRESS FORM */}
+      {/* ===================================================== */}
+      {!showCompleteAccountModal && (
+        <>
+          <h2 className="text-3xl font-bold text-slate-800">
+            Add New{" "}
+            <span className="text-[#00a300]">
+              Address
+            </span>
+          </h2>
 
-        {/* INPUTS */}
+          <div className="mt-6 flex flex-col gap-4">
 
-        <input
-          name="name"
-          onChange={handleAddressChange}
-          value={address.name}
-          className="p-3 px-4 border border-slate-200 rounded-lg w-full focus:ring-2 focus:ring-[#00a300] outline-none"
-          type="text"
-          placeholder="Enter your name"
-          required
-        />
+            <input
+              name="name"
+              value={address.name}
+              onChange={handleAddressChange}
+              className="p-3 px-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00a300]"
+              type="text"
+              placeholder="Enter your name"
+              required
+            />
 
-        <input
-          name="email"
-          onChange={handleAddressChange}
-          value={address.email}
-          className="p-3 px-4 border border-slate-200 rounded-lg w-full focus:ring-2 focus:ring-[#00a300] outline-none"
-          type="email"
-          placeholder="Email address"
-          required
-        />
+            <input
+              name="email"
+              value={address.email}
+              onChange={handleAddressChange}
+              className="p-3 px-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00a300]"
+              type="email"
+              placeholder="Email address"
+              required
+            />
 
-        <input
-          name="street"
-          onChange={handleAddressChange}
-          value={address.street}
-          className="p-3 px-4 border border-slate-200 rounded-lg w-full focus:ring-2 focus:ring-[#00a300] outline-none"
-          type="text"
-          placeholder="Street Address"
-          required
-        />
+            <input
+              name="street"
+              value={address.street}
+              onChange={handleAddressChange}
+              className="p-3 px-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00a300]"
+              type="text"
+              placeholder="Street Address"
+              required
+            />
 
-        <div className="flex gap-4">
-          <input
-            name="city"
-            onChange={handleAddressChange}
-            value={address.city}
-            className="p-3 px-4 border border-slate-200 rounded-lg w-full focus:ring-2 focus:ring-[#00a300] outline-none"
-            type="text"
-            placeholder="City"
-            required
-          />
+            <div className="flex gap-3">
 
-          <input
-            name="state"
-            onChange={handleAddressChange}
-            value={address.state}
-            className="p-3 px-4 border border-slate-200 rounded-lg w-full focus:ring-2 focus:ring-[#00a300] outline-none"
-            type="text"
-            placeholder="State"
-            required
-          />
-        </div>
+              <input
+                name="city"
+                value={address.city}
+                onChange={handleAddressChange}
+                className="flex-1 p-3 px-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00a300]"
+                type="text"
+                placeholder="City"
+                required
+              />
 
-        <div className="flex gap-4">
-          <input
-            name="zip"
-            onChange={handleAddressChange}
-            value={address.zip}
-            className="p-3 px-4 border border-slate-200 rounded-lg w-full focus:ring-2 focus:ring-[#00a300] outline-none"
-            type="number"
-            placeholder="PIN Code"
-            required
-          />
+              <input
+                name="state"
+                value={address.state}
+                onChange={handleAddressChange}
+                className="flex-1 p-3 px-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00a300]"
+                type="text"
+                placeholder="State"
+                required
+              />
 
-          <input
-            name="country"
-            onChange={handleAddressChange}
-            value={address.country}
-            className="p-3 px-4 border border-slate-200 rounded-lg w-full focus:ring-2 focus:ring-[#00a300] outline-none"
-            type="text"
-            placeholder="Country"
-            required
-          />
-        </div>
+            </div>
 
-        <input
-          name="phone"
-          onChange={handleAddressChange}
-          value={address.phone}
-          className="p-3 px-4 border border-slate-200 rounded-lg w-full focus:ring-2 focus:ring-[#00a300] outline-none"
-          type="text"
-          placeholder="Mobile Number"
-          required
-        />
+            <div className="flex gap-3">
 
-        <button
-          className="bg-[#00a300] hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-all active:scale-95"
-        >
-          {loading ? "Saving Address..." : "SAVE ADDRESS"}
-        </button>
+              <input
+                name="zip"
+                value={address.zip}
+                onChange={handleAddressChange}
+                className="flex-1 p-3 px-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00a300]"
+                type="number"
+                placeholder="PIN Code"
+                required
+              />
 
-      </div>
-    </form>
+              <input
+                name="country"
+                value={address.country}
+                onChange={handleAddressChange}
+                className="flex-1 p-3 px-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00a300]"
+                type="text"
+                placeholder="Country"
+                required
+              />
 
-    {/* Complete Account Modal */}
-    {showCompleteAccountModal && (
-      <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center">
+            </div>
 
-        <div className="w-full max-w-md mx-5 rounded-3xl bg-white p-8 shadow-2xl">
+            <input
+              name="phone"
+              value={address.phone}
+              onChange={handleAddressChange}
+              className="p-3 px-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00a300]"
+              type="text"
+              placeholder="Mobile Number"
+              required
+            />
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-2 bg-[#00a300] hover:bg-green-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition active:scale-95"
+            >
+              {loading ? "Saving Address..." : "SAVE ADDRESS"}
+            </button>
+
+          </div>
+        </>
+      )}
+
+      {/* ===================================================== */}
+      {/* COMPLETE ACCOUNT SCREEN */}
+      {/* ===================================================== */}
+      {showCompleteAccountModal && (
+        <div className="py-4">
 
           <div className="flex justify-center">
 
@@ -231,9 +242,9 @@ const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
           </p>
 
           <button
+            type="button"
             onClick={() => {
-              setShowCompleteAccountModal(false);
-              router.push("/complete-registration");
+              router.push("/phone-signup");
             }}
             className="mt-8 w-full rounded-xl bg-[#00a300] py-3 text-white font-semibold hover:bg-green-700 transition"
           >
@@ -241,17 +252,18 @@ const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
           </button>
 
           <button
+            type="button"
             onClick={() => setShowCompleteAccountModal(false)}
             className="mt-3 w-full rounded-xl border border-gray-300 py-3 font-medium text-gray-700 hover:bg-gray-100 transition"
           >
-            Maybe Later
+            Back to Address Form
           </button>
 
         </div>
-  
-      </div>
-    )}
-  </>
+      )}
+
+    </div>
+  </form>
 );
 }
 
