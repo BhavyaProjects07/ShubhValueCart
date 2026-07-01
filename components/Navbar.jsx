@@ -8,8 +8,7 @@ import {
     X,
   ShoppingBag,
   Info,
-    ChevronRight,
-  AlertTriangle,
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,10 +41,7 @@ const Navbar = () => {
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSeller, setIsSeller] = useState(false)
     const { user } = useUser()
-    const { openSignIn, signOut } = useClerk();
-    const [showCompleteAccountModal, setShowCompleteAccountModal] =
-        useState(false);
-    
+    const {openSignIn} = useClerk()
     const router = useRouter();
     const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
     const [search, setSearch] = useState('')
@@ -101,26 +97,6 @@ useEffect(() => {
 
         fetchRoles()
     }, [user])
-
-    useEffect(() => {
-  if (!user) return;
-
-  const checkStatus = async () => {
-    try {
-      const { data } = await axios.get("/api/user/status");
-
-      if (!data.completed) {
-        setShowCompleteAccountModal(true);
-      }
-
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  checkStatus();
-
-}, [user]);
 
     const handleSearch = (e) => {
         e.preventDefault()
@@ -553,61 +529,6 @@ useEffect(() => {
     </div>
 )}
             </nav>
-
-            {showCompleteAccountModal && (
-  <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center">
-
-    <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-5 shadow-2xl">
-                <button
-    onClick={async () => {
-      setShowCompleteAccountModal(false);
-      await signOut();
-      router.push("/");
-    }}
-    className="absolute top-5 right-5 p-2 rounded-full hover:bg-gray-100 transition"
-  >
-    <X className="w-5 h-5 text-gray-500" />
-  </button>
-      <div className="flex justify-center">
-        <div className="w-20 h-20 rounded-full bg-yellow-100 flex items-center justify-center">
-          <AlertTriangle
-            size={42}
-            className="text-yellow-600"
-          />
-        </div>
-      </div>
-
-      <h2 className="mt-6 text-3xl font-bold text-center">
-        Complete Your Account
-      </h2>
-
-      <p className="mt-4 text-center text-gray-600 leading-7">
-        Your Google account has been authenticated successfully,
-        but your registration isn't complete yet.
-        Please verify your mobile number before continuing.
-      </p>
-
-      <button
-        onClick={() => router.push("/phone-signup")}
-        className="mt-8 w-full bg-[#00a300] text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition"
-      >
-        Complete Registration
-      </button>
-
-      <button
-        onClick={async () => {
-          await signOut();
-          router.push("/");
-        }}
-        className="mt-3 w-full border border-gray-300 py-3 rounded-xl font-medium hover:bg-gray-100 transition"
-      >
-        Sign Out
-      </button>
-
-    </div>
-
-  </div>
-)}
         </>
     )
 }
