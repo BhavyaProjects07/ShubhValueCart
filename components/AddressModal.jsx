@@ -248,7 +248,7 @@ const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
           </button>
 
         </div>
-
+  
       </div>
     )}
   </>
