@@ -558,7 +558,16 @@ useEffect(() => {
   <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center">
 
     <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-5 shadow-2xl">
-
+                <button
+    onClick={async () => {
+      setShowCompleteAccountModal(false);
+      await signOut();
+      router.push("/");
+    }}
+    className="absolute top-5 right-5 p-2 rounded-full hover:bg-gray-100 transition"
+  >
+    <X className="w-5 h-5 text-gray-500" />
+  </button>
       <div className="flex justify-center">
         <div className="w-20 h-20 rounded-full bg-yellow-100 flex items-center justify-center">
           <AlertTriangle
