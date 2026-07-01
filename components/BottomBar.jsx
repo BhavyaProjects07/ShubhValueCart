@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Home,
-  ShoppingBag,
   Grid2x2,
   ShoppingCart,
   MessageCircle,
+  PhoneCall,
 } from "lucide-react";
 
 export default function BottomBar() {
@@ -20,9 +20,9 @@ export default function BottomBar() {
       icon: Home,
     },
     {
-      name: "Shop",
-      href: "/shop",
-      icon: ShoppingBag,
+      name: "Call",
+      href: "tel:9509086545", // <-- Call button
+      icon: PhoneCall,
     },
     {
       name: "Categories",
@@ -58,18 +58,14 @@ export default function BottomBar() {
                 <Icon
                   size={22}
                   className={`transition-all ${
-                    active
-                      ? "text-green-600"
-                      : "text-gray-500"
+                    active ? "text-green-600" : "text-gray-500"
                   }`}
                   strokeWidth={2.2}
                 />
 
                 <span
                   className={`mt-1 text-[11px] font-medium ${
-                    active
-                      ? "text-green-600"
-                      : "text-gray-500"
+                    active ? "text-green-600" : "text-gray-500"
                   }`}
                 >
                   {item.name}
@@ -80,7 +76,7 @@ export default function BottomBar() {
 
           {/* WhatsApp */}
           <a
-            href="https://wa.me/" // <-- Add your number here
+            href="https://wa.me/9509086545" // <-- WhatsApp with number
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center justify-center"
