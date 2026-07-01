@@ -11,6 +11,7 @@ import { fetchCart, uploadCart } from "@/lib/features/cart/cartSlice";
 import { fetchAddress } from "@/lib/features/address/addressSlice";
 import { fetchUserRatings } from "@/lib/features/rating/ratingSlice";
 import BottomBar from "@/components/BottomBar";
+import CouponBanner from "@/components/Coupon";
 
 export default function PublicLayout({ children }) {
 
@@ -53,7 +54,7 @@ export default function PublicLayout({ children }) {
             {/* <Banner /> */}
             {children}
           
-        
+            <CouponBanner/>
             <BottomBar/>
             
             <Footer />

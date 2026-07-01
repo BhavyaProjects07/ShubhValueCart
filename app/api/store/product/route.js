@@ -176,8 +176,7 @@ export async function GET(req) {
     const inStock = searchParams.get("inStock");
     const sort = searchParams.get("sort") || "latest";
     const hasSizes = searchParams.get("hasSizes");
-    const subCategory =
-  formData.get("subCategory")?.trim() || "";
+const subCategory = searchParams.get("subCategory") || "";
 
     // ---------------- STORE ----------------
     const store = await prisma.store.findFirst();
@@ -208,6 +207,10 @@ export async function GET(req) {
     if (category) {
       where.category = category;
     }
+
+    if (subCategory) {
+  where.subCategory = subCategory;
+}
 
     // 📦 STOCK
     if (inStock === "true") {
