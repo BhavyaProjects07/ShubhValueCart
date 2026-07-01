@@ -13,7 +13,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCart, fetchCart } from "@/lib/features/cart/cartSlice";
 import { assets } from "@/assets/assets";
 import Image from "next/image"
 import {useUser , useClerk , UserButton , useAuth} from "@clerk/nextjs";
@@ -51,19 +52,37 @@ const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     
     // Fallback for cartCount if redux is not set up in the environment
     const cartCount = useSelector(state => state?.cart?.total || 0)
+    const dispatch = useDispatch();
 
     const [mounted, setMounted] = useState(false)
 
 useEffect(() => {
   setMounted(true)
 }, [])
+    useEffect(() => {
+  if (!mounted) return;
+
+  // User logged out
+  if (!user) {
+    dispatch(clearCart());
+    return;
+  }
+
+  // User logged in
+  dispatch(fetchCart({ getToken }));
+
+}, [user, mounted]);
 
     useEffect(() => {
         setIsVisible(true)
     }, [])
 
     useEffect(() => {
-        if (!user) return
+        if (!user) {
+    setIsAdmin(false);
+    setIsSeller(false);
+    return;
+}
 
             const fetchRoles = async () => {
                 try {

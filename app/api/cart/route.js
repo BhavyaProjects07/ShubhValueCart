@@ -6,9 +6,26 @@ import prisma from "@/lib/prisma";
 export async function POST(request) {
     try {
         const { userId } = getAuth(request);
+        if (!userId) {
+  return NextResponse.json(
+    { cart: {} },
+    { status: 200 }
+  );
+}
         const { cart } = await request.json();
         
         // save the cart to the user obj
+
+        const user = await prisma.user.findUnique({
+  where: { id: userId }
+});
+
+if (!user) {
+  return NextResponse.json(
+    { error: "User not found" },
+    { status: 404 }
+  );
+}
 
         await prisma.user.update({
             where:{id: userId},
@@ -30,7 +47,16 @@ export async function GET(request) {
         const user = await prisma.user.findUnique({
             where:{id: userId}
         })
-        return NextResponse.json({ cart: user.cart });
+        if (!user) {
+  return NextResponse.json({
+    cart: {}
+  });
+}
+
+return NextResponse.json({
+  cart: user.cart || {}
+});
+        
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: error.message || error.code }, { status: 500 });
