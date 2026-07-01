@@ -8,7 +8,8 @@ import {
     X,
   ShoppingBag,
   Info,
-  ChevronRight,
+    ChevronRight,
+  AlertTriangle,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
