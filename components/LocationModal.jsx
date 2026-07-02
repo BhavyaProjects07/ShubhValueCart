@@ -26,7 +26,10 @@ const { user } = useUser();
 
 const [loading, setLoading] = useState(false);
 
-const [search, setSearch] = useState("");
+    const [search, setSearch] = useState("");
+    
+    const [savedAddresses, setSavedAddresses] = useState([]);
+const [loadingAddresses, setLoadingAddresses] = useState(false);
 
 const [suggestions, setSuggestions] = useState([]);
 
@@ -118,7 +121,45 @@ const [address, setAddress] = useState({
   }, 400);
 
   return () => clearTimeout(timer);
-}, [search , getToken]);
+    }, [search, getToken]);
+    
+    useEffect(() => {
+  if (!isOpen) return;
+
+        loadAddresses();
+        const handleSelectAddress = (address) => {
+  localStorage.setItem(
+    "selectedAddress",
+    JSON.stringify(address)
+  );
+
+  toast.success("Delivery address selected");
+
+  onClose();
+
+  window.location.reload();
+        };
+        
+        const handleDeleteAddress = async (id) => {
+  try {
+    const token = await getToken();
+
+    await axios.delete(`/api/address/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    toast.success("Address deleted");
+
+    loadAddresses();
+  } catch (err) {
+    console.error(err);
+
+    toast.error("Unable to delete address");
+  }
+};
+}, [isOpen]);
 
     if (!isOpen) return null;
     
@@ -154,6 +195,37 @@ const [address, setAddress] = useState({
   }));
 };
 
+    const loadAddresses = async () => {
+  try {
+    setLoadingAddresses(true);
+
+    const token = await getToken();
+
+    const { data } = await axios.get("/api/address", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const addresses = data.addresses || [];
+
+    setSavedAddresses(addresses);
+
+    // If user already has addresses,
+    // open Saved Addresses screen first
+    if (addresses.length > 0) {
+      setStep(0);
+    } else {
+      setStep(1);
+    }
+  } catch (err) {
+    console.error(err);
+    setStep(1);
+  } finally {
+    setLoadingAddresses(false);
+  }
+};
+    
     const handleSaveAddress = async () => {
   try {
     setLoading(true);
@@ -284,7 +356,7 @@ const [address, setAddress] = useState({
 
         <div className="flex-1 overflow-y-auto p-6">
 
-  {step === 1 ? (
+  {step === 0 ? (
     <>
       {/* SEARCH */}
       <div className="relative">
