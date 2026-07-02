@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
-
+import CouponBanner from './Coupon';
 import { useRouter } from "next/navigation";
 import GridBanners from './GridBanners';
 import HeroSlider from './heroBanner';
@@ -113,9 +113,9 @@ const gridBanners = [
 
 const CustomNavbar = ({ categories }) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [coupon, setCoupon] = useState(null)
+ 
   const router = useRouter();
-  const [showOffer, setShowOffer] = useState(true);
+
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -123,17 +123,7 @@ const CustomNavbar = ({ categories }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    axios.get('/api/public/coupons')
-      .then(res => {
-        if (res.data?.length) {
-          setCoupon(res.data[0])
-        }
-      })
-      .catch(err => {
-        console.error('COUPON FETCH ERROR:', err)
-      })
-  }, [])
+  
 
   return (
     <header
@@ -233,76 +223,7 @@ const CustomNavbar = ({ categories }) => {
       </div>
 
       {/* Bank Offer Strip */}
-      {showOffer && (
-        <div className="bg-gradient-to-r from-[#2874f0] via-[#3b82f6] to-[#60a5fa] text-white border-b border-blue-300 shadow-sm">
-    
-          <div className="px-4 py-2 flex items-center justify-between gap-3">
-
-            {/* LEFT CONTENT */}
-            <div className="flex items-center gap-3 overflow-x-auto whitespace-nowrap hide-scrollbar">
-
-              {/* ICON */}
-              <div className="animate-pulse text-lg">💳</div>
-
-              {coupon ? (
-                <div className="flex items-center gap-2">
-
-                  {/* DESCRIPTION */}
-                  <span className="text-[11px] sm:text-xs font-medium opacity-90">
-                    {coupon.description}
-                  </span>
-
-                  {/* COUPON BADGE */}
-                  <span className="bg-white text-[#2874f0] font-bold px-2.5 py-1 rounded-md text-[11px] sm:text-xs shadow-sm tracking-wide">
-                    {coupon.code}
-                  </span>
-
-                  {/* COPY BUTTON */}
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(coupon.code);
-                    }}
-                    className="text-[10px] sm:text-xs font-semibold bg-white/20 hover:bg-white/30 px-2 py-1 rounded transition-all"
-                  >
-                    Copy
-                  </button>
-
-                </div>
-              ) : (
-                <span className="text-white/70 text-xs">Loading offers...</span>
-              )}
-
-            </div>
-
-            {/* RIGHT ACTIONS */}
-            <div className="flex items-center gap-2">
-
-              {/* CTA */}
-              {coupon && (
-                <button
-                  onClick={() => navigator.clipboard.writeText(coupon.code)}
-                  className="hidden sm:block bg-white text-[#2874f0] text-xs font-bold px-3 py-1.5 rounded-md hover:scale-105 active:scale-95 transition-all shadow"
-                >
-                  Apply Now
-                </button>
-              )}
-
-              {/* CLOSE BUTTON */}
-              <button
-                onClick={() => {
-                  setShowOffer(false);
-                  localStorage.setItem("hideOffer", "true");
-                }}
-                className="text-white/80 hover:text-white text-sm font-bold px-2"
-              >
-                ✕
-              </button>
-
-            </div>
-
-          </div>
-        </div>
-      )}
+      
       {/* Mobile Search */}
       
     </header>
@@ -494,6 +415,7 @@ export default function Hero2() {
       <CustomNavbar categories={categories}/>
       <div className="pt-[120px] md:pt-[150px]">
         <HeroSlider />
+        <CouponBanner />
         <CategoryGrid categories={cats} />
         <Newsletter />
         
