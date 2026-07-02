@@ -18,8 +18,10 @@ import { clearCart, fetchCart } from "@/lib/features/cart/cartSlice";
 import { assets } from "@/assets/assets";
 import Image from "next/image"
 import {useUser , useClerk , UserButton , useAuth} from "@clerk/nextjs";
-import { PackageIcon, Store } from "lucide-react";
+import { PackageIcon, Store , MapPin , ChevronDown } from "lucide-react";
 import axios from "axios";
+import LocationModal from "./LocationModal";
+
 
 const NavLink = ({ href, children, delay = 0 }) => {
     return (
@@ -47,12 +49,13 @@ const Navbar = () => {
     const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
     const [search, setSearch] = useState('')
     const [isVisible, setIsVisible] = useState(false);
-const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    
+    const [showLocationModal, setShowLocationModal] = useState(false);
     // Fallback for cartCount if redux is not set up in the environment
     const cartCount = useSelector(state => state?.cart?.total || 0)
     const dispatch = useDispatch();
+    const [selectedAddress, setSelectedAddress] = useState(null);
 
     const [mounted, setMounted] = useState(false)
 
@@ -68,10 +71,37 @@ useEffect(() => {
     return;
   }
 
+        
   // User logged in
   dispatch(fetchCart({ getToken }));
 
-}, [user, mounted]);
+    }, [user, mounted]);
+    
+    useEffect(() => {
+  const fetchDefaultAddress = async () => {
+    if (!user) return;
+
+    try {
+      const token = await getToken();
+
+      const { data } = await axios.get("/api/address", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const defaultAddress =
+        data.addresses?.find((a) => a.isDefault) ||
+        data.addresses?.[0];
+
+      setSelectedAddress(defaultAddress || null);
+    } catch (error) {
+      console.error("Address fetch error:", error);
+    }
+  };
+
+  fetchDefaultAddress();
+}, [user]);
 
     useEffect(() => {
         setIsVisible(true)
@@ -176,8 +206,50 @@ useEffect(() => {
                         <div className="hidden lg:flex items-center space-x-10">
                             <NavLink href="/" delay={0}>Home</NavLink>
                             <NavLink href="/shop" delay={0.1}>Shop</NavLink>
-                            <NavLink href="/about" delay={0.2}>About</NavLink>
-                            <NavLink href="/contact">Contact US</NavLink>
+                            
+                            <button
+  onClick={() => setShowLocationModal(true)}
+  className="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm transition-all duration-200 hover:border-green-500 hover:shadow-md active:scale-95"
+>
+  {/* Location Icon */}
+  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+    <MapPin
+      size={18}
+      className="fill-green-600 text-green-600"
+    />
+  </div>
+
+  {/* Address */}
+  <div className="flex flex-col items-start leading-tight">
+
+    <span className="text-[11px] font-medium text-gray-500">
+      Deliver to
+    </span>
+
+    {selectedAddress ? (
+      <>
+        <span className="max-w-[170px] truncate text-sm font-semibold text-gray-900">
+          {selectedAddress.name}
+        </span>
+
+        <span className="max-w-[170px] truncate text-xs text-gray-500">
+          {selectedAddress.locality ||
+            selectedAddress.street},{" "}
+          {selectedAddress.city}
+        </span>
+      </>
+    ) : (
+      <span className="text-sm font-semibold text-gray-900">
+        Add Address
+      </span>
+    )}
+  </div>
+
+  <ChevronDown
+    size={18}
+    className="ml-1 text-gray-500 transition-transform duration-200 group-hover:rotate-180"
+  />
+                            </button>
 
                             <form 
                                 onSubmit={handleSearch} 
@@ -548,6 +620,13 @@ useEffect(() => {
     </div>
 )}
             </nav>
+            <LocationModal
+  isOpen={showLocationModal}
+  onClose={() => setShowLocationModal(false)}
+  onDetectLocation={() => {
+    console.log("Detect location...");
+  }}
+/>
         </>
     )
 }

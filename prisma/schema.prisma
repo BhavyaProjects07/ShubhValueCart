@@ -198,24 +198,34 @@ enum ReturnStatus {
 }
 
 // Required for creating an Address: userId, name, email, street, city, state, zip, country, phone
+
 model Address {
   id        String   @id @default(cuid())
   userId    String
+
   name      String
   email     String
-  street    String
-  city      String
-  state     String
-  zip       String
-  country   String
   phone     String
+
+  street    String
+  city       String
+  state      String
+  zip        String
+  country    String
+
+  landmark           String?
+  formattedAddress   String?
+  latitude           Float?
+  longitude          Float?
+
+  isDefault Boolean @default(false)
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  // Relations
   Order Order[]
-  user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user  User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-
 // Required for creating a Coupon: code, description, discount, forNewUser, isPublic, expiresAt
 
 model Coupon {

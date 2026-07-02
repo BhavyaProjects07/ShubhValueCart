@@ -54,7 +54,7 @@ export default function PublicLayout({ children }) {
             {/* <Banner /> */}
             {children}
           
-            <CouponBanner/>
+            
             <BottomBar/>
             
             <Footer />
