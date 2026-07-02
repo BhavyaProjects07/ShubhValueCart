@@ -84,9 +84,16 @@ if (Array.isArray(product?.rating)) {
                     Signature
                 </span>
                 
-                <h3 className="font-serif text-lg sm:text-xl text-gray-900 line-clamp-2 mb-2 font-medium tracking-tight group-hover:text-[#2874f0] transition-colors">
-                    {productName}
-                </h3>
+                <h3 className="font-serif text-[15px] sm:text-[16px] font-semibold leading-6 tracking-[0.01em] text-[#1f2937] line-clamp-2 text-center transition-colors duration-300 group-hover:text-[#2874f0]">
+    {productName}
+</h3>
+                {product.itemCode && (
+  <div className="mt-1">
+    <span className="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-gray-700 border border-gray-200">
+      Item Code: {product.itemCode}
+    </span>
+  </div>
+)}
 
                 <div className="flex items-center justify-center gap-3 mt-1">
                     {isDiscounted && (

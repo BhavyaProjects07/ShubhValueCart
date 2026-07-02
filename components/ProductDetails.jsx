@@ -124,7 +124,13 @@ const ProductDetails = ({ product }) => {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter text-[#1D1D1F] leading-[1.1]">
             {product.name}
           </h1>
-
+            {product.itemCode && (
+  <div className="mt-1">
+    <span className="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-gray-700 border border-gray-200">
+      Item Code: {product.itemCode}
+    </span>
+  </div>
+)}
           {/* RATING */}
           <div className="flex items-center mt-4 gap-4">
             <div className="flex items-center gap-1">
