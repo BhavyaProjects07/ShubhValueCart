@@ -1,131 +1,32 @@
 import { NextResponse } from "next/server";
-import { reverseGeocode } from "@/lib/placekit";
+import { reverse } from "@/lib/geoapify";
 
 const REQUEST_TIMEOUT = 10000;
 
-function isValidLatitude(lat) {
-  return Number.isFinite(lat) && lat >= -90 && lat <= 90;
-}
-
-function isValidLongitude(lng) {
-  return Number.isFinite(lng) && lng >= -180 && lng <= 180;
-}
-
-function withTimeout(promise, ms) {
+function withTimeout(promise) {
   return Promise.race([
     promise,
     new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("PlaceKit request timed out")), ms)
+      setTimeout(
+        () => reject(new Error("Geoapify timeout")),
+        REQUEST_TIMEOUT
+      )
     ),
   ]);
 }
 
-function normalizeAddress(result, lat, lng) {
-  return {
-    house: "",
-
-    apartment: "",
-
-    landmark: "",
-
-    street:
-      result.street ||
-      result.road ||
-      result.address?.road ||
-      "",
-
-    locality:
-      result.locality ||
-      result.suburb ||
-      result.neighbourhood ||
-      result.address?.suburb ||
-      "",
-
-    city:
-      result.city ||
-      result.town ||
-      result.village ||
-      result.address?.city ||
-      result.address?.town ||
-      "",
-
-    state:
-      result.state ||
-      result.address?.state ||
-      "",
-
-    country:
-      result.country ||
-      result.address?.country ||
-      "",
-
-    zip:
-      result.postcode ||
-      result.postalCode ||
-      result.address?.postcode ||
-      "",
-
-    formattedAddress:
-      result.formatted ||
-      result.display_name ||
-      result.label ||
-      "",
-
-    latitude: lat,
-
-    longitude: lng,
-  };
-}
-
 export async function POST(req) {
   try {
-    const body = await req.json();
+    const { latitude, longitude } =
+      await req.json();
 
-    const lat = Number(body.latitude);
-    const lng = Number(body.longitude);
-
-    if (!isValidLatitude(lat)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid latitude",
-        },
-        { status: 400 }
-      );
-    }
-
-    if (!isValidLongitude(lng)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid longitude",
-        },
-        { status: 400 }
-      );
-    }
-
-    const placekitResponse = await withTimeout(
-      reverseGeocode(lat, lng),
-      REQUEST_TIMEOUT
+    const response = await withTimeout(
+      reverse(latitude, longitude)
     );
 
-    if (!placekitResponse) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Unable to detect address",
-        },
-        { status: 404 }
-      );
-    }
+    const item = response.results?.[0];
 
-    const result =
-      placekitResponse.features?.[0]?.properties ||
-      placekitResponse.features?.[0] ||
-      placekitResponse.result ||
-      placekitResponse;
-
-    if (!result) {
+    if (!item) {
       return NextResponse.json(
         {
           success: false,
@@ -135,24 +36,52 @@ export async function POST(req) {
       );
     }
 
-    const address = normalizeAddress(result, lat, lng);
-
     return NextResponse.json({
       success: true,
 
-      address,
+      address: {
+        street:
+          item.street ||
+          item.address_line1 ||
+          "",
+
+        city:
+          item.city ||
+          item.county ||
+          item.state_district ||
+          "",
+
+        state:
+          item.state ||
+          "",
+
+        zip:
+          item.postcode ||
+          "",
+
+        country:
+          item.country ||
+          "",
+
+        formattedAddress:
+          item.formatted,
+
+        latitude:
+          item.lat,
+
+        longitude:
+          item.lon,
+
+        landmark: "",
+      },
     });
-  } catch (error) {
-    console.error("ADDRESS REVERSE ERROR");
-    console.error(error);
+  } catch (err) {
+    console.error(err);
 
     return NextResponse.json(
       {
         success: false,
-        error:
-          process.env.NODE_ENV === "production"
-            ? "Unable to detect address"
-            : error.message,
+        error: err.message,
       },
       { status: 500 }
     );

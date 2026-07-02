@@ -1,56 +1,79 @@
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
-import { searchAddress } from "@/lib/placekit";
+import { autocomplete } from "@/lib/geoapify";
+
+const REQUEST_TIMEOUT = 10000;
+
+function withTimeout(promise) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(
+        () => reject(new Error("Geoapify timeout")),
+        REQUEST_TIMEOUT
+      )
+    ),
+  ]);
+}
 
 export async function POST(req) {
   try {
-    const { userId } = getAuth(req);
+    const { query } = await req.json();
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+    if (!query || query.trim().length < 3) {
+      return NextResponse.json({
+        success: true,
+        results: [],
+      });
     }
 
-    const body = await req.json();
-    const query = body.query?.trim();
+    const response = await withTimeout(
+      autocomplete(query)
+    );
 
-    if (!query || query.length < 3) {
-      return NextResponse.json(
-        {
-          results: [],
-        },
-        { status: 200 }
-      );
-    }
+    const results = (response.results || []).map((item) => ({
+      label: item.formatted,
 
-    const data = await searchAddress(query);
+      street:
+        item.street ||
+        item.address_line1 ||
+        "",
 
-    const results = (data.results || []).map((item) => ({
-      label: item.name,
-      street: item.name,
-      city: item.city || "",
-      state: item.administrative || "",
-      country: item.country || "",
-      zip: item.zipcode?.[0] || "",
-      coordinates: item.coordinates,
-      latitude: Number(item.coordinates?.split(",")[0]),
-      longitude: Number(item.coordinates?.split(",")[1]),
+      city:
+        item.city ||
+        item.county ||
+        item.state_district ||
+        "",
+
+      state:
+        item.state ||
+        "",
+
+      zip:
+        item.postcode ||
+        "",
+
+      country:
+        item.country ||
+        "",
+
+      latitude:
+        item.lat,
+
+      longitude:
+        item.lon,
     }));
 
     return NextResponse.json({
       success: true,
       results,
     });
-
-  } catch (error) {
-    console.error("ADDRESS SEARCH:", error);
+  } catch (err) {
+    console.error(err);
 
     return NextResponse.json(
       {
         success: false,
-        error: error.message,
+        error: err.message,
       },
       { status: 500 }
     );
