@@ -5,6 +5,12 @@ import Link from "next/link";
 
 const categories = [
   {
+    name: "Dry Fruits",
+    search: "DRY FRUITS",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRS6es5Z7JGu172bEK9AWWib3EUWKdA67i1fadgcgCZg&s=10",
+    badge: "Best Seller"
+  },
+  {
     name: "Snacks",
     search: "SNACKS",
     image: "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=200&auto=format&fit=crop",
