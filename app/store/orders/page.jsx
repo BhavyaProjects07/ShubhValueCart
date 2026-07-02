@@ -106,6 +106,7 @@ export default function StoreOrders() {
         },
       }
     );
+    console.log(data.order);
 
     setSelectedOrder(data.order);
 
