@@ -76,7 +76,7 @@ export default function BottomBar() {
 
           {/* WhatsApp */}
           <a
-            href="https://wa.me/9509086545" // <-- WhatsApp with number
+            href="https://wa.me/+919509086545" // <-- WhatsApp with number
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center justify-center"

@@ -94,10 +94,30 @@ export default function StoreOrders() {
     }
   }
 
-  const openModal = (order) => {
-    setSelectedOrder(order)
-    setIsModalOpen(true)
+  const openModal = async (orderId) => {
+  try {
+    const token = await getToken();
+
+    const { data } = await axios.get(
+      `/api/store/orders/${orderId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setSelectedOrder(data.order);
+
+    setIsModalOpen(true);
+
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message ||
+      error.message
+    );
   }
+};
 
   const closeModal = () => {
     setSelectedOrder(null)
@@ -217,7 +237,7 @@ export default function StoreOrders() {
                 <tr
                   key={order.id}
                   className="hover:bg-[#fefdfb] cursor-pointer"
-                  onClick={() => openModal(order)}
+                  onClick={() => openModal(order.id)}
                 >
                   <td className="pl-6">{index + 1}</td>
                   <td className="px-4 py-3">{order.user?.name}</td>
