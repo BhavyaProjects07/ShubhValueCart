@@ -143,6 +143,15 @@ const [address, setAddress] = useState({
   setSearch(item.label);
 
   setStep(2);
+    };
+    
+    const handleAddressChange = (e) => {
+  const { name, value } = e.target;
+
+  setAddress((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
 };
 
     const handleSaveAddress = async () => {
