@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 
-import UploadZone from "@/components/admin/inventory/UploadZone";
-import SelectedFileCard from "@/components/admin/inventory/SelectedFileCard";
-import PreviewCard from "@/components/admin/inventory/PreviewCard";
-import ProgressCard from "@/components/admin/inventory/ProgressCard";
-import ResultCard from "@/components/admin/inventory/ResultCard";
+import UploadZone from "@/components/store/inventory/UploadZone";
+import SelectedFileCard from "@/components/store/inventory/SelectedFileCard";
+import PreviewCard from "@/components/store/inventory/PreviewCard";
+import ProgressCard from "@/components/store/inventory/ProgressCard";
+import ResultCard from "@/components/store/inventory/ResultCard";
 
 export default function InventoryPage() {
   const [file, setFile] = useState(null);
