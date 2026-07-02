@@ -252,7 +252,7 @@ const [address, setAddress] = useState({
 
       <div
         ref={modalRef}
-        className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300"
+        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl animate-in fade-in zoom-in duration-300 max-h-[90vh] flex flex-col"
       >
 
         {/* HEADER */}
@@ -282,7 +282,7 @@ const [address, setAddress] = useState({
 
         {/* CONTENT */}
 
-        <div className="p-6">
+        <div className="flex-1 overflow-y-auto p-6">
 
   {step === 1 ? (
     <>
