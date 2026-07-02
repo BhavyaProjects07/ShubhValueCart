@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 
 import UploadZone from "@/components/store/inventory/UploadZone";
 import SelectedFileCard from "@/components/store/inventory/SelectedFileCard";
@@ -13,62 +14,121 @@ export default function InventoryPage() {
 
   const [preview, setPreview] = useState(null);
 
+  const [result, setResult] = useState(null);
+
+  const [syncExisting, setSyncExisting] = useState(true);
+  const [importNew, setImportNew] = useState(false);
+
+  const [previewLoading, setPreviewLoading] = useState(false);
+
   const [syncing, setSyncing] = useState(false);
 
   const [progress, setProgress] = useState(0);
 
   const [currentStep, setCurrentStep] = useState("");
 
-  const [result, setResult] = useState(null);
-
-  // Temporary Preview
-  const handlePreview = () => {
-    setPreview({
-      existing: 2450,
-      newProducts: 36,
-      stockUpdates: 412,
-      outOfStock: 187,
-      unchanged: 2038,
-    });
-  };
-
-  // Temporary Sync
-  const handleInventorySync = async () => {
-    setSyncing(true);
-    setProgress(0);
-
-    const steps = [
-      "Reading Excel...",
-      "Finding existing products...",
-      "Updating inventory...",
-      "Creating new products...",
-      "Marking missing products as Out of Stock...",
-      "Finalizing...",
-    ];
-
-    for (let i = 0; i < steps.length; i++) {
-      setCurrentStep(steps[i]);
-
-      await new Promise((resolve) => setTimeout(resolve, 700));
-
-      setProgress(Math.round(((i + 1) / steps.length) * 100));
+  // -----------------------------
+  // PREVIEW INVENTORY
+  // -----------------------------
+  const handlePreview = async () => {
+    if (!file) {
+      alert("Please select an Excel file.");
+      return;
     }
 
-    setSyncing(false);
+    try {
+      setPreviewLoading(true);
+      setPreview(null);
+      setResult(null);
 
-    setResult({
-      updated: 412,
-      created: 36,
-      outOfStock: 187,
-      unchanged: 2038,
-      timeTaken: "2.8 sec",
-    });
+      const formData = new FormData();
+
+      formData.append("file", file);
+      formData.append("syncExisting", syncExisting);
+      formData.append("importNew", importNew);
+
+      const { data } = await axios.post(
+        "/api/store/inventory/preview",
+        formData
+      );
+
+      if (!data.success) {
+        throw new Error(data.error);
+      }
+
+      setPreview(data.summary);
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error.response?.data?.error ||
+          error.message ||
+          "Failed to preview inventory."
+      );
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+
+  // -----------------------------
+  // SYNC INVENTORY
+  // -----------------------------
+  const handleInventorySync = async () => {
+    if (!file) return;
+
+    try {
+      setSyncing(true);
+      setResult(null);
+
+      setProgress(10);
+      setCurrentStep("Uploading Excel...");
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+      formData.append("syncExisting", syncExisting);
+      formData.append("importNew", importNew);
+
+      setProgress(30);
+      setCurrentStep("Analyzing inventory...");
+
+      const { data } = await axios.post(
+        "/api/store/inventory/sync",
+        formData
+      );
+
+      setProgress(90);
+      setCurrentStep("Finalizing...");
+
+      if (!data.success) {
+        throw new Error(data.error);
+      }
+
+      setProgress(100);
+
+      setCurrentStep("Completed");
+
+      setResult({
+        ...data.summary,
+        timeTaken: data.timeTaken,
+      });
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error.response?.data?.error ||
+          error.message ||
+          "Inventory sync failed."
+      );
+    } finally {
+      setSyncing(false);
+    }
   };
 
   return (
     <div className="max-w-7xl mx-auto">
 
-      {/* Page Title */}
+      {/* Header */}
 
       <div className="mb-8">
 
@@ -77,9 +137,8 @@ export default function InventoryPage() {
         </h1>
 
         <p className="text-gray-500 mt-2">
-          Upload your supplier's Excel file to automatically synchronize
-          inventory, create new products, and mark unavailable products as
-          out of stock.
+          Upload your supplier's Excel file to synchronize inventory,
+          update stock and optionally import new products.
         </p>
 
       </div>
@@ -95,10 +154,21 @@ export default function InventoryPage() {
 
       {file && (
         <div className="mt-6">
+
           <SelectedFileCard
             file={file}
+
             onPreview={handlePreview}
+
+            syncExisting={syncExisting}
+            setSyncExisting={setSyncExisting}
+
+            importNew={importNew}
+            setImportNew={setImportNew}
+
+            loading={previewLoading}
           />
+
         </div>
       )}
 
@@ -108,10 +178,12 @@ export default function InventoryPage() {
         <div className="mt-8">
 
           <PreviewCard
-            preview={preview}
-            onSync={handleInventorySync}
-            loading={syncing}
-          />
+  preview={preview}
+  onSync={handleInventorySync}
+  loading={syncing}
+  syncExisting={syncExisting}
+  importNew={importNew}
+/>
 
         </div>
       )}
