@@ -197,11 +197,21 @@ const subCategory = searchParams.get("subCategory") || "";
 
     // 🔍 SEARCH (LIKE)
     if (search) {
-      where.name = {
+  where.OR = [
+    {
+      name: {
         contains: search,
         mode: "insensitive",
-      };
-    }
+      },
+    },
+    {
+      itemCode: {
+        contains: search,
+        mode: "insensitive",
+      },
+    },
+  ];
+}
 
     // 📂 CATEGORY
     if (category) {

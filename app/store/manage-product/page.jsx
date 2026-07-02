@@ -113,7 +113,7 @@ export default function StoreManageProducts() {
         
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search by Product Name or Item Code"
           value={filters.search}
           onChange={(e) =>
             setFilters({ ...filters, search: e.target.value })
@@ -181,16 +181,29 @@ export default function StoreManageProducts() {
           {products.map((product) => (
             <tr key={product.id} className="border-t border-[#ede6dd] hover:bg-[#fefdfb]">
               <td className="px-4 py-3">
-                <div className="flex gap-2 items-center">
-                  <Image
-                    width={40}
-                    height={40}
-                    className="p-1 shadow rounded cursor-pointer"
-                    src={product.images[0] || "/placeholder.svg"}
-                    alt=""
-                  />
-                  {product.name}
-                </div>
+                <div className="flex gap-3 items-center">
+
+  <Image
+    width={40}
+    height={40}
+    className="p-1 shadow rounded cursor-pointer"
+    src={product.images[0] || "/placeholder.svg"}
+    alt=""
+  />
+
+  <div>
+
+    <p className="font-medium">
+      {product.name}
+    </p>
+
+    <p className="text-xs text-gray-500">
+      Item Code: {product.itemCode}
+    </p>
+
+  </div>
+
+</div>
               </td>
 
               <td className="px-4 py-3 max-w-md text-[#9a8978] hidden md:table-cell truncate">
