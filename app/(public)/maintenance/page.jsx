@@ -81,14 +81,14 @@ export default function MaintenancePage() {
         </h1>
 
         <p className="text-xl md:text-2xl text-slate-600 leading-relaxed mb-8">
-          This website is currently unavailable due to some technical issues
+          This website is in maintanence mode and will be back shortly. We apologize for the inconvenience and appreciate your patience.
         </p>
 
         
 
         <div className="bg-slate-100 rounded-3xl p-8 border border-slate-200">
           <p className="text-slate-800 text-lg font-medium">
-            If you are the website owner, please contact the developer
+            If you have any urgent inquiries please contact us at {"shubhvaluecart@gmail.com"}
           </p>
         </div>
       </div>
