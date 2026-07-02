@@ -109,12 +109,11 @@ for (const item of items) {
 // Delivery Fee Logic
 let shippingFee = 0;
 
-if (subtotal >= 1000) {
+if (subtotal >= 399) {
   shippingFee = 0;
-} else if (subtotal >= 500) {
-  shippingFee = 25;
+
 } else {
-  shippingFee = 60;
+  shippingFee = 150;
 }
 
     const total = subtotal + shippingFee;
