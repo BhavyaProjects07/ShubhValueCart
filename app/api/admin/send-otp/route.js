@@ -50,7 +50,7 @@ export async function POST(req) {
     // =========================
     // ✅ ADMIN PHONE
     // =========================
-    const envPhones = process.env.ADMIN_PHONES;
+    const envPhones = process.env.ADMIN_PHONE;
 
 if (!envPhones) {
   return NextResponse.json(
