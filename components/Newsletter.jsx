@@ -168,40 +168,87 @@ export default function CategoryShowcase() {
       </div>
 
       {/* Responsive Grid with exact 4-columns matching on mobile */}
-      <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-x-3 sm:gap-x-4 gap-y-6 max-w-6xl mx-auto">
-        {categories.map((category) => (
-          <Link
-            key={category.name}
-            href={`/shop?subCategory=${encodeURIComponent(category.search)}`}
-            className="group flex flex-col items-center select-none cursor-pointer"
-          >
-            {/* Square/slightly rounded product box matching screenshot (soft light-peach/orange color background) */}
-            <div className="aspect-square w-full rounded-2xl bg-[#fff2ec] hover:bg-[#ffece2] flex items-center justify-center p-2.5 relative transition-all duration-200 group-hover:scale-105 shadow-sm border border-[#fff2ec]">
-              
-              {/* Product Packshot Image */}
-              <div className="w-full h-full rounded-xl overflow-hidden bg-transparent flex items-center justify-center">
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="w-[85%] h-[85%] object-cover rounded-xl transition-transform duration-300 group-hover:scale-110 shadow-sm"
-                />
-              </div>
+      {/* Flipkart Style Two-Row Horizontal Categories */}
+<div className="category-scroll overflow-x-auto pb-4">
+  <div
+    className="
+      grid
+      grid-rows-2
+      grid-flow-col
+      auto-cols-[95px]
+      sm:auto-cols-[110px]
+      gap-x-4
+      gap-y-5
+      w-max
+      px-1
+    "
+  >
+    {categories.map((category) => (
+      <Link
+        key={category.name}
+        href={`/shop?subCategory=${encodeURIComponent(category.search)}`}
+        className="group flex flex-col items-center"
+      >
+        <div
+          className="
+            relative
+            h-20
+            w-20
+            sm:h-24
+            sm:w-24
+            rounded-3xl
+            bg-gradient-to-br
+            from-white
+            via-gray-50
+            to-green-50
+            border
+            border-gray-200
+            shadow-sm
+            transition-all
+            duration-300
+            group-hover:-translate-y-1
+            group-hover:shadow-xl
+            group-hover:border-green-400
+            flex
+            items-center
+            justify-center
+            overflow-hidden
+          "
+        >
+          <img
+            src={category.image}
+            alt={category.name}
+            className="w-[72%] h-[72%] object-contain transition-transform duration-300 group-hover:scale-110"
+          />
 
-              {/* Exact Screenshot Orange overlay Badge if exists */}
-              {category.badge && (
-                <div className="absolute bottom-0 left-0 right-0 bg-[#fc6c40] text-white text-[8px] sm:text-[9px] font-black py-0.5 text-center uppercase tracking-wide rounded-b-2xl">
-                  {category.badge}
-                </div>
-              )}
+          {category.badge && (
+            <div className="absolute top-1.5 right-1.5 rounded-full bg-green-600 px-2 py-[2px] text-[8px] font-bold text-white shadow">
+              {category.badge}
             </div>
+          )}
+        </div>
 
-            {/* Title Label Underneath */}
-            <span className="text-[11px] sm:text-[13px] font-bold text-gray-800 text-center mt-2.5 leading-snug line-clamp-2 h-9 flex items-center justify-center px-0.5 group-hover:text-[#fc6c40] transition-colors">
-              {category.name}
-            </span>
-          </Link>
-        ))}
-      </div>
+        <span
+          className="
+            mt-2
+            text-[11px]
+            sm:text-[13px]
+            font-semibold
+            text-center
+            text-gray-700
+            leading-tight
+            line-clamp-2
+            transition-colors
+            duration-300
+            group-hover:text-green-700
+          "
+        >
+          {category.name}
+        </span>
+      </Link>
+    ))}
+  </div>
+</div>
 
     </section>
   );

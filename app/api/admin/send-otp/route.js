@@ -1,88 +1,24 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { sendBrevoEmail } from "@/lib/brevo";
 
-// =========================
-// ✅ PHONE NORMALIZER
-// =========================
-function normalizeIndianPhone(phone) {
-  if (!phone) return null;
-
-  let normalized = phone.replace(/\s/g, "");
-
-  if (normalized.startsWith("+91")) {
-    return normalized;
-  }
-
-  if (/^\d{10}$/.test(normalized)) {
-    return `+91${normalized}`;
-  }
-
-  if (/^91\d{10}$/.test(normalized)) {
-    return `+${normalized}`;
-  }
-
-  return null;
-}
-
-export async function POST(req) {
+export async function POST() {
   try {
-    const { phone } = await req.json();
+    const adminEmail = process.env.ADMIN_EMAIL2;
 
-    // =========================
-    // ✅ VALIDATION
-    // =========================
-    if (!phone) {
+    if (!adminEmail) {
       return NextResponse.json(
-        { error: "Phone required" },
-        { status: 400 }
-      );
-    }
-
-    const normalizedPhone = normalizeIndianPhone(phone);
-
-    if (!normalizedPhone) {
-      return NextResponse.json(
-        { error: "Invalid Indian phone number" },
-        { status: 400 }
+        { error: "ADMIN_EMAIL2 not configured" },
+        { status: 500 }
       );
     }
 
     // =========================
-    // ✅ ADMIN PHONE
-    // =========================
-    const envPhones = process.env.ADMIN_PHONE;
-
-if (!envPhones) {
-  return NextResponse.json(
-    { error: "ADMIN_PHONE not configured" },
-    { status: 500 }
-  );
-}
-
-// Normalize every admin phone
-const adminPhones = envPhones
-  .split(",")
-  .map((phone) => normalizeIndianPhone(phone.trim()))
-  .filter(Boolean);
-
-console.log("Entered Phone :", normalizedPhone);
-console.log("Allowed Phones:", adminPhones);
-
-if (!adminPhones.includes(normalizedPhone)) {
-  return NextResponse.json(
-    {
-      error: "This phone number is not authorized."
-    },
-    { status: 403 }
-  );
-}
-
-    // =========================
-    // ✅ RATE LIMIT (60 sec)
+    // RATE LIMIT (60 sec)
     // =========================
     const recentOtp = await prisma.otp.findFirst({
       where: {
-        phone: normalizedPhone,
+        phone: adminEmail,
         createdAt: {
           gt: new Date(Date.now() - 60 * 1000),
         },
@@ -92,76 +28,98 @@ if (!adminPhones.includes(normalizedPhone)) {
     if (recentOtp) {
       return NextResponse.json(
         {
-          error: "Wait 60 seconds before requesting OTP again",
+          error: "Wait 60 seconds before requesting OTP again.",
         },
         { status: 429 }
       );
     }
 
     // =========================
-    // ✅ DELETE OLD OTP
+    // DELETE OLD OTP
     // =========================
     await prisma.otp.deleteMany({
       where: {
-        phone: normalizedPhone,
+        phone: adminEmail,
       },
     });
 
     // =========================
-    // 🔢 GENERATE OTP
+    // GENERATE OTP
     // =========================
     const otp = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
 
     // =========================
-    // 💾 SAVE OTP
+    // SAVE OTP
     // =========================
     await prisma.otp.create({
       data: {
-        phone: normalizedPhone,
+        phone: adminEmail,
         otp,
         attempts: 0,
-        expiresAt: new Date(
-          Date.now() + 10 * 60 * 1000
-        ),
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
       },
     });
 
     // =========================
-    // 📩 SEND SMS
+    // SEND EMAIL
     // =========================
-    const smsPhone = normalizedPhone.slice(1); // remove +
+    await sendBrevoEmail({
+      to: adminEmail,
+      subject: "Admin Dashboard Verification OTP",
+      htmlContent: `
+        <div style="font-family:Arial,sans-serif;padding:30px;background:#f7f7f7">
+          <div style="max-width:600px;margin:auto;background:white;border-radius:12px;padding:40px">
 
-    const message = `Dear Admin, ${otp} is your OTP for Admin Dashboard Verification. Valid for 10 mins. Do not share. -Shubh Value Cart`;
+            <h2 style="color:#16a34a;margin-bottom:10px">
+              Admin Verification
+            </h2>
 
-    const url = `https://api.amazesms.com/api/sms?key=${process.env.SMS_KEY}&from=${process.env.SMS_SENDER}&to=${smsPhone}&body=${encodeURIComponent(
-      message
-    )}&templateid=${process.env.SMS_TEMPLATE}&entityid=${process.env.SMS_ENTITY}`;
+            <p>
+              Your OTP for accessing the
+              <strong>Shubh Value Cart Admin Dashboard</strong>
+              is:
+            </p>
 
-    console.log("SMS URL:", url);
+            <div style="
+              font-size:34px;
+              font-weight:bold;
+              letter-spacing:8px;
+              text-align:center;
+              background:#f0fdf4;
+              color:#15803d;
+              padding:20px;
+              border-radius:10px;
+              margin:30px 0;
+            ">
+              ${otp}
+            </div>
 
-    const res = await fetch(url);
-    const text = await res.text();
+            <p>This OTP is valid for <b>10 minutes</b>.</p>
 
-    console.log("SMS RESPONSE:", text);
+            <p>
+              If you didn't request this verification,
+              you can safely ignore this email.
+            </p>
 
-    if (!res.ok) {
-      return NextResponse.json(
-        {
-          error: "SMS failed",
-          details: text,
-        },
-        { status: 500 }
-      );
-    }
+            <hr style="margin:30px 0">
+
+            <small style="color:#777">
+              Shubh Value Cart
+            </small>
+
+          </div>
+        </div>
+      `,
+    });
 
     return NextResponse.json({
       success: true,
-      message: "OTP sent successfully",
+      message: "OTP sent successfully.",
     });
   } catch (error) {
-    console.error("ADMIN OTP ERROR:", error);
+    console.error("ADMIN EMAIL OTP:", error);
 
     return NextResponse.json(
       {

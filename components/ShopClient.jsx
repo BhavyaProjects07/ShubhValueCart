@@ -137,7 +137,7 @@ if (search)
   return (
     <div className="min-h-screen bg-white pt-24 pb-32">
 
-      <Advertisement />
+      
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 xl:px-24">
 
         {/* HEADER */}

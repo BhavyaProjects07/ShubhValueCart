@@ -7,7 +7,7 @@ import { CircleDollarSignIcon, ShoppingBasketIcon, StoreIcon, TagsIcon } from "l
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { toast } from "react-hot-toast"
-
+import UsersTable from "@/components/admin/UserTable";
 export default function AdminDashboard() {
   const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || "$"
   const {getToken} = useAuth()
@@ -49,29 +49,39 @@ export default function AdminDashboard() {
   if (loading) return <Loading />
 
   return (
-    <div className="text-[#9a8978]">
-      <h1 className="text-2xl">
-        Admin <span className="text-[#6b5d52] font-medium">Dashboard</span>
-      </h1>
+  <div className="text-[#9a8978]">
+    <h1 className="text-2xl">
+      Admin <span className="text-[#6b5d52] font-medium">Dashboard</span>
+    </h1>
 
-      {/* Cards */}
-      <div className="flex flex-wrap gap-5 my-10 mt-4">
-        {dashboardCardsData.map((card, index) => (
-          <div
-            key={index}
-            className="flex items-center gap-10 border border-[#d4c4b3] bg-white/60 backdrop-blur p-3 px-6 rounded-lg hover:bg-white/80 transition shadow-sm"
-          >
-            <div className="flex flex-col gap-3 text-xs">
-              <p>{card.title}</p>
-              <b className="text-2xl font-medium text-[#6b5d52]">{card.value}</b>
-            </div>
-            <card.icon size={50} className=" w-11 h-11 p-2.5 text-[#9a8978] bg-[#ede6dd] rounded-full" />
+    {/* Cards */}
+    <div className="flex flex-wrap gap-5 my-10 mt-4">
+      {dashboardCardsData.map((card, index) => (
+        <div
+          key={index}
+          className="flex items-center gap-10 border border-[#d4c4b3] bg-white/60 backdrop-blur p-3 px-6 rounded-lg hover:bg-white/80 transition shadow-sm"
+        >
+          <div className="flex flex-col gap-3 text-xs">
+            <p>{card.title}</p>
+
+            <b className="text-2xl font-medium text-[#6b5d52]">
+              {card.value}
+            </b>
           </div>
-        ))}
-      </div>
 
-      {/* Area Chart */}
-      <OrdersAreaChart allOrders={dashboardData.allOrders} />
+          <card.icon
+            size={50}
+            className="w-11 h-11 rounded-full bg-[#ede6dd] p-2.5 text-[#9a8978]"
+          />
+        </div>
+      ))}
     </div>
-  )
+
+    {/* Orders Analytics */}
+    
+
+    {/* Registered Users */}
+    <UsersTable />
+  </div>
+);
 }

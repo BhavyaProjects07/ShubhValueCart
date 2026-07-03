@@ -92,3 +92,51 @@
     background-position: 468px 0;
   }
 }
+
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mobile */
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .category-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #22c55e #f3f4f6;
+  }
+
+  .category-scroll::-webkit-scrollbar {
+    display: block;
+    height: 8px;
+  }
+
+  .category-scroll::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 9999px;
+  }
+
+  .category-scroll::-webkit-scrollbar-thumb {
+    background: #22c55e;
+    border-radius: 9999px;
+    border: 2px solid #f3f4f6;
+  }
+
+  .category-scroll::-webkit-scrollbar-thumb:hover {
+    background: #16a34a;
+  }
+}

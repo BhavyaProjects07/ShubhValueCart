@@ -93,7 +93,7 @@ if (Array.isArray(product?.rating)) {
                 {product.itemCode && (
   <div className="mt-1">
     <span className="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-gray-700 border border-gray-200">
-      Item Code: {product.itemCode}
+      {product.itemCode}
     </span>
   </div>
 )}
@@ -113,7 +113,7 @@ if (Array.isArray(product?.rating)) {
                 <div className="mt-2">
                     {product?.stock > 10 ? (
                         <span className="text-green-600 text-xs font-medium">
-                        In Stock ({product.stock})
+                        In Stock 
                         </span>
                     ) : product?.stock > 0 ? (
                         <span className="text-orange-600 text-xs font-medium">
