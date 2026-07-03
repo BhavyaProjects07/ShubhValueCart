@@ -152,6 +152,16 @@ useEffect(() => {
         if (!search.trim()) return
         router.push(`/shop?search=${encodeURIComponent(search.trim())}`)
     }
+  
+  const openLocationModal = () => {
+  setMobileMenuOpen(false);
+  setMobileSearchOpen(false);
+
+  // allow menu animation to finish
+  setTimeout(() => {
+    setShowLocationModal(true);
+  }, 150);
+};
 
     return (
         <>
@@ -456,7 +466,7 @@ useEffect(() => {
 
         {/* Search */}
         <button
-            onClick={() => setMobileSearchOpen((prev) => !prev)}
+            onClick={openLocationModal}
             className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
         >
             <Search size={18} />
