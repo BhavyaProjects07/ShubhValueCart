@@ -452,7 +452,50 @@ useEffect(() => {
     </Link>
 
     {/* Right Side */}
-    <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
+                  
+                  <button
+  onClick={() => setShowLocationModal(true)}
+  className="group flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-2 py-1.5 sm:px-4 sm:py-2 shadow-sm transition-all duration-200 hover:border-green-500 hover:shadow-md active:scale-95"
+>
+  {/* Location Icon */}
+  <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-green-100">
+    <MapPin
+      size={16}
+      className="fill-green-600 text-green-600 sm:w-[18px] sm:h-[18px]"
+    />
+  </div>
+
+  {/* Address */}
+  <div className="flex flex-col items-start leading-tight">
+
+    <span className="text-[9px] sm:text-[11px] font-medium uppercase tracking-wide text-gray-500">
+      Deliver To
+    </span>
+
+    {selectedAddress ? (
+      <>
+        <span className="max-w-[65px] sm:max-w-[170px] truncate text-[11px] sm:text-sm font-semibold text-gray-900">
+          {selectedAddress.name}
+        </span>
+
+        <span className="hidden sm:block max-w-[170px] truncate text-xs text-gray-500">
+          {selectedAddress.locality || selectedAddress.street},{" "}
+          {selectedAddress.city}
+        </span>
+      </>
+    ) : (
+      <span className="max-w-[70px] sm:max-w-none truncate text-[11px] sm:text-sm font-semibold text-gray-900">
+        Add Address
+      </span>
+    )}
+  </div>
+
+  <ChevronDown
+    size={14}
+    className="text-gray-500 transition-transform duration-200 group-hover:rotate-180 sm:w-[18px] sm:h-[18px]"
+  />
+</button>
 
         {/* Search */}
         <button
@@ -462,37 +505,10 @@ useEffect(() => {
             <Search size={18} />
         </button>
 
-        {/* Cart */}
-        <button
-            onClick={() => router.push("/cart")}
-            className="relative p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
-        >
-            <ShoppingCart size={18} />
-
-            {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#1D1D1F] text-white text-[10px] w-4.5 h-4.5 rounded-full flex items-center justify-center">
-                    {cartCount}
-                </span>
-            )}
-        </button>
+        
 
         {/* User */}
-        {user ? (
-            <UserButton
-                appearance={{
-                    elements: {
-                        avatarBox: "w-9 h-9 shadow-sm",
-                    },
-                }}
-            />
-        ) : (
-            <button
-                onClick={() => router.push("/phone-signup")}
-                className="px-4 py-2 border rounded-full text-sm"
-            >
-                Sign Up
-            </button>
-        )}
+        
 
         {/* Hamburger */}
         <button
