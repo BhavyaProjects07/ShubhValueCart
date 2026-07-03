@@ -37,140 +37,140 @@ export default function CouponBanner() {
   if (!showOffer) return null;
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-[#0057d9] via-[#2874f0] to-[#4a90ff] text-white shadow-lg">
+  <div className="relative overflow-hidden bg-gradient-to-r from-[#0057d9] via-[#2874f0] to-[#4a90ff] text-white shadow-lg">
 
-      {/* Background */}
-      <div className="absolute -left-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
-      <div className="absolute right-0 bottom-0 h-52 w-52 rounded-full bg-cyan-300/10 blur-3xl" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_45%)]" />
+    {/* Background */}
+    <div className="absolute -left-16 -top-16 h-52 w-52 rounded-full bg-white/10 blur-3xl" />
+    <div className="absolute right-0 bottom-0 h-56 w-56 rounded-full bg-cyan-300/10 blur-3xl" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.15),transparent_45%)]" />
 
-      <div className="relative mx-auto max-w-7xl px-6 py-6">
+    <div className="relative mx-auto max-w-6xl px-4 py-5 md:px-6 md:py-6">
 
-        <div className="flex flex-col items-center justify-between gap-6 lg:flex-row">
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
 
-          {/* LEFT */}
+        {/* LEFT */}
+        <div className="flex w-full lg:w-[68%] items-center gap-4">
 
-          <div className="flex w-full items-center gap-5">
+          <div className="hidden sm:flex h-16 w-16 md:h-20 md:w-20 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/15 backdrop-blur">
+            <span className="text-4xl md:text-5xl">
+              🎁
+            </span>
+          </div>
 
-            <div className="hidden h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/15 backdrop-blur sm:flex">
-              <span className="text-5xl">🎁</span>
+          <div>
+
+            <div className="inline-flex items-center rounded-full bg-yellow-400 px-3 py-1 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-black shadow">
+              LIMITED TIME OFFER
             </div>
 
-            <div>
+            <h2 className="mt-3 text-2xl font-black leading-tight sm:text-3xl lg:text-4xl">
 
-              <div className="inline-flex items-center rounded-full bg-yellow-400 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-black shadow">
+              Save Big on{" "}
 
-                LIMITED TIME OFFER
+              <span className="text-yellow-300">
+                Grocery Shopping
+              </span>
 
-              </div>
+            </h2>
 
-              <h2 className="mt-3 text-3xl font-extrabold leading-tight md:text-4xl">
+            <p className="mt-2 max-w-xl text-sm text-blue-100">
 
-                Save Big on
-                <span className="text-yellow-300">
-                  {" "}Your Grocery Shopping
-                </span>
+              {coupon
+                ? coupon.description
+                : "Loading latest offers..."}
 
-              </h2>
+            </p>
 
-              <p className="mt-2 max-w-2xl text-sm text-blue-100 md:text-base">
+            {coupon && (
 
-                {coupon
-                  ? coupon.description
-                  : "Loading latest offers..."}
+              <div className="mt-4 flex flex-wrap items-center gap-3">
 
-              </p>
+                {/* Coupon */}
+                <div className="rounded-xl border-2 border-dashed border-yellow-300 bg-white px-4 py-2 shadow-lg">
 
-              {coupon && (
+                  <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-gray-500">
 
-                <div className="mt-5 flex flex-wrap items-center gap-3">
-
-                  <div className="rounded-xl border-2 border-dashed border-yellow-300 bg-white px-5 py-3 shadow-lg">
-
-                    <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
-
-                      Coupon Code
-
-                    </div>
-
-                    <div className="mt-1 text-xl font-black tracking-[0.25em] text-[#2874f0]">
-
-                      {coupon.code}
-
-                    </div>
+                    Coupon Code
 
                   </div>
 
-                  <button
-                    onClick={copyCoupon}
-                    className="rounded-xl bg-yellow-400 px-6 py-3 font-bold text-black shadow-lg transition hover:scale-105 hover:bg-yellow-300 active:scale-95"
-                  >
-                    Copy Coupon
-                  </button>
+                  <div className="mt-1 text-lg md:text-xl font-black tracking-[0.22em] text-[#2874f0]">
+
+                    {coupon.code}
+
+                  </div>
 
                 </div>
 
-              )}
-
-            </div>
-
-          </div>
-
-          {/* RIGHT */}
-
-          <div className="flex flex-col items-center">
-
-            <div className="rounded-3xl bg-white px-8 py-6 text-center shadow-2xl">
-
-              <p className="text-xs font-bold uppercase tracking-[0.25em] text-gray-500">
-
-                EXTRA SAVINGS
-
-              </p>
-
-              <h2 className="mt-2 text-5xl font-black text-[#2874f0]">
-
-                SALE
-
-              </h2>
-
-              <p className="mt-2 text-sm text-gray-500">
-
-                Apply Coupon During Checkout
-
-              </p>
-
-              {coupon && (
-
                 <button
                   onClick={copyCoupon}
-                  className="mt-5 w-full rounded-xl bg-[#2874f0] px-6 py-3 font-bold text-white transition hover:bg-[#1458c4]"
+                  className="rounded-xl bg-yellow-400 px-5 py-2.5 text-sm font-bold text-black shadow-lg transition hover:scale-105 hover:bg-yellow-300 active:scale-95"
                 >
-                  Apply Now
+                  Copy Coupon
                 </button>
 
-              )}
+              </div>
 
-            </div>
+            )}
 
           </div>
 
         </div>
 
-        {/* Close */}
+        {/* RIGHT */}
+        <div className="mx-auto w-full max-w-[250px] lg:w-[270px] lg:flex-shrink-0">
 
-        <button
-          onClick={() => {
-            setShowOffer(false);
-            localStorage.setItem("hideOffer", "true");
-          }}
-          className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur transition hover:bg-white/25"
-        >
-          ✕
-        </button>
+          <div className="rounded-3xl bg-white px-5 py-5 text-center shadow-2xl">
+
+            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gray-500">
+
+              EXTRA SAVINGS
+
+            </p>
+
+            <h2 className="mt-2 text-4xl md:text-5xl font-black text-[#2874f0]">
+
+              SALE
+
+            </h2>
+
+            <p className="mt-2 text-xs md:text-sm text-gray-500">
+
+              Apply Coupon During Checkout
+
+            </p>
+
+            {coupon && (
+
+              <button
+                onClick={copyCoupon}
+                className="mt-4 w-full rounded-xl bg-[#2874f0] py-2.5 text-sm font-bold text-white transition hover:bg-[#1458c4]"
+              >
+                Apply Now
+              </button>
+
+            )}
+
+          </div>
+
+        </div>
 
       </div>
 
+      {/* Close */}
+
+      <button
+        onClick={() => {
+          setShowOffer(false);
+          localStorage.setItem("hideOffer", "true");
+        }}
+        className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/15 backdrop-blur transition hover:bg-white/25 md:right-5 md:top-5 md:h-9 md:w-9"
+      >
+        ✕
+      </button>
+
     </div>
-  );
+
+  </div>
+);
 }
