@@ -152,16 +152,6 @@ useEffect(() => {
         if (!search.trim()) return
         router.push(`/shop?search=${encodeURIComponent(search.trim())}`)
     }
-  
-  const openLocationModal = () => {
-  setMobileMenuOpen(false);
-  setMobileSearchOpen(false);
-
-  // allow menu animation to finish
-  setTimeout(() => {
-    setShowLocationModal(true);
-  }, 150);
-};
 
     return (
         <>
@@ -466,60 +456,43 @@ useEffect(() => {
 
         {/* Search */}
         <button
-            onClick={openLocationModal}
+            onClick={() => setMobileSearchOpen((prev) => !prev)}
             className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
         >
             <Search size={18} />
         </button>
 
+        {/* Cart */}
         <button
-  onClick={() => setShowLocationModal(true)}
-  className="group flex w-full max-w-[240px] items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-sm transition-all duration-200 hover:border-green-500 hover:shadow-md active:scale-95"
->
-  {/* Location Icon */}
-  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100">
-    <MapPin
-      size={16}
-      className="fill-green-600 text-green-600"
-    />
-  </div>
+            onClick={() => router.push("/cart")}
+            className="relative p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+        >
+            <ShoppingCart size={18} />
 
-  {/* Address */}
-  <div className="min-w-0 flex-1 text-left leading-tight">
-
-    <p className="text-[10px] font-medium uppercase tracking-wide text-gray-500">
-      Deliver to
-    </p>
-
-    {selectedAddress ? (
-      <>
-        <p className="truncate text-[13px] font-semibold text-gray-900">
-          {selectedAddress.name}
-        </p>
-
-        <p className="truncate text-[11px] text-gray-500">
-          {selectedAddress.locality ||
-            selectedAddress.street},{" "}
-          {selectedAddress.city}
-        </p>
-      </>
-    ) : (
-      <p className="truncate text-[13px] font-semibold text-gray-900">
-        Add Address
-      </p>
-    )}
-
-  </div>
-
-  <ChevronDown
-    size={16}
-    className="shrink-0 text-gray-400 transition-transform duration-200 group-hover:rotate-180"
-  />
-</button>
-        
+            {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#1D1D1F] text-white text-[10px] w-4.5 h-4.5 rounded-full flex items-center justify-center">
+                    {cartCount}
+                </span>
+            )}
+        </button>
 
         {/* User */}
-        
+        {user ? (
+            <UserButton
+                appearance={{
+                    elements: {
+                        avatarBox: "w-9 h-9 shadow-sm",
+                    },
+                }}
+            />
+        ) : (
+            <button
+                onClick={() => router.push("/phone-signup")}
+                className="px-4 py-2 border rounded-full text-sm"
+            >
+                Sign Up
+            </button>
+        )}
 
         {/* Hamburger */}
         <button
@@ -566,179 +539,85 @@ useEffect(() => {
                 )}
 
                 {mobileMenuOpen && (
-  <div className="sm:hidden overflow-hidden rounded-b-2xl border-t border-gray-200 bg-white shadow-xl animate-[fadeInUp_0.25s_ease-out]">
+    <div className="sm:hidden bg-white border-t border-gray-200 shadow-lg animate-[fadeInUp_0.25s_ease-out]">
 
-    {/* ================= PROFILE HEADER ================= */}
-
-    <div className="border-b bg-gradient-to-r from-green-50 via-white to-white px-5 py-4">
-
-      {user ? (
-        <div className="flex items-center justify-between">
-
-          <div className="flex items-center gap-3">
-
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox:
-                    "w-11 h-11 rounded-full shadow-md ring-2 ring-green-100",
-                },
-              }}
-            />
-
-            <div>
-
-              <h3 className="text-sm font-bold text-gray-900">
-                {user.fullName || "My Account"}
-              </h3>
-
-              <p className="text-xs text-gray-500">
-                Manage your profile
-              </p>
-
-            </div>
-
-          </div>
-
-          <ChevronRight
-            size={18}
-            className="text-gray-400"
-          />
-
-        </div>
-      ) : (
-
-        <button
-          onClick={() => {
-            setMobileMenuOpen(false);
-            router.push("/phone-signup");
-          }}
-          className="flex w-full items-center justify-between rounded-2xl border border-green-200 bg-green-50 px-4 py-3 transition hover:bg-green-100"
+        <Link
+            href="/orders"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
         >
+            <div className="flex items-center gap-3">
+                <PackageIcon size={18} />
+                <span>My Orders</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
 
-          <div className="text-left">
+        <Link
+            href="/shop"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <ShoppingBag size={18} />
+                <span>Shop</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
 
-            <p className="text-sm font-bold text-green-700">
-              Welcome 👋
-            </p>
+        <Link
+            href="/about"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <Info size={18} />
+                <span>About Us</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
 
-            <p className="text-xs text-gray-500">
-              Login to place orders faster
-            </p>
+        <Link
+            href="/contact"
+            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+            onClick={() => setMobileMenuOpen(false)}
+        >
+            <div className="flex items-center gap-3">
+                <PhoneCallIcon size={18} />
+                <span>Contact Us</span>
+            </div>
+            <ChevronRight size={16} />
+        </Link>
 
-          </div>
+        {isSeller && (
+            <Link
+                href="/store"
+                className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
+            >
+                <div className="flex items-center gap-3">
+                    <Store size={18} />
+                    <span>Store Dashboard</span>
+                </div>
+                <ChevronRight size={16} />
+            </Link>
+        )}
 
-          <div className="rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow">
-            Sign In
-          </div>
-
-        </button>
-
-      )}
+        {isAdmin && (
+            <Link
+                href="/admin"
+                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
+            >
+                <div className="flex items-center gap-3">
+                    <PackageIcon size={18} />
+                    <span>Admin Panel</span>
+                </div>
+                <ChevronRight size={16} />
+            </Link>
+        )}
 
     </div>
-
-    {/* ================= MENU ================= */}
-
-    <Link
-      href="/orders"
-      onClick={() => setMobileMenuOpen(false)}
-      className="flex items-center justify-between border-b px-6 py-4 transition hover:bg-gray-50"
-    >
-      <div className="flex items-center gap-3">
-        <PackageIcon size={18} className="text-gray-600" />
-        <span className="font-medium">My Orders</span>
-      </div>
-
-      <ChevronRight size={17} className="text-gray-400" />
-    </Link>
-
-    <Link
-      href="/shop"
-      onClick={() => setMobileMenuOpen(false)}
-      className="flex items-center justify-between border-b px-6 py-4 transition hover:bg-gray-50"
-    >
-      <div className="flex items-center gap-3">
-        <ShoppingBag size={18} className="text-gray-600" />
-        <span className="font-medium">Shop</span>
-      </div>
-
-      <ChevronRight size={17} className="text-gray-400" />
-    </Link>
-
-    <Link
-      href="/about"
-      onClick={() => setMobileMenuOpen(false)}
-      className="flex items-center justify-between border-b px-6 py-4 transition hover:bg-gray-50"
-    >
-      <div className="flex items-center gap-3">
-        <Info size={18} className="text-gray-600" />
-        <span className="font-medium">About Us</span>
-      </div>
-
-      <ChevronRight size={17} className="text-gray-400" />
-    </Link>
-
-    <Link
-      href="/contact"
-      onClick={() => setMobileMenuOpen(false)}
-      className="flex items-center justify-between border-b px-6 py-4 transition hover:bg-gray-50"
-    >
-      <div className="flex items-center gap-3">
-        <PhoneCallIcon size={18} className="text-gray-600" />
-        <span className="font-medium">Contact Us</span>
-      </div>
-
-      <ChevronRight size={17} className="text-gray-400" />
-    </Link>
-
-    {isSeller && (
-      <Link
-        href="/store"
-        onClick={() => setMobileMenuOpen(false)}
-        className="flex items-center justify-between border-b px-6 py-4 transition hover:bg-gray-50"
-      >
-        <div className="flex items-center gap-3">
-          <Store size={18} className="text-green-600" />
-          <span className="font-medium">
-            Store Dashboard
-          </span>
-        </div>
-
-        <ChevronRight
-          size={17}
-          className="text-gray-400"
-        />
-      </Link>
-    )}
-
-    {isAdmin && (
-      <Link
-        href="/admin"
-        onClick={() => setMobileMenuOpen(false)}
-        className="flex items-center justify-between border-b px-6 py-4 transition hover:bg-gray-50"
-      >
-        <div className="flex items-center gap-3">
-          <ShieldCheck size={18} className="text-red-500" />
-          <span className="font-medium">
-            Admin Panel
-          </span>
-        </div>
-
-        <ChevronRight
-          size={17}
-          className="text-gray-400"
-        />
-      </Link>
-    )}
-
-    {/* ================= FOOTER ================= */}
-
-    <div className="bg-gray-50 px-6 py-3 text-center text-xs text-gray-400">
-      Shubh Value Cart • Grocery Delivered Faster
-    </div>
-
-  </div>
 )}
             </nav>
             <LocationModal
