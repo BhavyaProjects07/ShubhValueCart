@@ -326,7 +326,7 @@ useEffect(() => {
                                                     labelIcon={<Store size={16} />}
                                                     label="Store Dashboard"
                                                     onClick={() =>
-                                                    router.push("/admin/verify?redirect=/store")
+                                                    router.push("/admin-verify-svc?redirect=/store")
 }
                                                 />
                                                 )}
@@ -335,7 +335,7 @@ useEffect(() => {
                                                     labelIcon={<PackageIcon size={16} />}
                                                     label="Admin Panel"
                                                     onClick={() =>
-  router.push("/admin/verify?redirect=/admin")
+  router.push("/admin-verify-svc?redirect=/admin")
 }
                                                 />
                                                 )}              
@@ -405,7 +405,7 @@ useEffect(() => {
 
       {isSeller && (
         <Link
-          href="/admin/verify?redirect=/store"
+          href="/admin-verify-svc?redirect=/store"
           className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 border-t"
         >
           <div className="flex items-center gap-3">
@@ -418,7 +418,7 @@ useEffect(() => {
 
       {isAdmin && (
         <Link
-          href="/admin/verify?redirect=/admin"
+          href="/admin-verify-svc?redirect=/admin"
           className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
         >
           <div className="flex items-center gap-3">
@@ -611,7 +611,7 @@ useEffect(() => {
 
         {isSeller && (
             <Link
-                href="/admin/verify?redirect=/store"
+                href="/admin-verify-svc?redirect=/store"
                 className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
                 onClick={() => setMobileMenuOpen(false)}
             >
@@ -625,7 +625,7 @@ useEffect(() => {
 
         {isAdmin && (
             <Link
-                href="/admin/verify?redirect=/admin"
+                href="/admin-verify-svc?redirect=/admin"
                 className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
                 onClick={() => setMobileMenuOpen(false)}
             >
