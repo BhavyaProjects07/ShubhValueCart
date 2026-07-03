@@ -123,24 +123,7 @@ const [address, setAddress] = useState({
   return () => clearTimeout(timer);
     }, [search, getToken]);
     
-    useEffect(() => {
-  if (!isOpen) return;
-
-        loadAddresses();
-        const handleSelectAddress = (address) => {
-  localStorage.setItem(
-    "selectedAddress",
-    JSON.stringify(address)
-  );
-
-  toast.success("Delivery address selected");
-
-  onClose();
-
-  window.location.reload();
-        };
-        
-        const handleDeleteAddress = async (id) => {
+  const handleDeleteAddress = async (id) => {
   try {
     const token = await getToken();
 
@@ -159,7 +142,28 @@ const [address, setAddress] = useState({
     toast.error("Unable to delete address");
   }
 };
-}, [isOpen]);
+  
+  
+  const handleSelectAddress = (address) => {
+  localStorage.setItem(
+    "selectedAddress",
+    JSON.stringify(address)
+  );
+
+  toast.success("Delivery address selected");
+
+  onClose();
+
+  window.location.reload();
+        };
+    useEffect(() => {
+  if (!isOpen) return;
+
+        loadAddresses();
+        
+        
+        
+}, [isOpen , getToken]);
 
     if (!isOpen) return null;
     
@@ -214,10 +218,13 @@ const [address, setAddress] = useState({
     // If user already has addresses,
     // open Saved Addresses screen first
     if (addresses.length > 0) {
-      setStep(0);
-    } else {
-      setStep(1);
-    }
+  setStep(0); // Show saved addresses
+} else {
+  setStep(1); // Show location detection screen
+}
+
+setSearch("");
+setSuggestions([]);
   } catch (err) {
     console.error(err);
     setStep(1);
@@ -246,7 +253,11 @@ const [address, setAddress] = useState({
 
     toast.success(data.message || "Address saved");
 
-    onClose();
+    setSavedAddresses(prev => [...prev, data.newAddress]);
+
+setStep(0);
+
+onClose();
 
   } catch (err) {
     console.error(err);
@@ -357,234 +368,341 @@ const [address, setAddress] = useState({
         <div className="flex-1 overflow-y-auto p-6">
 
   {step === 0 ? (
-    <>
-      {/* SEARCH */}
-      <div className="relative">
+  <>
+    {/* SAVED ADDRESSES */}
 
-        <Search
-          size={18}
-          className="absolute left-4 top-4 text-gray-400"
+    <h3 className="mb-5 text-xl font-bold text-gray-900">
+      Saved Addresses
+    </h3>
+
+    {loadingAddresses ? (
+      <div className="py-12 text-center">
+        <Loader2 className="mx-auto animate-spin text-green-600" />
+      </div>
+    ) : savedAddresses.length === 0 ? (
+      <div className="rounded-2xl border border-dashed border-gray-300 p-10 text-center">
+        <MapPin
+          size={45}
+          className="mx-auto text-gray-400"
         />
-
-        <input
-          placeholder="Search area, street or colony..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-12 pr-4 h-12 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-
-        {suggestions.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 max-h-72 overflow-y-auto rounded-2xl border bg-white shadow-xl z-50">
-
-            {suggestions.map((item, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => handleSuggestion(item)}
-                className="w-full border-b last:border-none px-4 py-3 text-left hover:bg-green-50 transition"
-              >
-                <p className="font-medium text-gray-900">
-                  {item.label}
-                </p>
-
-                <p className="text-xs text-gray-500 mt-1">
-                  {item.city}, {item.state}
-                </p>
-              </button>
-            ))}
-
-          </div>
-        )}
-
-      </div>
-
-      <div className="my-6 flex items-center">
-        <div className="flex-1 h-px bg-gray-200" />
-        <span className="px-4 text-sm text-gray-400">
-          OR
-        </span>
-        <div className="flex-1 h-px bg-gray-200" />
-      </div>
-
-      {/* CURRENT LOCATION */}
-
-      <button
-        type="button"
-        onClick={handleLocation}
-        disabled={loading}
-        className="w-full h-14 rounded-2xl bg-green-600 text-white font-semibold flex items-center justify-center gap-3 hover:bg-green-700 disabled:opacity-60 transition"
-      >
-        {loading ? (
-          <>
-            <Loader2
-              size={20}
-              className="animate-spin"
-            />
-            Detecting Location...
-          </>
-        ) : (
-          <>
-            <Navigation size={20} />
-            Use Current Location
-          </>
-        )}
-      </button>
-
-      {/* INFO */}
-
-      <div className="mt-6 rounded-2xl border border-green-100 bg-green-50 p-5">
-
-        <div className="flex gap-4">
-
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-green-100">
-            <MapPin
-              size={22}
-              className="text-green-600"
-            />
-          </div>
-
-          <div>
-
-            <h3 className="font-semibold text-gray-800">
-              Faster Delivery
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500 leading-relaxed">
-              Detect your current location automatically or search manually to
-              receive groceries faster.
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <div className="mt-6 text-center text-xs text-gray-400">
-        Your precise location is only used to detect your delivery address.
-      </div>
-    </>
-  ) : (
-    <>
-      {/* STEP 2 */}
-
-      <div className="rounded-2xl border border-green-200 bg-green-50 p-4 mb-5">
-
-        <h3 className="font-semibold text-green-700">
-          ✓ Location Detected
-        </h3>
-
-        <p className="mt-1 text-sm text-gray-600">
-          Review your address before saving.
+        <h4 className="mt-3 font-semibold text-gray-700">
+          No Saved Address
+        </h4>
+        <p className="mt-1 text-sm text-gray-500">
+          Add your first delivery address.
         </p>
 
+        <button
+          type="button"
+          onClick={() => setStep(1)}
+          className="mt-5 rounded-xl bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700"
+        >
+          Add Address
+        </button>
+      </div>
+    ) : (
+      <>
+        <div className="space-y-4">
+
+          {savedAddresses.map((item) => (
+            <div
+              key={item.id}
+              className="rounded-2xl border border-gray-200 p-5"
+            >
+              <div className="flex justify-between">
+
+                <div>
+
+                  <h4 className="font-semibold">
+                    {item.name}
+                  </h4>
+
+                  <p className="mt-1 text-sm text-gray-600">
+                    {item.street}
+                  </p>
+
+                  <p className="text-sm text-gray-600">
+                    {item.city}, {item.state} - {item.zip}
+                  </p>
+
+                </div>
+
+                {item.isDefault && (
+                  <span className="h-fit rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                    Default
+                  </span>
+                )}
+
+              </div>
+
+              <div className="mt-5 flex gap-3">
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSelectAddress(item)
+                  }
+                  className="flex-1 rounded-xl bg-green-600 py-3 font-semibold text-white hover:bg-green-700"
+                >
+                  Deliver Here
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleDeleteAddress(item.id)
+                  }
+                  className="rounded-xl border border-red-300 px-5 text-red-600 hover:bg-red-50"
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </div>
+          ))}
+
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setStep(1)}
+          className="mt-6 w-full rounded-xl border-2 border-dashed border-green-500 py-3 font-semibold text-green-600 hover:bg-green-50"
+        >
+          + Add New Address
+        </button>
+      </>
+    )}
+  </>
+) : step === 1 ? (
+  <>
+    {/* SEARCH */}
+
+    <div className="relative">
+
+      <Search
+        size={18}
+        className="absolute left-4 top-4 text-gray-400"
+      />
+
+      <input
+        placeholder="Search area, street or colony..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="h-12 w-full rounded-xl border border-gray-300 pl-12 pr-4 focus:ring-2 focus:ring-green-500"
+      />
+
+      {suggestions.length > 0 && (
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-72 overflow-y-auto rounded-2xl border bg-white shadow-xl">
+
+          {suggestions.map((item, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => handleSuggestion(item)}
+              className="w-full border-b px-4 py-3 text-left hover:bg-green-50 last:border-none"
+            >
+              <p className="font-medium">
+                {item.label}
+              </p>
+
+              <p className="text-xs text-gray-500">
+                {item.city}, {item.state}
+              </p>
+
+            </button>
+          ))}
+
+        </div>
+      )}
+
+    </div>
+
+    <div className="my-6 flex items-center">
+      <div className="h-px flex-1 bg-gray-200" />
+      <span className="px-4 text-sm text-gray-400">
+        OR
+      </span>
+      <div className="h-px flex-1 bg-gray-200" />
+    </div>
+
+    <button
+      type="button"
+      onClick={handleLocation}
+      disabled={loading}
+      className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-green-600 font-semibold text-white hover:bg-green-700 disabled:opacity-60"
+    >
+      {loading ? (
+        <>
+          <Loader2
+            size={20}
+            className="animate-spin"
+          />
+          Detecting Location...
+        </>
+      ) : (
+        <>
+          <Navigation size={20} />
+          Use Current Location
+        </>
+      )}
+    </button>
+
+    <div className="mt-6 rounded-2xl border border-green-100 bg-green-50 p-5">
+
+      <div className="flex gap-4">
+
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-green-100">
+
+          <MapPin
+            size={22}
+            className="text-green-600"
+          />
+
+        </div>
+
+        <div>
+
+          <h3 className="font-semibold">
+            Faster Delivery
+          </h3>
+
+          <p className="mt-1 text-sm text-gray-500">
+            Detect your current location or search
+            manually.
+          </p>
+
+        </div>
+
       </div>
 
-      <div className="space-y-4">
+    </div>
+
+    <div className="mt-6 text-center text-xs text-gray-400">
+      Your precise location is only used to detect your delivery address.
+    </div>
+  </>
+) : (
+  <>
+    {/* REVIEW ADDRESS */}
+
+    <div className="mb-5 rounded-2xl border border-green-200 bg-green-50 p-4">
+
+      <h3 className="font-semibold text-green-700">
+        ✓ Location Detected
+      </h3>
+
+      <p className="mt-1 text-sm text-gray-600">
+        Review your address before saving.
+      </p>
+
+    </div>
+
+    <div className="space-y-4">
+
+      <input
+        name="name"
+        value={address.name}
+        onChange={handleAddressChange}
+        placeholder="Full Name"
+        className="w-full rounded-xl border p-3"
+      />
+
+      <input
+        name="phone"
+        value={address.phone}
+        onChange={handleAddressChange}
+        placeholder="Phone Number"
+        className="w-full rounded-xl border p-3"
+      />
+
+      <input
+        name="street"
+        value={address.street}
+        onChange={handleAddressChange}
+        placeholder="House No / Street"
+        className="w-full rounded-xl border p-3"
+      />
+
+      <input
+        name="landmark"
+        value={address.landmark}
+        onChange={handleAddressChange}
+        placeholder="Landmark (Optional)"
+        className="w-full rounded-xl border p-3"
+      />
+
+      <div className="grid grid-cols-2 gap-3">
 
         <input
-          name="name"
-          value={address.name}
+          name="city"
+          value={address.city}
           onChange={handleAddressChange}
-          placeholder="Full Name"
-          className="w-full rounded-xl border p-3"
+          placeholder="City"
+          className="rounded-xl border p-3"
         />
 
         <input
-          name="phone"
-          value={address.phone}
+          name="state"
+          value={address.state}
           onChange={handleAddressChange}
-          placeholder="Phone Number"
-          className="w-full rounded-xl border p-3"
+          placeholder="State"
+          className="rounded-xl border p-3"
         />
-
-        <input
-          name="street"
-          value={address.street}
-          onChange={handleAddressChange}
-          placeholder="House No / Street"
-          className="w-full rounded-xl border p-3"
-        />
-
-        <input
-          name="landmark"
-          value={address.landmark}
-          onChange={handleAddressChange}
-          placeholder="Landmark (Optional)"
-          className="w-full rounded-xl border p-3"
-        />
-
-        <div className="grid grid-cols-2 gap-3">
-
-          <input
-            name="city"
-            value={address.city}
-            onChange={handleAddressChange}
-            placeholder="City"
-            className="rounded-xl border p-3"
-          />
-
-          <input
-            name="state"
-            value={address.state}
-            onChange={handleAddressChange}
-            placeholder="State"
-            className="rounded-xl border p-3"
-          />
-
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-
-          <input
-            name="zip"
-            value={address.zip}
-            onChange={handleAddressChange}
-            placeholder="PIN Code"
-            className="rounded-xl border p-3"
-          />
-
-          <input
-            name="country"
-            value={address.country}
-            onChange={handleAddressChange}
-            placeholder="Country"
-            className="rounded-xl border p-3"
-          />
-
-        </div>
-
-        <textarea
-          rows={3}
-          readOnly
-          value={address.formattedAddress}
-          className="w-full rounded-xl border bg-gray-50 p-3 text-sm text-gray-600"
-        />
-
-        <div className="flex gap-3 pt-2">
-
-          <button
-            type="button"
-            onClick={() => setStep(1)}
-            className="flex-1 rounded-xl border border-gray-300 py-3 font-medium hover:bg-gray-100"
-          >
-            Back
-          </button>
-
-          <button
-            type="button"
-            onClick={handleSaveAddress}
-            disabled={loading}
-            className="flex-1 rounded-xl bg-green-600 py-3 font-semibold text-white hover:bg-green-700 disabled:opacity-60"
-          >
-            {loading ? "Saving..." : "Save Address"}
-          </button>
-
-        </div>
 
       </div>
-    </>
-  )}
+
+      <div className="grid grid-cols-2 gap-3">
+
+        <input
+          name="zip"
+          value={address.zip}
+          onChange={handleAddressChange}
+          placeholder="PIN Code"
+          className="rounded-xl border p-3"
+        />
+
+        <input
+          name="country"
+          value={address.country}
+          onChange={handleAddressChange}
+          placeholder="Country"
+          className="rounded-xl border p-3"
+        />
+
+      </div>
+
+      <textarea
+        rows={3}
+        readOnly
+        value={address.formattedAddress}
+        className="w-full rounded-xl border bg-gray-50 p-3 text-sm text-gray-600"
+      />
+
+      <div className="flex gap-3 pt-2">
+
+        <button
+          type="button"
+          onClick={() => setStep(1)}
+          className="flex-1 rounded-xl border py-3"
+        >
+          Back
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSaveAddress}
+          disabled={loading}
+          className="flex-1 rounded-xl bg-green-600 py-3 font-semibold text-white hover:bg-green-700"
+        >
+          {loading ? "Saving..." : "Save Address"}
+        </button>
+
+      </div>
+
+    </div>
+  </>
+)}
 
 </div>
       </div>
