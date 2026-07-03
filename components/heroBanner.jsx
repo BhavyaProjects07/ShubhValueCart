@@ -85,7 +85,7 @@ useEffect(() => {
 
   return (
   <section
-    className="relative w-full bg-white py-11"
+    className="relative w-full bg-white py-7"
     onMouseEnter={() => setPaused(true)}
     onMouseLeave={() => setPaused(false)}
   >
