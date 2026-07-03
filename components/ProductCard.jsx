@@ -80,13 +80,16 @@ if (Array.isArray(product?.rating)) {
                 {/* Decorative line */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[2px] bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
 
-                <span className="text-[9px] tracking-[0.25em] text-gray-400 uppercase mb-2.5 font-medium">
-                    Signature
-                </span>
-                
-                <h3 className="font-serif text-[15px] sm:text-[16px] font-semibold leading-6 tracking-[0.01em] text-[#1f2937] line-clamp-2 text-center transition-colors duration-300 group-hover:text-[#2874f0]">
-    {productName}
+                <h3
+  className="font-serif text-[11px] sm:text-[13px] font-medium leading-4 tracking-[0.01em] 
+             text-[#1f2937] line-clamp-2 text-center transition-colors duration-300 
+             group-hover:text-[#2874f0]"
+>
+  {productName}
 </h3>
+
+
+
                 {product.itemCode && (
   <div className="mt-1">
     <span className="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-gray-700 border border-gray-200">

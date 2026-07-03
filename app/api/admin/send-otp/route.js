@@ -54,7 +54,7 @@ export async function POST(req) {
 
 if (!envPhones) {
   return NextResponse.json(
-    { error: "ADMIN_PHONES not configured" },
+    { error: "ADMIN_PHONE not configured" },
     { status: 500 }
   );
 }
