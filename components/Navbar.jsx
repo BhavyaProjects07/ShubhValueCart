@@ -533,7 +533,25 @@ useEffect(() => {
     {/* Right Side */}
                             <div className="flex items-center gap-2">
                                 
-                                   <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
+                                   {
+                            !mounted ? (
+                                <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse" />
+                            ) : !user ? (
+                                <div className="flex items-center gap-3">
+                                {/* Clerk Login */}
+                                
+
+                                {/* 🔥 NEW PHONE LOGIN */}
+                                <button
+                                    onClick={() => router.push("/phone-signup")}
+                                    className="px-5 py-2 border border-[#1D1D1F] text-[#1D1D1F] text-sm font-semibold rounded-full hover:bg-gray-100 transition"
+                                >
+                                    Sign Up
+                                </button>
+                                </div>
+                            ) : (
+                                <div className="hover:scale-105 transition-transform">
+                                <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
                                     <UserButton.MenuItems>
                                          <UserButton.Action
                                                     labelIcon={<ShoppingCart size={16} />}
@@ -572,6 +590,11 @@ useEffect(() => {
                                                         
                                     </UserButton.MenuItems>
                                 </UserButton>
+                                                
+                                                
+                                </div>
+                            )
+                            }
 
         {/* Hamburger */}
         <button
