@@ -531,7 +531,47 @@ useEffect(() => {
     </Link>
 
     {/* Right Side */}
-                <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2">
+                                
+                                   <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
+                                    <UserButton.MenuItems>
+                                         <UserButton.Action
+                                                    labelIcon={<ShoppingCart size={16} />}
+                                                    label="Cart"
+                                                    onClick={() => router.push("/cart")}
+                                                />
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="My Orders"
+                                                    onClick={() => router.push("/orders")}
+                                                />
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="About Us"
+                                                    onClick={() => router.push("/about")}
+                                                        />
+                                                
+                                                {isSeller && (
+                                                <UserButton.Action
+                                                    labelIcon={<Store size={16} />}
+                                                    label="Store Dashboard"
+                                                    onClick={() =>
+                                                    router.push("/admin-verify-svc?redirect=/store")
+}
+                                                />
+                                                )}
+                                                {isAdmin && (
+                                                <UserButton.Action
+                                                    labelIcon={<PackageIcon size={16} />}
+                                                    label="Admin Panel"
+                                                    onClick={() =>
+  router.push("/admin-verify-svc?redirect=/admin")
+}
+                                                />
+                                                )}              
+                                                        
+                                    </UserButton.MenuItems>
+                                </UserButton>
 
         {/* Hamburger */}
         <button
@@ -661,8 +701,14 @@ useEffect(() => {
         </button>
       );
     })}
-  </div>
+                    </div>
+                    
+                    
                 </div>
+
+                
+
+                
 
                 {/* Mobile Menu Dropdown */}
                 {mobileMenuOpen && (
@@ -678,7 +724,9 @@ useEffect(() => {
                 <span>My Orders</span>
             </div>
             <ChevronRight size={16} />
-        </Link>
+                        </Link>
+                        
+                        
 
         <Link
             href="/shop"
@@ -714,7 +762,9 @@ useEffect(() => {
                 <span>Contact Us</span>
             </div>
             <ChevronRight size={16} />
-        </Link>
+                        </Link>
+                        
+                        
 
         {isSeller && (
             <Link
