@@ -11,6 +11,7 @@ import HeroSlider from './heroBanner';
 
 import Image from "next/image";
 import Newsletter from './Newsletter';
+import Deals from './Deals';
 // --- DATA ---
 
 
@@ -312,6 +313,9 @@ export default function Hero2() {
         <CouponBanner />
         
         <Newsletter />
+
+        <Deals />
+
         <BestSelling />
         
         

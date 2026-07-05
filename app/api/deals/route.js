@@ -1,22 +1,20 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+const DEALS_PER_DAY = 15;
+const TOTAL_DEALS = 180;
+const TOTAL_DAYS = TOTAL_DEALS / DEALS_PER_DAY; // 12
+
 export async function GET() {
   try {
     const products = await prisma.product.findMany({
       where: {
-        inStock: {
-          not: false,
-        },
+        inStock: true,
         store: {
           isActive: true,
         },
         mrp: {
           gt: 0,
-        },
-        category: {
-          equals: "Personal Care",
-          mode: "insensitive",
         },
       },
       include: {
@@ -26,39 +24,71 @@ export async function GET() {
     });
 
     const withDiscount = products.map((p) => {
-      const discount =
-        p.mrp > 0
-          ? Math.round(((p.mrp - p.price) / p.mrp) * 100)
-          : 0;
+      const discount = Math.round(
+        ((p.mrp - p.price) / p.mrp) * 100
+      );
 
       return {
         id: p.id,
         name: p.name,
         price: p.price,
         mrp: p.mrp,
-        stock: p.stock,
         images: p.images,
         category: p.category,
         storeId: p.storeId,
         createdAt: p.createdAt,
         rating: p.rating || [],
         discount,
+        stock: p.stock,
       };
     });
 
-    const deals = withDiscount
+    // Top discounted products
+    const topDeals = withDiscount
       .filter(
         (p) =>
           p.discount > 5 &&
-          p.id &&
-          Array.isArray(p.images) &&
-          p.images.length > 0 &&
-          p.price > 0
+          p.price > 0 &&
+          p.images?.length > 0 &&
+          p.id
       )
-      .sort((a, b) => b.discount - a.discount)
-      .slice(0, 24);
+      .sort((a, b) => {
+        if (b.discount !== a.discount) {
+          return b.discount - a.discount;
+        }
 
-    return NextResponse.json({ deals });
+        // Tie breaker: newest product first
+        return (
+          new Date(b.createdAt) -
+          new Date(a.createdAt)
+        );
+      })
+      .slice(0, TOTAL_DEALS);
+
+    // -------------------------------------
+    // DAY ROTATION (12 day loop)
+    // -------------------------------------
+
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+    const epochDay = Math.floor(Date.now() / MS_PER_DAY);
+
+    // 0 → 11
+    const cycleDay = epochDay % TOTAL_DAYS;
+
+    const start = cycleDay * DEALS_PER_DAY;
+
+    const deals = topDeals.slice(
+      start,
+      start + DEALS_PER_DAY
+    );
+
+    return NextResponse.json({
+      deals,
+      cycleDay: cycleDay + 1,
+      totalCycleDays: TOTAL_DAYS,
+    });
+
   } catch (error) {
     console.error("DEALS API ERROR:", error);
 
