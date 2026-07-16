@@ -64,15 +64,18 @@ const handleCouponCode = async (e) => {
     const couponData = data.coupon
 
     // 🔥 STRICT VALIDATION (core fix)
-    if (!couponData?.minOrderValue || totalPrice < couponData.minOrderValue) {
-      setCoupon(null)
+    const minOrderValue = Number(couponData?.minOrderValue ?? 0);
 
-      const msg = `Minimum order ${currency}${couponData.minOrderValue} required`
-      setCouponError(msg)
-      toast.error(msg)
+if (totalPrice < minOrderValue) {
+  setCoupon(null);
 
-      return
-    }
+  const msg = `Minimum order ${currency}${minOrderValue} required`;
+
+  setCouponError(msg);
+  toast.error(msg);
+
+  return;
+}
 
     // ✅ APPLY ONLY IF VALID
     setCoupon(couponData)
@@ -94,19 +97,20 @@ const handleCouponCode = async (e) => {
 
 /* ===== AUTO REMOVE COUPON IF CART VALUE DROPS ===== */
 useEffect(() => {
-  if (!coupon) return
+  if (!coupon) return;
 
-  // 🔥 STRICT CHECK (prevents stale/invalid coupon UI)
-  if (!coupon.minOrderValue || totalPrice < coupon.minOrderValue) {
-    const msg = `Coupon removed — minimum ${currency}${coupon.minOrderValue} required`
+  const minOrderValue = Number(coupon?.minOrderValue ?? 0);
 
-    setCoupon(null)
-    setCouponError(msg)
+  // Remove coupon only if cart value drops below minimum
+  if (totalPrice < minOrderValue) {
+    const msg = `Coupon removed — minimum ${currency}${minOrderValue} required`;
 
-    toast.error(msg)
+    setCoupon(null);
+    setCouponError(msg);
+
+    toast.error(msg);
   }
-}, [totalPrice, coupon])
-
+}, [totalPrice, coupon, currency]);
   useEffect(() => {
   const script = document.createElement("script");
   script.src = "https://checkout.razorpay.com/v1/checkout.js";

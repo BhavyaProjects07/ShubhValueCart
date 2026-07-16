@@ -19,6 +19,9 @@ import {
   BookOpen,
   Heart,
   Package,
+  Truck,
+  User,
+  PlayCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,18 +36,14 @@ import axios from "axios";
 import LocationModal from "./LocationModal";
 
 
-const NavLink = ({ href, children, delay = 0 }) => {
+const NavLink = ({ href, children }) => {
     return (
         <Link
             href={href}
-            className="relative group text-sm font-semibold tracking-wide text-gray-600 hover:text-[#1D1D1F] transition-colors duration-300"
-            style={{
-                animation: `fadeInUp 0.6s ease-out ${delay}s forwards`,
-                opacity: 0,
-            }}
+            className="relative group text-[13px] font-bold uppercase tracking-wide text-gray-700 hover:text-[#0a6c3d] transition-colors duration-200 whitespace-nowrap"
         >
             {children}
-            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#1D1D1F] group-hover:w-full transition-all duration-300 ease-out rounded-full" />
+            <span className="absolute -bottom-1.5 left-0 w-0 h-[2px] bg-[#0a6c3d] group-hover:w-full transition-all duration-300 ease-out rounded-full" />
         </Link>
     )
 }
@@ -220,12 +219,47 @@ useEffect(() => {
         router.push(`/shop?search=${encodeURIComponent(search.trim())}`)
     }
 
+    // Shared UserButton menu (used in both desktop + mobile slots)
+    const AccountMenuItems = (
+        <UserButton.MenuItems>
+            <UserButton.Action
+                labelIcon={<ShoppingCart size={16} />}
+                label="Cart"
+                onClick={() => router.push("/cart")}
+            />
+            <UserButton.Action
+                labelIcon={<PackageIcon size={16} />}
+                label="My Orders"
+                onClick={() => router.push("/orders")}
+            />
+            <UserButton.Action
+                labelIcon={<PackageIcon size={16} />}
+                label="About Us"
+                onClick={() => router.push("/about")}
+            />
+            {isSeller && (
+                <UserButton.Action
+                    labelIcon={<Store size={16} />}
+                    label="Store Dashboard"
+                    onClick={() => router.push("/admin-verify-svc?redirect=/store")}
+                />
+            )}
+            {isAdmin && (
+                <UserButton.Action
+                    labelIcon={<PackageIcon size={16} />}
+                    label="Admin Panel"
+                    onClick={() => router.push("/admin-verify-svc?redirect=/admin")}
+                />
+            )}
+        </UserButton.MenuItems>
+    );
+
     return (
         <>
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
                 .font-inter { font-family: 'Inter', sans-serif; }
-                
+
                 @keyframes fadeInUp {
                     from { opacity: 0; transform: translateY(10px); }
                     to { opacity: 1; transform: translateY(0); }
@@ -241,14 +275,8 @@ useEffect(() => {
                 }
 
                 .search-input-wrapper {
-                    animation: fadeInUp 0.6s ease-out 0.2s forwards;
+                    animation: fadeInUp 0.5s ease-out 0.1s forwards;
                     opacity: 0;
-                    transition: all 0.3s ease;
-                }
-
-                .search-input-wrapper:focus-within {
-                    transform: scale(1.02);
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
                 }
 
                 .hide-scrollbar::-webkit-scrollbar {
@@ -260,583 +288,383 @@ useEffect(() => {
                 }
             `}</style>
 
-            <nav className="fixed top-0 left-0 w-full z-[100] bg-white border-b border-gray-200/50 pointer-events-auto font-inter ">
-                <div className="mx-6">
-                    <div className="flex items-center justify-between max-w-[1400px] mx-auto py-4 transition-all duration-500">
+            <nav className="fixed top-0 left-0 w-full z-[100] pointer-events-auto font-inter">
 
-                        {/* Desktop Logo */}
-                        <Link
-                            href="/"
-                            className="nav-logo relative text-2xl font-extrabold tracking-tighter text-[#1D1D1F] hover:scale-105 transition-transform duration-300 hidden sm:flex items-center gap-2"
-                        >
-                            {/* Assuming assets.FrostWayne is available, otherwise fallback to text */}
+                {/* Top strip: announcement / delivery / app download */}
+                <div className="hidden sm:flex items-center justify-between bg-[#0a6c3d] text-white text-xs px-6 py-1.5">
+                    <span className="truncate">Welcome to Shubh Value Cart – Shop More, Save More!</span>
+                    <span className="hidden md:flex items-center gap-1.5 whitespace-nowrap">
+                        <Truck size={14} />
+                        Free Delivery on Orders Above ₹999
+                    </span>
+                    <span className="flex items-center gap-2 whitespace-nowrap">
+                        Download Our App
+                        <PlayCircle size={16} />
+                        <Apple size={16} />
+                    </span>
+                </div>
+
+                {/* Main header row */}
+                <div className="bg-white border-b border-gray-200/70">
+                    <div className="max-w-[1400px] mx-auto flex items-center gap-4 sm:gap-6 px-4 sm:px-6 py-3">
+
+                        {/* Logo */}
+                        <Link href="/" className="nav-logo flex items-center gap-2 shrink-0 hover:opacity-90 transition-opacity">
                             {assets?.logo ? (
-                                <Image src={assets.logo} alt="Logo" width={120} height={40} className="object-contain" />
+                                <Image src={assets.logo} alt="Shubh Value Cart" width={120} height={40} className="object-contain" />
                             ) : (
-                                <span>Shubh Value Cart</span>
+                                <>
+                                    <ShoppingCart size={30} strokeWidth={2.4} className="text-orange-500 shrink-0" />
+                                    <div className="leading-none">
+                                        <div className="text-lg sm:text-2xl font-extrabold text-[#0a6c3d] tracking-tight">SHUBH</div>
+                                        <div className="text-[10px] sm:text-xs font-extrabold text-orange-500 tracking-[0.18em] -mt-0.5">VALUE CART</div>
+                                    </div>
+                                </>
                             )}
                         </Link>
 
-                        {/* Desktop Menu */}
-                        <div className="hidden lg:flex items-center space-x-10">
-                            <NavLink href="/" delay={0}>Home</NavLink>
-                            <NavLink href="/shop" delay={0.1}>Shop</NavLink>
-                            
+                        {/* Search (desktop) */}
+                        <form
+                            onSubmit={handleSearch}
+                            className="search-input-wrapper flex-1 hidden md:flex items-stretch max-w-2xl border border-gray-300 rounded-sm overflow-hidden"
+                        >
                             <button
-  onClick={() => setShowLocationModal(true)}
-  className="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm transition-all duration-200 hover:border-green-500 hover:shadow-md active:scale-95"
->
-  {/* Location Icon */}
-  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-    <MapPin
-      size={18}
-      className="fill-green-600 text-green-600"
-    />
-  </div>
+                                type="button"
+                                className="flex items-center gap-1 px-3 bg-gray-50 border-r border-gray-300 text-sm text-gray-600 whitespace-nowrap hover:bg-gray-100 transition-colors"
+                            >
+                                All Categories <ChevronDown size={14} />
+                            </button>
+                            <input
+                                className="flex-1 min-w-0 px-3 py-2 text-sm outline-none text-[#1D1D1F] placeholder-gray-400"
+                                type="text"
+                                placeholder="Search for products, brands and more..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                required
+                            />
+                            <button type="submit" className="flex items-center justify-center px-4 bg-[#0a6c3d] hover:bg-[#085531] transition-colors">
+                                <Search size={18} className="text-white" />
+                            </button>
+                        </form>
 
-  {/* Address */}
-  <div className="flex flex-col items-start leading-tight">
+                        {/* Right-side info icons (desktop) */}
+                        <div className="hidden lg:flex items-center gap-6 shrink-0 ml-auto">
 
-    <span className="text-[11px] font-medium text-gray-500">
-      Deliver to
-    </span>
-
-    {selectedAddress ? (
-      <>
-        <span className="max-w-[170px] truncate text-sm font-semibold text-gray-900">
-          {selectedAddress.name}
-        </span>
-
-        <span className="max-w-[170px] truncate text-xs text-gray-500">
-          {selectedAddress.locality ||
-            selectedAddress.street},{" "}
-          {selectedAddress.city}
-        </span>
-      </>
-    ) : (
-      <span className="text-sm font-semibold text-gray-900">
-        Add Address
-      </span>
-    )}
-  </div>
-
-  <ChevronDown
-    size={18}
-    className="ml-1 text-gray-500 transition-transform duration-200 group-hover:rotate-180"
-  />
+                            {/* Store Locator / Deliver-to — reuses the existing address selection logic */}
+                            <button
+                                onClick={() => setShowLocationModal(true)}
+                                className="flex items-center gap-2 text-gray-700 hover:text-[#0a6c3d] transition-colors"
+                            >
+                                <MapPin size={20} />
+                                <div className="leading-tight text-left">
+                                    <div className="text-[13px] font-semibold text-gray-900">
+                                        {selectedAddress ? "Deliver to" : "Store Locator"}
+                                    </div>
+                                    <div className="text-[11px] text-gray-500 max-w-[140px] truncate">
+                                        {selectedAddress
+                                            ? `${selectedAddress.name}, ${selectedAddress.locality || selectedAddress.street}`
+                                            : "Find a Store"}
+                                    </div>
+                                </div>
                             </button>
 
-                            <form 
-                                onSubmit={handleSearch} 
-                                className="search-input-wrapper hidden xl:flex items-center w-64 text-sm gap-2 bg-gray-100/80 px-4 py-2.5 rounded-full hover:bg-gray-200/80 transition-all duration-300 border border-transparent focus-within:border-gray-300 focus-within:bg-white"
-                            >
-                                <Search size={16} className="text-gray-500 transition-transform duration-300 group-hover:rotate-90" />
-                                <input 
-                                    className="w-full bg-transparent outline-none placeholder-gray-500 text-[#1D1D1F] transition-colors duration-300" 
-                                    type="text" 
-                                    placeholder="Search products..." 
-                                    value={search} 
-                                    onChange={(e) => setSearch(e.target.value)} 
-                                    required 
-                                />
-                            </form>
+                            {/* My Account */}
+                            {!mounted ? (
+                                <div className="w-24 h-9 bg-gray-200 rounded-md animate-pulse" />
+                            ) : !user ? (
+                                <button
+                                    onClick={() => router.push("/phone-signup")}
+                                    className="flex items-center gap-2 text-gray-700 hover:text-[#0a6c3d] transition-colors"
+                                >
+                                    <User size={20} />
+                                    <div className="leading-tight text-left">
+                                        <div className="text-[13px] font-semibold text-gray-900">My Account</div>
+                                        <div className="text-[11px] text-gray-500">Login / Register</div>
+                                    </div>
+                                </button>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <UserButton appearance={{ elements: { avatarBox: "w-9 h-9 shadow-sm" } }}>
+                                        {AccountMenuItems}
+                                    </UserButton>
+                                    <div className="leading-tight text-left">
+                                        <div className="text-[13px] font-semibold text-gray-900">My Account</div>
+                                        <div className="text-[11px] text-gray-500 max-w-[110px] truncate">
+                                            {user?.firstName || "Welcome back"}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
-                            <Link 
-                                href="/cart" 
-                                className="relative flex items-center gap-2 text-gray-600 group transition-all duration-300 hover:scale-105"
-                                style={{
-                                    animation: `fadeInUp 0.6s ease-out 0.4s forwards`,
-                                    opacity: 0,
-                                }}
-                            >
-                                <div className="relative p-2 bg-gray-100 rounded-full group-hover:bg-gray-200 transition-colors">
-                                    <ShoppingCart size={18} className="text-[#1D1D1F] transition-transform duration-300 group-hover:rotate-12" />
+                            {/* My Cart */}
+                            <Link href="/cart" className="flex items-center gap-2 text-gray-700 hover:text-[#0a6c3d] transition-colors">
+                                <div className="relative">
+                                    <ShoppingCart size={22} />
                                     {cartCount > 0 && (
-                                        <span className="absolute -top-1 -right-1 text-[10px] font-bold text-white bg-[#1D1D1F] size-4.5 flex items-center justify-center rounded-full shadow-sm">
+                                        <span className="absolute -top-2 -right-2 flex items-center justify-center text-[10px] font-bold text-white bg-red-500 rounded-full w-4 h-4">
                                             {cartCount}
                                         </span>
                                     )}
                                 </div>
-                                <span className="font-semibold text-sm group-hover:text-[#1D1D1F] transition-colors duration-300">Cart</span>
+                                <div className="leading-tight text-left">
+                                    <div className="text-[13px] font-semibold text-gray-900">My Cart</div>
+                                    <div className="text-[11px] text-gray-500">₹{Number(cartCount || 0).toFixed(2)}</div>
+                                </div>
                             </Link>
-
-                            {
-                            !mounted ? (
-                                <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse" />
-                            ) : !user ? (
-                                <div className="flex items-center gap-3">
-                                {/* Clerk Login */}
-                                
-
-                                {/* 🔥 NEW PHONE LOGIN */}
-                                <button
-                                    onClick={() => router.push("/phone-signup")}
-                                    className="px-5 py-2 border border-[#1D1D1F] text-[#1D1D1F] text-sm font-semibold rounded-full hover:bg-gray-100 transition"
-                                >
-                                    Sign Up
-                                </button>
-                                </div>
-                            ) : (
-                                <div className="hover:scale-105 transition-transform">
-                                <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
-                                    <UserButton.MenuItems>
-                                         <UserButton.Action
-                                                    labelIcon={<ShoppingCart size={16} />}
-                                                    label="Cart"
-                                                    onClick={() => router.push("/cart")}
-                                                />
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="My Orders"
-                                                    onClick={() => router.push("/orders")}
-                                                />
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="About Us"
-                                                    onClick={() => router.push("/about")}
-                                                        />
-                                                
-                                                {isSeller && (
-                                                <UserButton.Action
-                                                    labelIcon={<Store size={16} />}
-                                                    label="Store Dashboard"
-                                                    onClick={() =>
-                                                    router.push("/admin-verify-svc?redirect=/store")
-}
-                                                />
-                                                )}
-                                                {isAdmin && (
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="Admin Panel"
-                                                    onClick={() =>
-  router.push("/admin-verify-svc?redirect=/admin")
-}
-                                                />
-                                                )}              
-                                                        
-                                    </UserButton.MenuItems>
-                                </UserButton>
-                                                
-                                                
-                                </div>
-                            )
-                            }
-                                                <div
-  className="relative"
-  onMouseEnter={() => setMenuOpen(true)}
-  onMouseLeave={() => setMenuOpen(false)}
->
-  <button className="ml-3 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition">
-    <Menu size={20} />
-  </button>
-
-  {menuOpen && (
-    <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150">
-
-      <Link
-        href="/orders"
-        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
-      >
-        <div className="flex items-center gap-3">
-          <PackageIcon size={18} />
-          <span>My Orders</span>
-        </div>
-        <ChevronRight size={16} />
-      </Link>
-
-      <Link
-        href="/terms"
-        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
-      >
-        <div className="flex items-center gap-3">
-          <Gift size={18} />
-          <span>terms & conditions</span>
-        </div>
-        <ChevronRight size={16} />
-      </Link>
-
-      <Link
-        href="/about"
-        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
-      >
-        <div className="flex items-center gap-3">
-          <Info size={18} />
-          <span>About Us</span>
-        </div>
-        <ChevronRight size={16} />
-      </Link>
-
-      <Link
-        href="/contact"
-        className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
-      >
-        <div className="flex items-center gap-3">
-          <PhoneCallIcon size={18} />
-          <span>Contact Us</span>
-        </div>
-        <ChevronRight size={16} />
-      </Link>
-
-      {isSeller && (
-        <Link
-          href="/admin-verify-svc?redirect=/store"
-          className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 border-t"
-        >
-          <div className="flex items-center gap-3">
-            <Store size={18} />
-            <span>Store Dashboard</span>
-          </div>
-          <ChevronRight size={16} />
-        </Link>
-      )}
-
-      {isAdmin && (
-        <Link
-          href="/admin-verify-svc?redirect=/admin"
-          className="flex items-center justify-between px-5 py-4 hover:bg-gray-50"
-        >
-          <div className="flex items-center gap-3">
-            <PackageIcon size={18} />
-            <span>Admin Panel</span>
-          </div>
-          <ChevronRight size={16} />
-        </Link>
-      )}
-    </div>
-  )}
-                                                </div>
                         </div>
 
-                        {/* Mobile Nav */}
-                        <div className="sm:hidden flex items-center justify-between w-full opacity-0 animate-[fadeInUp_0.6s_ease-out_0.5s_forwards]">
+                        {/* Mobile right-side icons */}
+                        <div className="flex lg:hidden items-center gap-1 ml-auto">
+                            <button
+                                onClick={() => setMobileSearchOpen((v) => !v)}
+                                className="p-2.5 rounded-full hover:bg-gray-100 transition"
+                            >
+                                <Search size={19} className="text-gray-700" />
+                            </button>
 
-    {/* Logo */}
-    <Link
-        href="/"
-        className="flex items-center font-extrabold tracking-tighter text-xl text-[#1D1D1F]"
-    >
-        {assets?.logo ? (
-            <Image
-                src={assets.logo}
-                alt="Shubh Value Cart"
-                width={67}
-                height={21}
-                priority
-                className="object-contain"
-            />
-        ) : (
-            <span>Shubh Value Cart</span>
-        )}
-    </Link>
+                            <Link href="/cart" className="relative p-2.5 rounded-full hover:bg-gray-100 transition">
+                                <ShoppingCart size={19} className="text-gray-700" />
+                                {cartCount > 0 && (
+                                    <span className="absolute top-1 right-1 text-[9px] font-bold text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center">
+                                        {cartCount}
+                                    </span>
+                                )}
+                            </Link>
 
-    {/* Right Side */}
-                            <div className="flex items-center gap-2">
-                                
-                                   {
-                            !mounted ? (
-                                <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse" />
+                            {!mounted ? (
+                                <div className="w-9 h-9 bg-gray-200 rounded-full animate-pulse" />
                             ) : !user ? (
-                                <div className="flex items-center gap-3">
-                                {/* Clerk Login */}
-                                
-
-                                {/* 🔥 NEW PHONE LOGIN */}
                                 <button
                                     onClick={() => router.push("/phone-signup")}
-                                    className="px-5 py-2 border border-[#1D1D1F] text-[#1D1D1F] text-sm font-semibold rounded-full hover:bg-gray-100 transition"
+                                    className="p-2.5 rounded-full hover:bg-gray-100 transition"
                                 >
-                                    Sign Up
+                                    <User size={19} className="text-gray-700" />
                                 </button>
-                                </div>
                             ) : (
-                                <div className="hover:scale-105 transition-transform">
-                                <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 shadow-sm" } }}>
-                                    <UserButton.MenuItems>
-                                         <UserButton.Action
-                                                    labelIcon={<ShoppingCart size={16} />}
-                                                    label="Cart"
-                                                    onClick={() => router.push("/cart")}
-                                                />
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="My Orders"
-                                                    onClick={() => router.push("/orders")}
-                                                />
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="About Us"
-                                                    onClick={() => router.push("/about")}
-                                                        />
-                                                
-                                                {isSeller && (
-                                                <UserButton.Action
-                                                    labelIcon={<Store size={16} />}
-                                                    label="Store Dashboard"
-                                                    onClick={() =>
-                                                    router.push("/admin-verify-svc?redirect=/store")
-}
-                                                />
-                                                )}
-                                                {isAdmin && (
-                                                <UserButton.Action
-                                                    labelIcon={<PackageIcon size={16} />}
-                                                    label="Admin Panel"
-                                                    onClick={() =>
-  router.push("/admin-verify-svc?redirect=/admin")
-}
-                                                />
-                                                )}              
-                                                        
-                                    </UserButton.MenuItems>
+                                <UserButton appearance={{ elements: { avatarBox: "w-8 h-8 shadow-sm" } }}>
+                                    {AccountMenuItems}
                                 </UserButton>
-                                                
-                                                
-                                </div>
-                            )
-                            }
+                            )}
 
-        {/* Hamburger */}
-        <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 transition"
-        >
-            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-        </button>
-
-    </div>
-</div>
-
+                            <button
+                                onClick={() => setMobileMenuOpen((v) => !v)}
+                                className="p-2.5 rounded-full hover:bg-gray-100 transition"
+                            >
+                                {mobileMenuOpen ? <X size={19} className="text-gray-700" /> : <Menu size={19} className="text-gray-700" />}
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                {/* Mobile Address + Search — Flipkart style (mobile only) */}
-                <div className="sm:hidden px-4 pb-3 space-y-2">
-
-                    {/* Address pill + Cart + Shop — all in one row */}
-                    <div className="flex items-center gap-2">
-
-                        {/* Address pill — single line, like Flipkart */}
+                    {/* Mobile search + address row */}
+                    <div className="lg:hidden px-4 pb-3 space-y-2">
                         <button
                             onClick={() => setShowLocationModal(true)}
-                            className="flex min-w-0 flex-1 items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-left transition hover:bg-gray-200 active:scale-[0.99]"
+                            className="flex w-full items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-left transition hover:bg-gray-200 active:scale-[0.99]"
                         >
-                            <MapPin size={16} className="shrink-0 fill-green-600 text-green-600" />
+                            <MapPin size={16} className="shrink-0 text-[#0a6c3d]" />
                             <span className="min-w-0 flex-1 truncate text-sm font-semibold text-gray-900">
                                 {selectedAddress
                                     ? `${selectedAddress.name}, ${selectedAddress.locality || selectedAddress.street}, ${selectedAddress.city}`
-                                    : "Add Address"}
+                                    : "Store Locator — Find a Store"}
                             </span>
                             <ChevronDown size={16} className="shrink-0 text-gray-500" />
                         </button>
 
-                        {/* Cart icon */}
-                        <Link
-                            href="/cart"
-                            className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition"
+                        <div
+                            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                                mobileSearchOpen ? "max-h-16 opacity-100" : "max-h-0 opacity-0"
+                            }`}
                         >
-                            <ShoppingCart size={18} className="text-[#1D1D1F]" />
-                            {cartCount > 0 && (
-                                <span className="absolute -top-1 -right-1 text-[9px] font-bold text-white bg-[#1D1D1F] size-4 flex items-center justify-center rounded-full shadow-sm">
-                                    {cartCount}
-                                </span>
-                            )}
-                        </Link>
-
-                        {/* Shop icon */}
-                        <Link
-                            href="/shop"
-                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition"
-                        >
-                            <ShoppingBag size={18} className="text-[#1D1D1F]" />
-                        </Link>
-
+                            <form
+                                onSubmit={handleSearch}
+                                className="flex items-center gap-2 rounded-sm border border-gray-300 overflow-hidden"
+                            >
+                                <input
+                                    type="text"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    placeholder="Search for products, brands and more..."
+                                    className="flex-1 min-w-0 px-3 py-2.5 text-sm font-medium text-[#1D1D1F] outline-none placeholder-gray-400"
+                                />
+                                <button type="submit" className="shrink-0 px-4 py-2.5 bg-[#0a6c3d]">
+                                    <Search size={16} className="text-white" />
+                                </button>
+                            </form>
+                        </div>
                     </div>
-
-                    {/* Search bar — collapses on scroll down, reappears on scroll up (same behavior as the category bar) */}
-                    <div
-                        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                            showCategoryBar ? "max-h-16 opacity-100" : "max-h-0 opacity-0"
-                        }`}
-                    >
-                        <form
-                            onSubmit={handleSearch}
-                            className="flex items-center gap-2 rounded-full border border-gray-200 bg-gray-100 px-4 py-2.5"
-                        >
-                            <Search size={18} className="shrink-0 text-gray-500" />
-                            <input
-                                type="text"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Search products..."
-                                className="w-full bg-transparent text-sm font-medium text-[#1D1D1F] outline-none placeholder-gray-500"
-                            />
-                        </form>
-                    </div>
-
                 </div>
 
-                {/* Mini Category Bar — collapses on scroll down, reappears on scroll up */}
+                {/* Category links bar — collapses on scroll down, reappears on scroll up */}
                 <div
-  className={`border-t border-gray-100 bg-white overflow-hidden transition-all duration-300 ${
-    showCategoryBar ? "max-h-24 opacity-100" : "max-h-0 opacity-0"
-  }`}
->
-  <div className="max-w-[1600px] mx-auto flex items-center gap-10 overflow-x-auto hide-scrollbar px-6">
+                    className={`hidden lg:block bg-white border-b border-gray-200/70 overflow-visible transition-all duration-300 ${
+                        showCategoryBar ? "max-h-14 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+                    }`}
+                >
+                    <div className="max-w-[1400px] mx-auto flex items-center gap-8 px-6">
 
-    {/* All */}
-    <button
-      onClick={() => router.push("/shop")}
-      className="group flex min-w-[70px] flex-col items-center py-0"
-    >
-      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 transition group-hover:bg-[#2874f0]">
-        <Menu className="h-5 w-5 text-[#2874f0] group-hover:text-white" />
-      </div>
+                        <div
+                            className="relative"
+                            onMouseEnter={() => setMenuOpen(true)}
+                            onMouseLeave={() => setMenuOpen(false)}
+                        >
+                            <button className="flex items-center gap-2 bg-[#0a6c3d] hover:bg-[#085531] text-white text-sm font-bold tracking-wide px-4 py-2.5 transition-colors">
+                                <Menu size={16} /> ALL CATEGORIES
+                            </button>
 
-      <span className="mt-1 text-xs font-medium text-gray-800">
-        All
-      </span>
+                            {menuOpen && (
+                                <div className="absolute left-0 top-full w-72 bg-white shadow-2xl border border-gray-100 rounded-b-lg z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                                    {categories.length > 0 ? (
+                                        categories.slice(0, 12).map((cat, idx) => {
+                                            const Icon = categoryIcons[cat.name] || Package;
+                                            return (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => router.push(`/shop?category=${cat.slug}`)}
+                                                    className="flex w-full items-center gap-3 px-5 py-3 text-left hover:bg-gray-50"
+                                                >
+                                                    <Icon size={18} className="text-[#0a6c3d]" />
+                                                    <span className="text-sm font-medium text-gray-800">{cat.name}</span>
+                                                </button>
+                                            );
+                                        })
+                                    ) : (
+                                        <button
+                                            onClick={() => router.push("/shop")}
+                                            className="flex w-full items-center gap-3 px-5 py-4 text-left hover:bg-gray-50"
+                                        >
+                                            <Package size={18} className="text-[#0a6c3d]" />
+                                            <span className="text-sm font-medium text-gray-800">Browse all products</span>
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
 
-      <div className="mt-1 h-[3px] w-8 rounded-full bg-[#2874f0]" />
-    </button>
-
-    {categories.slice(0, 10).map((cat, idx) => {
-      const Icon = categoryIcons[cat.name] || Package;
-
-      return (
-        <button
-          key={idx}
-          onClick={() => router.push(`/shop?category=${cat.slug}`)}
-          className="group flex min-w-[72px] flex-col items-center py-2"
-        >
-          <div className="flex h-9 w-9 items-center justify-center rounded-full transition group-hover:bg-blue-50">
-            <Icon
-              size={22}
-              className="text-gray-700 transition-all group-hover:scale-110 group-hover:text-[#2874f0]"
-            />
-          </div>
-
-          <span className="mt-1 whitespace-nowrap text-xs font-medium text-gray-800 transition-colors group-hover:text-[#2874f0]">
-            {cat.name}
-          </span>
-
-          <div className="mt-1 h-[3px] w-0 rounded-full bg-[#2874f0] transition-all duration-300 group-hover:w-8" />
-        </button>
-      );
-    })}
+                        <nav className="flex items-center gap-7">
+                            <NavLink href="/">Home</NavLink>
+                            <NavLink href="/#offers">Offers</NavLink>
+                            <NavLink href="/shop?category=fashion">Men</NavLink>
+                            <NavLink href="/shop?category=fashion">Women</NavLink>
+                            <NavLink href="/shop?category=toys">Kids</NavLink>
+                            <NavLink href="/shop?category=grocery">Grocery</NavLink>
+                            <NavLink href="/shop?category=household-essentials">Home & Kitchen</NavLink>
+                            <NavLink href="/shop?category=electronics">Electronics</NavLink>
+                            <NavLink href="/shop?category=personal-care">Personal Care</NavLink>
+                            <NavLink href="/shop">More</NavLink>
+                        </nav>
                     </div>
-                    
-                    
                 </div>
-
-                
-
-                
 
                 {/* Mobile Menu Dropdown */}
                 {mobileMenuOpen && (
-    <div className="sm:hidden bg-white border-t border-gray-200 shadow-lg animate-[fadeInUp_0.25s_ease-out]">
+                    <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg animate-[fadeInUp_0.25s_ease-out]">
 
-        <Link
-            href="/orders"
-            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-            onClick={() => setMobileMenuOpen(false)}
-        >
-            <div className="flex items-center gap-3">
-                <PackageIcon size={18} />
-                <span>My Orders</span>
-            </div>
-            <ChevronRight size={16} />
+                        <Link
+                            href="/orders"
+                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <div className="flex items-center gap-3">
+                                <PackageIcon size={18} className="text-[#0a6c3d]" />
+                                <span className="text-sm font-medium text-gray-800">My Orders</span>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-400" />
                         </Link>
-                        
-                        
 
-        <Link
-            href="/shop"
-            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-            onClick={() => setMobileMenuOpen(false)}
-        >
-            <div className="flex items-center gap-3">
-                <ShoppingBag size={18} />
-                <span>Shop</span>
-            </div>
-            <ChevronRight size={16} />
-        </Link>
-
-        <Link
-            href="/about"
-            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-            onClick={() => setMobileMenuOpen(false)}
-        >
-            <div className="flex items-center gap-3">
-                <Info size={18} />
-                <span>About Us</span>
-            </div>
-            <ChevronRight size={16} />
-        </Link>
-
-        <Link
-            href="/contact"
-            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-            onClick={() => setMobileMenuOpen(false)}
-        >
-            <div className="flex items-center gap-3">
-                <PhoneCallIcon size={18} />
-                <span>Contact Us</span>
-            </div>
-            <ChevronRight size={16} />
+                        <Link
+                            href="/shop"
+                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <div className="flex items-center gap-3">
+                                <ShoppingBag size={18} className="text-[#0a6c3d]" />
+                                <span className="text-sm font-medium text-gray-800">Shop</span>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-400" />
                         </Link>
-                        
-                        
 
-        {isSeller && (
-            <Link
-                href="/admin-verify-svc?redirect=/store"
-                className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-                onClick={() => setMobileMenuOpen(false)}
-            >
-                <div className="flex items-center gap-3">
-                    <Store size={18} />
-                    <span>Store Dashboard</span>
-                </div>
-                <ChevronRight size={16} />
-            </Link>
-        )}
+                        <Link
+                            href="/terms"
+                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <div className="flex items-center gap-3">
+                                <Gift size={18} className="text-[#0a6c3d]" />
+                                <span className="text-sm font-medium text-gray-800">Terms & Conditions</span>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-400" />
+                        </Link>
 
-        {isAdmin && (
-            <Link
-                href="/admin-verify-svc?redirect=/admin"
-                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
-                onClick={() => setMobileMenuOpen(false)}
-            >
-                <div className="flex items-center gap-3">
-                    <PackageIcon size={18} />
-                    <span>Admin Panel</span>
-                </div>
-                <ChevronRight size={16} />
-            </Link>
-        )}
+                        <Link
+                            href="/about"
+                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <div className="flex items-center gap-3">
+                                <Info size={18} className="text-[#0a6c3d]" />
+                                <span className="text-sm font-medium text-gray-800">About Us</span>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-400" />
+                        </Link>
 
-    </div>
-)}
-        </nav>
-        
+                        <Link
+                            href="/contact"
+                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <div className="flex items-center gap-3">
+                                <PhoneCallIcon size={18} className="text-[#0a6c3d]" />
+                                <span className="text-sm font-medium text-gray-800">Contact Us</span>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-400" />
+                        </Link>
 
+                        {isSeller && (
+                            <Link
+                                href="/admin-verify-svc?redirect=/store"
+                                className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <Store size={18} className="text-[#0a6c3d]" />
+                                    <span className="text-sm font-medium text-gray-800">Store Dashboard</span>
+                                </div>
+                                <ChevronRight size={16} className="text-gray-400" />
+                            </Link>
+                        )}
 
-        <div
-  className="
-    h-[125px]
-    sm:h-[85px]
-    lg:h-[78px]
-  "
-/>
+                        {isAdmin && (
+                            <Link
+                                href="/admin-verify-svc?redirect=/admin"
+                                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <PackageIcon size={18} className="text-[#0a6c3d]" />
+                                    <span className="text-sm font-medium text-gray-800">Admin Panel</span>
+                                </div>
+                                <ChevronRight size={16} className="text-gray-400" />
+                            </Link>
+                        )}
+                    </div>
+                )}
+            </nav>
+
+            <div
+                className="
+                    h-[132px]
+                    sm:h-[158px]
+                    lg:h-[168px]
+                "
+            />
+
             <LocationModal
-  isOpen={showLocationModal}
-  onClose={() => setShowLocationModal(false)}
-  onDetectLocation={() => {
-    console.log("Detect location...");
-  }}
-/>
+                isOpen={showLocationModal}
+                onClose={() => setShowLocationModal(false)}
+                onDetectLocation={() => {
+                    console.log("Detect location...");
+                }}
+            />
         </>
     )
 }

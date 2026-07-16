@@ -37,7 +37,7 @@ export default function CouponBanner() {
   if (!showOffer) return null;
 
   return (
-  <div className="relative overflow-hidden bg-gradient-to-r from-[#0057d9] via-[#2874f0] to-[#4a90ff] text-white shadow-md">
+  <div id="offers" className="relative overflow-hidden bg-gradient-to-r from-[#0057d9] via-[#2874f0] to-[#4a90ff] text-white shadow-md">
 
     {/* Background */}
     <div className="absolute -left-12 -top-12 h-40 w-40 rounded-full bg-white/10 blur-3xl" />

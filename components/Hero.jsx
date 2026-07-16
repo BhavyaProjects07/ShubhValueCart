@@ -308,7 +308,7 @@ export default function Hero2() {
     >
       
       <CustomNavbar categories={categories}/>
-      <div className="pt-[120px] md:pt-[150px]">
+      <div className="">
         <HeroSlider />
         <CouponBanner />
         
