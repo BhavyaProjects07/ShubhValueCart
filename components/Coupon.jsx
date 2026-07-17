@@ -37,11 +37,11 @@ export default function CouponBanner() {
   if (!showOffer) return null;
 
   return (
-  <div id="offers" className="relative overflow-hidden bg-gradient-to-r from-[#0057d9] via-[#2874f0] to-[#4a90ff] text-white shadow-md">
+  <div id="offers" className="relative overflow-hidden bg-gradient-to-r from-[#053a22] via-[#0a6c3d] to-[#1a8f52] text-white shadow-md">
 
     {/* Background */}
     <div className="absolute -left-12 -top-12 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
-    <div className="absolute right-0 bottom-0 h-44 w-44 rounded-full bg-cyan-300/10 blur-3xl" />
+    <div className="absolute right-0 bottom-0 h-44 w-44 rounded-full bg-yellow-300/10 blur-3xl" />
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.15),transparent_45%)]" />
 
     <div className="relative mx-auto max-w-6xl px-4 py-3 sm:py-4 md:px-6 md:py-6">
@@ -73,7 +73,7 @@ export default function CouponBanner() {
 
             </h2>
 
-            <p className="mt-1 max-w-xl text-xs text-blue-100 sm:text-sm">
+            <p className="mt-1 max-w-xl text-xs text-green-100 sm:text-sm">
 
               {coupon
                 ? coupon.description
@@ -96,7 +96,7 @@ export default function CouponBanner() {
 
                     </div>
 
-                    <div className="text-sm font-black tracking-[0.18em] text-[#2874f0] sm:text-base">
+                    <div className="text-sm font-black tracking-[0.18em] text-[#0a6c3d] sm:text-base">
 
                       {coupon.code}
 
@@ -114,7 +114,7 @@ export default function CouponBanner() {
                 </div>
 
                 {/* Compact mobile-only note, replaces the separate SALE card below lg */}
-                <p className="mt-1.5 text-[11px] text-blue-100/90 lg:hidden">
+                <p className="mt-1.5 text-[11px] text-green-100/90 lg:hidden">
                   Apply at checkout for extra savings
                 </p>
 
@@ -138,7 +138,7 @@ export default function CouponBanner() {
 
               </p>
 
-              <h2 className="mt-1 text-3xl font-black text-[#2874f0]">
+              <h2 className="mt-1 text-3xl font-black text-[#0a6c3d]">
 
                 SALE
 
@@ -152,7 +152,7 @@ export default function CouponBanner() {
 
               <button
                 onClick={copyCoupon}
-                className="mt-3 w-full rounded-xl bg-[#2874f0] py-2 text-sm font-bold text-white transition hover:bg-[#1458c4]"
+                className="mt-3 w-full rounded-xl bg-[#0a6c3d] py-2 text-sm font-bold text-white transition hover:bg-[#085531]"
               >
                 Apply Now
               </button>

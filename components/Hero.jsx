@@ -90,19 +90,19 @@ const bestSellers = [
 ];
 
 const midBanners = [
-  { id: 1, title: 'Grocery Sale', subtitle: 'Stock up and save big on daily essentials', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200', color: 'from-green-900/90' , cat:"food-grocery" },
-  { id: 2, title: 'Enhance your skin', subtitle: 'Latest skin care products at unbeatable prices', image: 'https://thephrase.in/cdn/shop/articles/Skin_Care_Banner_1.jpg?v=1697455809&width=1100?w=1200', color: 'from-pink-900/90' , cat:"personal-care"}
+  { id: 1, title: 'Grocery Sale', subtitle: 'Stock up and save big on daily essentials', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200', color: 'from-[#0a4d2e]/90' , cat:"food-grocery" },
+  { id: 2, title: 'Enhance your skin', subtitle: 'Latest skin care products at unbeatable prices', image: 'https://thephrase.in/cdn/shop/articles/Skin_Care_Banner_1.jpg?v=1697455809&width=1100?w=1200', color: 'from-orange-900/90' , cat:"personal-care"}
 ];
 
 const splitBanners = [
-  { id: 1, title: 'Staples & Cooking', subtitle: 'Starting at ₹1,999', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC4CAlq-V7qlxvzyWFr3D6SIRkT9lwJiS5-Q&s', color: 'from-purple-900/90' ,cat : "staples-cooking"},
-  { id: 2, title: 'Your Stationary Collection', subtitle: 'Up to 60% OFF', image: 'https://static.vecteezy.com/system/resources/thumbnails/071/157/463/small/back-to-school-supplies-background-colorful-stationery-calculator-and-blank-workspace-for-educational-and-creative-projects-photo.jpg?w=800', color: 'from-red-900/90' , cat : "stationery"}
+  { id: 1, title: 'Staples & Cooking', subtitle: 'Starting at ₹1,999', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC4CAlq-V7qlxvzyWFr3D6SIRkT9lwJiS5-Q&s', color: 'from-[#0a6c3d]/90' ,cat : "staples-cooking"},
+  { id: 2, title: 'Your Stationary Collection', subtitle: 'Up to 60% OFF', image: 'https://static.vecteezy.com/system/resources/thumbnails/071/157/463/small/back-to-school-supplies-background-colorful-stationery-calculator-and-blank-workspace-for-educational-and-creative-projects-photo.jpg?w=800', color: 'from-orange-800/90' , cat : "stationery"}
 ];
 
 const gridBanners = [
-  { id: 1, title: 'Under ₹499', subtitle: 'Daily Essentials', image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400', color: 'bg-pink-50' },
-  { id: 2, title: 'Up to 10% off', subtitle: 'HouseHold Essentials', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400', color: 'bg-blue-50' },
-  { id: 3, title: 'New Toys', subtitle: 'Toys for kids', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400', color: 'bg-purple-50' },
+  { id: 1, title: 'Under ₹499', subtitle: 'Daily Essentials', image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400', color: 'bg-green-50' },
+  { id: 2, title: 'Up to 10% off', subtitle: 'HouseHold Essentials', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400', color: 'bg-amber-50' },
+  { id: 3, title: 'New Toys', subtitle: 'Toys for kids', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400', color: 'bg-lime-50' },
   { id: 4, title: 'Clearance', subtitle: 'Home Decor', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400', color: 'bg-orange-50' }
 ];
 
@@ -151,7 +151,7 @@ const CategoryGrid = React.memo(({ categories = [] }) => {
                 {/* Image Box */}
                 <div
                   className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl ${
-                    cat.color || "bg-gray-100"
+                    cat.color || "bg-[#eef5ee]"
                   } overflow-hidden relative shadow-sm border border-gray-100 `}
                 >
                   <Image
@@ -171,7 +171,7 @@ const CategoryGrid = React.memo(({ categories = [] }) => {
                 </div>
 
                 {/* Name */}
-                <span className="text-xs sm:text-sm font-bold text-gray-800 text-center group-hover:text-[#2874f0] transition-colors leading-tight">
+                <span className="text-xs sm:text-sm font-bold text-gray-800 text-center group-hover:text-[#0a6c3d] transition-colors leading-tight">
                   {cat.name}
                 </span>
               </div>
@@ -225,7 +225,7 @@ const MidBanner = ({ banner }) => {
                     if (banner.cat) {
                         router.push(`/shop?page=1&category=${banner.cat}`)
                     }
-                    }} className="bg-white text-gray-900 px-6 py-2.5 sm:px-8 sm:py-3.5 rounded-lg font-bold hover:bg-[#ff9900] hover:text-white transition-colors shadow-lg text-sm sm:text-base flex items-center gap-2">
+                    }} className="bg-white text-gray-900 px-6 py-2.5 sm:px-8 sm:py-3.5 rounded-lg font-bold hover:bg-[#0a6c3d] hover:text-white transition-colors shadow-lg text-sm sm:text-base flex items-center gap-2">
               Explore Now <ChevronRight className="w-4 h-4" />
             </button>
 
@@ -265,7 +265,7 @@ const SplitBanners = () => {
               <div className="px-6 sm:px-10 text-white max-w-md">
                 <h3 className="text-2xl sm:text-3xl font-black mb-2 drop-shadow-md">{banner.title}</h3>
                 <p className="text-sm sm:text-base font-medium mb-4 text-white/90 drop-shadow">{banner.subtitle}</p>
-                <button className="bg-white/20 hover:bg-white backdrop-blur-sm text-white hover:text-gray-900 border border-white/50 px-5 py-2 rounded-lg font-bold transition-all text-sm">
+                <button className="bg-white/20 hover:bg-white backdrop-blur-sm text-white hover:text-[#0a6c3d] border border-white/50 px-5 py-2 rounded-lg font-bold transition-all text-sm">
                   Shop Now
                 </button>
               </div>
@@ -304,7 +304,7 @@ export default function Hero2() {
   return (
     <div 
       
-      className="min-h-screen bg-[#f1f3f6] font-sans overflow-x-hidden"
+      className="min-h-screen bg-[#f5f7f4] font-sans overflow-x-hidden"
     >
       
       <CustomNavbar categories={categories}/>
