@@ -74,11 +74,9 @@ export default function HeroSlider() {
       try {
         const { data } = await axios.get("/api/store/banners");
 
-        const active = (data.banners || [])
-          .filter((b) => b.isActive)
-          .sort((a, b) => a.order - b.order);
+        const active = (data.banners || []).filter((b) => b.isActive);
 
-        setBanners(active);
+setBanners(active);
 
         if (current >= active.length) {
           setCurrent(0);
@@ -190,100 +188,116 @@ export default function HeroSlider() {
         {/* promoPrepaidOffer / promoQualityAssured to replace the icon       */}
         {/* watermark shown below with real product photography.             */}
         {/* ---------------------------------------------------------------- */}
-        <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-5">
-
-          {/* Card 1 — Weekend Super Saver Sale */}
-          <div className="relative overflow-hidden rounded-2xl bg-[#e7efe1] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between">
-            <div className="relative z-10 max-w-[72%]">
-              <div className="text-xs font-bold uppercase tracking-widest text-[#0a6c3d] mb-1.5">
-                Weekend
-              </div>
-              <h3 className="text-xl sm:text-[22px] font-extrabold text-gray-900 leading-snug mb-3">
-                Super Saver Sale
-              </h3>
-              <div className="text-xs text-gray-500 mb-0.5">Up to</div>
-              <div className="text-3xl sm:text-4xl font-extrabold mb-1">
-                <span className="text-orange-500">50%</span>{" "}
-                <span className="text-gray-900">OFF</span>
-              </div>
-              <div className="text-sm text-gray-600 mb-4">On Selected Products</div>
-              <Link
-                href="/shop?sale=weekend"
-                className="inline-block bg-[#0a6c3d] hover:bg-[#085531] text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-colors"
-              >
-                Shop Now
-              </Link>
-            </div>
-            <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32">
-              {assets?.promoWeekendSale ? (
-                <Image src={assets.promoWeekendSale} alt="Weekend super saver sale" fill className="object-contain" />
-              ) : (
-                <ShoppingBasket className="w-full h-full text-[#0a6c3d]/15" strokeWidth={1} />
-              )}
-            </div>
-          </div>
-
-          {/* Card 2 — Smart Shoppers Save More */}
-          <div className="relative overflow-hidden rounded-2xl bg-[#fbe9d4] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between">
-            <div className="relative z-10 max-w-[72%]">
-              <h3 className="text-xl sm:text-[22px] font-extrabold text-gray-900 leading-snug mb-3">
-                Smart Shoppers
-                <br />
-                Save More!
-              </h3>
-              <div className="text-xs font-semibold text-orange-600 mb-0.5">Get Extra</div>
-              <div className="text-3xl sm:text-4xl font-extrabold mb-1">
-                <span className="text-orange-500">5%</span>{" "}
-                <span className="text-gray-900">OFF</span>
-              </div>
-              <div className="text-sm text-gray-600 mb-4">On Prepaid Orders</div>
-              <Link
-                href="/shop"
-                className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-colors"
-              >
-                Order Now
-              </Link>
-            </div>
-            <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32">
-              {assets?.promoPrepaidOffer ? (
-                <Image src={assets.promoPrepaidOffer} alt="Prepaid order offer" fill className="object-contain" />
-              ) : (
-                <ShoppingBag className="w-full h-full text-orange-500/20" strokeWidth={1} />
-              )}
-            </div>
-          </div>
-
-          {/* Card 3 — 100% Quality Assured */}
-          <div className="relative overflow-hidden rounded-2xl bg-[#e7efe1] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between">
-            <div className="relative z-10 max-w-[72%]">
-              <h3 className="text-2xl sm:text-[26px] font-extrabold text-[#0a6c3d] leading-[1.15] mb-3">
-                100%
-                <br />
-                Quality
-                <br />
-                Assured
-              </h3>
-              <div className="text-sm text-gray-600 mb-4">
-                Branded Products
-                <br />
-                You Can Trust
-              </div>
-              <Link
-                href="/shop"
-                className="inline-block bg-[#0a6c3d] hover:bg-[#085531] text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-colors"
-              >
-                Explore Now
-              </Link>
-            </div>
-            <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32">
-              {assets?.promoQualityAssured ? (
-                <Image src={assets.promoQualityAssured} alt="Quality assured products" fill className="object-contain" />
-              ) : (
-                <ShieldCheck className="w-full h-full text-[#0a6c3d]/15" strokeWidth={1} />
-              )}
-            </div>
-          </div>
+        {/* Promo cards — swipeable slider on mobile, grid on desktop */}
+<div className="mt-5">
+  <div
+    className="
+      flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2
+      [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+      md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:snap-none md:pb-0
+    "
+  >
+    {/* Card 1 — Weekend Super Saver Sale */}
+    <div className="group relative overflow-hidden rounded-2xl bg-[#e7efe1] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between shrink-0 w-[80%] sm:w-[55%] md:w-auto snap-center snap-always transition-all duration-300 motion-reduce:transition-none hover:shadow-xl hover:shadow-[#0a6c3d]/15 md:hover:-translate-y-1">
+      <div className="pointer-events-none absolute -right-8 -top-8 w-36 h-36 rounded-full bg-[#0a6c3d]/10 blur-2xl" aria-hidden="true" />
+      <div className="relative z-10 max-w-[72%]">
+        <div className="text-xs font-bold uppercase tracking-widest text-[#0a6c3d] mb-1.5">
+          Weekend
         </div>
+        <h3 className="text-xl sm:text-[22px] font-extrabold text-gray-900 leading-snug mb-3">
+          Super Saver Sale
+        </h3>
+        <div className="text-xs text-gray-500 mb-0.5">Up to</div>
+        <div className="text-3xl sm:text-4xl font-extrabold mb-1">
+          <span className="text-orange-500">50%</span>{" "}
+          <span className="text-gray-900">OFF</span>
+        </div>
+        <div className="text-sm text-gray-600 mb-4">On Selected Products</div>
+        <Link
+          href="/shop?sale=weekend"
+          className="inline-block bg-[#0a6c3d] hover:bg-[#085531] active:scale-95 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0a6c3d]"
+        >
+          Shop Now
+        </Link>
+      </div>
+      <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32 transition-transform duration-300 md:group-hover:scale-105">
+        {assets?.promoWeekendSale ? (
+          <Image src={assets.promoWeekendSale} alt="Weekend super saver sale" fill className="object-contain" />
+        ) : (
+          <ShoppingBasket className="w-full h-full text-[#0a6c3d]/15" strokeWidth={1} />
+        )}
+      </div>
+    </div>
+
+    {/* Card 2 — Smart Shoppers Save More */}
+    <div className="group relative overflow-hidden rounded-2xl bg-[#fbe9d4] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between shrink-0 w-[80%] sm:w-[55%] md:w-auto snap-center snap-always transition-all duration-300 motion-reduce:transition-none hover:shadow-xl hover:shadow-orange-500/15 md:hover:-translate-y-1">
+      <div className="pointer-events-none absolute -right-8 -top-8 w-36 h-36 rounded-full bg-orange-400/15 blur-2xl" aria-hidden="true" />
+      <div className="relative z-10 max-w-[72%]">
+        <h3 className="text-xl sm:text-[22px] font-extrabold text-gray-900 leading-snug mb-3">
+          Smart Shoppers
+          <br />
+          Save More!
+        </h3>
+        <div className="text-xs font-semibold text-orange-600 mb-0.5">Get Extra</div>
+        <div className="text-3xl sm:text-4xl font-extrabold mb-1">
+          <span className="text-orange-500">5%</span>{" "}
+          <span className="text-gray-900">OFF</span>
+        </div>
+        <div className="text-sm text-gray-600 mb-4">On Prepaid Orders</div>
+        <Link
+          href="/shop"
+          className="inline-block bg-orange-500 hover:bg-orange-600 active:scale-95 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+        >
+          Order Now
+        </Link>
+      </div>
+      <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32 transition-transform duration-300 md:group-hover:scale-105">
+        {assets?.promoPrepaidOffer ? (
+          <Image src={assets.promoPrepaidOffer} alt="Prepaid order offer" fill className="object-contain" />
+        ) : (
+          <ShoppingBag className="w-full h-full text-orange-500/20" strokeWidth={1} />
+        )}
+      </div>
+    </div>
+
+    {/* Card 3 — 100% Quality Assured */}
+    <div className="group relative overflow-hidden rounded-2xl bg-[#e7efe1] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between shrink-0 w-[80%] sm:w-[55%] md:w-auto snap-center snap-always transition-all duration-300 motion-reduce:transition-none hover:shadow-xl hover:shadow-[#0a6c3d]/15 md:hover:-translate-y-1">
+      <div className="pointer-events-none absolute -right-8 -top-8 w-36 h-36 rounded-full bg-[#0a6c3d]/10 blur-2xl" aria-hidden="true" />
+      <div className="relative z-10 max-w-[72%]">
+        <h3 className="text-2xl sm:text-[26px] font-extrabold text-[#0a6c3d] leading-[1.15] mb-3">
+          100%
+          <br />
+          Quality
+          <br />
+          Assured
+        </h3>
+        <div className="text-sm text-gray-600 mb-4">
+          Branded Products
+          <br />
+          You Can Trust
+        </div>
+        <Link
+          href="/shop"
+          className="inline-block bg-[#0a6c3d] hover:bg-[#085531] active:scale-95 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0a6c3d]"
+        >
+          Explore Now
+        </Link>
+      </div>
+      <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32 transition-transform duration-300 md:group-hover:scale-105">
+        {assets?.promoQualityAssured ? (
+          <Image src={assets.promoQualityAssured} alt="Quality assured products" fill className="object-contain" />
+        ) : (
+          <ShieldCheck className="w-full h-full text-[#0a6c3d]/15" strokeWidth={1} />
+        )}
+      </div>
+    </div>
+  </div>
+
+  {/* Swipe hint — mobile only */}
+  <p className="mt-2 text-center text-[11px] tracking-wide text-gray-400 md:hidden">
+    Swipe to see more offers →
+  </p>
+</div>
       </div>
     </section>
   );

@@ -303,7 +303,7 @@ useEffect(() => {
                     <span className="truncate">Welcome to Shubh Value Cart – Shop More, Save More!</span>
                     <span className="flex items-center gap-1.5 whitespace-nowrap">
                         <Truck size={14} />
-                        Free Delivery on Orders Above ₹999
+                        Free Delivery on Orders Above ₹500
                     </span>
                     <span className="flex items-center gap-2 whitespace-nowrap">
                         Download Our App

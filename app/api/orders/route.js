@@ -113,7 +113,7 @@ if (subtotal >= 399) {
   shippingFee = 0;
 
 } else {
-  shippingFee = 150;
+  shippingFee = 50;
 }
 
     const total = subtotal + shippingFee;

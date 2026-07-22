@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { fetchProducts } from "@/lib/features/product/productSlice"
-
+import ShubhamGoyal from "@/components/ShubhamGoyal"
 
 import Hero from "@/components/Hero"
 
@@ -26,7 +26,7 @@ export default function Home() {
       
       <LatestProducts />
       
-      
+      <ShubhamGoyal />
       <WhatsAppButton />
     </div>
   )

@@ -250,7 +250,7 @@ await axios.post(
   totalPrice >= 399
     ? 0
     
-    : 150;
+    : 50;
 
 const discount = coupon
   ? (coupon.discount / 100) * totalPrice
@@ -267,7 +267,7 @@ const finalTotal = totalPrice - discount + shippingFee;
           🚚 Get FREE Delivery on orders above ₹399
         </p>
         <p className="text-red-700 text-sm font-medium">
-          🚚 ₹150 delivery charge below ₹399 subtotal
+          🚚 ₹50 delivery charge below ₹399 subtotal
         </p>
       </div>
       {/* PAYMENT METHOD */}
