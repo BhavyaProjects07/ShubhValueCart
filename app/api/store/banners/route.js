@@ -8,7 +8,7 @@ export async function GET() {
   try {
     const banners = await prisma.banner.findMany({
       orderBy: {
-        order: "asc",
+        order: "desc",
       },
     });
 
@@ -51,10 +51,10 @@ export async function POST(req) {
     // ----------------------------
     const total = await prisma.banner.count();
 
-    if (total >= 5) {
+    if (total >= 10) {
       return NextResponse.json(
         {
-          error: "Maximum 5 banners allowed.",
+          error: "Maximum 10 banners allowed.",
         },
         {
           status: 400,

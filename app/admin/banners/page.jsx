@@ -213,7 +213,7 @@ const [deleting, setDeleting] = useState(false);
 
         <div className="bg-green-100 text-green-700 px-4 py-2 rounded-xl font-semibold">
 
-          {banners.length}/5 Banners
+          {banners.length}/10 Banners
 
         </div>
 
@@ -221,7 +221,7 @@ const [deleting, setDeleting] = useState(false);
 
       {/* Upload */}
 
-      {banners.length < 5 && (
+      {banners.length < 10 && (
 
         <form
           onSubmit={uploadBanner}
