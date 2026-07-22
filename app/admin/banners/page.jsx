@@ -1,4 +1,68 @@
-const uploadBanner = async (e) => {
+"use client";
+
+import { useState, useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Image from "next/image";
+import {
+  Upload,
+  ImagePlus,
+  ExternalLink,
+  Loader2,
+  Plus,
+} from "lucide-react";
+
+export default function AdminBanners() {
+  const { getToken } = useAuth();
+
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+
+    const [banners, setBanners] = useState([]);
+    const [editBanner, setEditBanner] = useState(null);
+
+const [saving, setSaving] = useState(false);
+
+const [deleting, setDeleting] = useState(false);
+
+  const [form, setForm] = useState({
+    title: "",
+    link: "",
+    image: null,
+  });
+
+  const [preview, setPreview] = useState(null);
+
+  const fetchBanners = async () => {
+    try {
+      const { data } = await axios.get("/api/store/banners");
+      setBanners(data.banners || []);
+    } catch (err) {
+      toast.error("Failed to fetch banners.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBanners();
+  }, []);
+
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    setForm((prev) => ({
+      ...prev,
+      image: file,
+    }));
+
+    setPreview(URL.createObjectURL(file));
+  };
+
+  const uploadBanner = async (e) => {
   e.preventDefault();
 
   if (!form.image) {
@@ -131,7 +195,86 @@ const uploadBanner = async (e) => {
     setUploading(false);
 
   }
+};
 
+
+    const updateBanner = async () => {
+  try {
+    setSaving(true);
+
+    const token = await getToken();
+
+    const fd = new FormData();
+
+    fd.append("title", editBanner.title || "");
+    fd.append("link", editBanner.link || "");
+    fd.append("order", editBanner.order);
+    fd.append("isActive", editBanner.isActive);
+
+    if (editBanner.newImage) {
+      fd.append("image", editBanner.newImage);
+    }
+
+    await axios.put(
+      `/api/store/banners/${editBanner.id}`,
+      fd,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success("Banner updated.");
+
+    setEditBanner(null);
+
+    fetchBanners();
+
+  } catch (err) {
+    toast.error(
+      err?.response?.data?.error || "Update failed."
+    );
+  } finally {
+    setSaving(false);
+  }
+    };
+    
+
+    const deleteBanner = async (id) => {
+  if (!confirm("Delete this banner?")) return;
+
+  try {
+
+    setDeleting(true);
+
+    const token = await getToken();
+
+    await axios.delete(
+      `/api/store/banners/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success("Banner deleted.");
+
+    fetchBanners();
+
+  } catch (err) {
+
+    toast.error(
+      err?.response?.data?.error || "Delete failed."
+    );
+
+  } finally {
+
+    setDeleting(false);
+
+  }
+    };
     
 
 
