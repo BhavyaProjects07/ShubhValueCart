@@ -51,10 +51,10 @@ export async function POST(req) {
     // ----------------------------
     const total = await prisma.banner.count();
 
-    if (total >= 10) {
+    if (total >= 5) {
       return NextResponse.json(
         {
-          error: "Maximum 10 banners allowed.",
+          error: "Maximum 5 banners allowed.",
         },
         {
           status: 400,
@@ -67,62 +67,26 @@ export async function POST(req) {
     // ----------------------------
     const formData = await req.formData();
 
+    const image = formData.get("image");
     const title = formData.get("title") || "";
     const link = formData.get("link") || "";
-    
-    const image = formData.get("image");
 
-console.log("========== IMAGE DEBUG ==========");
-console.log("Name:", image?.name);
-console.log("Type:", image?.type);
-console.log("Size (Bytes):", image?.size);
-console.log("Size (KB):", (image?.size / 1024).toFixed(2));
-console.log("Size (MB):", (image?.size / 1024 / 1024).toFixed(2));
-console.log("================================");
-
-if (!image || image.size === 0) {
-  return NextResponse.json(
-    {
-      error: "Banner image is required.",
-    },
-    {
-      status: 400,
+    if (!image || image.size === 0) {
+      return NextResponse.json(
+        {
+          error: "Banner image is required.",
+        },
+        {
+          status: 400,
+        }
+      );
     }
-  );
-}
-
-// Optional size limit (10 MB example)
-const MAX_SIZE = 10 * 1024 * 1024;
-
-if (image.size > MAX_SIZE) {
-  console.error("Image exceeds allowed size.");
-  console.error(`Uploaded: ${(image.size / 1024 / 1024).toFixed(2)} MB`);
-  console.error(`Allowed : ${(MAX_SIZE / 1024 / 1024).toFixed(2)} MB`);
-
-  return NextResponse.json(
-    {
-      error: `Image too large (${(
-        image.size /
-        1024 /
-        1024
-      ).toFixed(2)} MB). Maximum allowed is 10 MB.`,
-    },
-    {
-      status: 413,
-    }
-  );
-}
 
     // ----------------------------
     // Upload ImageKit
     // ----------------------------
     const buffer = Buffer.from(await image.arrayBuffer());
 
-    console.log("Buffer Size:", buffer.length);
-console.log(
-  "Buffer MB:",
-  (buffer.length / 1024 / 1024).toFixed(2)
-);
     const upload = await imagekit.upload({
       file: buffer,
       fileName: `${Date.now()}-${image.name}`,

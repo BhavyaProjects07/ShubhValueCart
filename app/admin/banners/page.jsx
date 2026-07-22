@@ -63,141 +63,48 @@ const [deleting, setDeleting] = useState(false);
   };
 
   const uploadBanner = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!form.image) {
-    toast.error("Please choose a banner.");
-    return;
-  }
+    if (!form.image)
+      return toast.error("Please choose a banner.");
 
-  try {
-    setUploading(true);
+    try {
+      setUploading(true);
 
-    // ==============================
-    // IMAGE DEBUG
-    // ==============================
-    console.group("🖼️ Banner Upload Debug");
+      const token = await getToken();
 
-    console.log("Selected File:", form.image);
-    console.log("Name:", form.image.name);
-    console.log("Type:", form.image.type);
-    console.log("Bytes:", form.image.size);
-    console.log(
-      "KB:",
-      (form.image.size / 1024).toFixed(2)
-    );
-    console.log(
-      "MB:",
-      (form.image.size / 1024 / 1024).toFixed(2)
-    );
+      const fd = new FormData();
 
-    const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+      fd.append("image", form.image);
+      fd.append("title", form.title);
+      fd.append("link", form.link);
 
-    if (form.image.size > MAX_SIZE) {
-      console.error("❌ IMAGE TOO LARGE");
-      console.error(
-        `Selected: ${(form.image.size / 1024 / 1024).toFixed(2)} MB`
-      );
-      console.error("Allowed : 10 MB");
-
-      toast.error(
-        `Image is ${(form.image.size / 1024 / 1024).toFixed(
-          2
-        )} MB.\nMaximum allowed is 10 MB.`
-      );
-
-      console.groupEnd();
-      return;
-    }
-
-    const token = await getToken();
-
-    console.log("Clerk Token:", token ? "✅ Received" : "❌ Missing");
-
-    const fd = new FormData();
-
-    fd.append("image", form.image);
-    fd.append("title", form.title);
-    fd.append("link", form.link);
-
-    console.log("----------- FormData -----------");
-
-    for (const [key, value] of fd.entries()) {
-      if (value instanceof File) {
-        console.log(`${key}:`);
-        console.log("  Name :", value.name);
-        console.log("  Type :", value.type);
-        console.log("  Size :", value.size);
-        console.log(
-          "  MB   :",
-          (value.size / 1024 / 1024).toFixed(2)
-        );
-      } else {
-        console.log(`${key}:`, value);
-      }
-    }
-
-    console.log("-------------------------------");
-    console.log("🚀 Uploading banner...");
-
-    const response = await axios.post(
-      "/api/store/banners",
-      fd,
-      {
+      await axios.post("/api/store/banners", fd, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
+      });
 
-    console.log("✅ Upload Success");
-    console.log("Status:", response.status);
-    console.log("Response:", response.data);
+      toast.success("Banner uploaded.");
 
-    console.groupEnd();
+      setForm({
+        title: "",
+        link: "",
+        image: null,
+      });
 
-    toast.success("Banner uploaded.");
+      setPreview(null);
 
-    setForm({
-      title: "",
-      link: "",
-      image: null,
-    });
-
-    setPreview(null);
-
-    fetchBanners();
-
-  } catch (err) {
-
-    console.group("❌ Banner Upload Failed");
-
-    console.error("Message:", err.message);
-
-    if (err.response) {
-      console.error("Status:", err.response.status);
-      console.error("Headers:", err.response.headers);
-      console.error("Data:", err.response.data);
-    } else {
-      console.error("No response received.");
+      fetchBanners();
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.error || "Upload failed."
+      );
+    } finally {
+      setUploading(false);
     }
-
-    console.error("Full Error:", err);
-
-    console.groupEnd();
-
-    toast.error(
-      err?.response?.data?.error || "Upload failed."
-    );
-
-  } finally {
-
-    setUploading(false);
-
-  }
-};
-
-
+    };
+    
     const updateBanner = async () => {
   try {
     setSaving(true);
@@ -306,7 +213,7 @@ const [deleting, setDeleting] = useState(false);
 
         <div className="bg-green-100 text-green-700 px-4 py-2 rounded-xl font-semibold">
 
-          {banners.length}/10 Banners
+          {banners.length}/5 Banners
 
         </div>
 
@@ -314,7 +221,7 @@ const [deleting, setDeleting] = useState(false);
 
       {/* Upload */}
 
-      {banners.length < 10 && (
+      {banners.length < 5 && (
 
         <form
           onSubmit={uploadBanner}
