@@ -7,9 +7,9 @@ import ShubhamGoyal from "@/components/ShubhamGoyal"
 
 import Hero from "@/components/Hero"
 
-import OurSpecs from "@/components/OurSpec"
+
 import LatestProducts from "@/components/LatestProducts"
-import Lookbook from "@/components/ExtraUI"
+
 import WhatsAppButton from "@/components/Whatsapp"
 export default function Home() {
   const dispatch = useDispatch()
@@ -27,7 +27,9 @@ export default function Home() {
       <LatestProducts />
       
       <ShubhamGoyal />
-      <WhatsAppButton />
+      <div className="hide-on-mobile">
+        <WhatsAppButton />
+      </div>
     </div>
   )
 }

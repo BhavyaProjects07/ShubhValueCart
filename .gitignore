@@ -44,3 +44,39 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+
+
+@"
+
+# =========================
+# Android / Capacitor
+# =========================
+
+# Android Studio
+.idea/
+android/.idea/
+
+# Local SDK path
+android/local.properties
+
+# Gradle cache
+.gradle/
+android/.gradle/
+
+# Build outputs
+android/build/
+android/app/build/
+
+# Android Studio caches
+android/captures/
+android/.cxx/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+"@ | Add-Content .gitignore

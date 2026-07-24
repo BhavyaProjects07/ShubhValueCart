@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Shubh Value Cart</string>
+    <string name="title_activity_main">Shubh Value Cart</string>
+    <string name="package_name">com.shubhavaluecart.in</string>
+    <string name="custom_url_scheme">com.shubhavaluecart.in</string>
+</resources>
