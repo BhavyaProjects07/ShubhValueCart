@@ -26,10 +26,8 @@ export default function Home() {
       
       <LatestProducts />
       
-      <ShubhamGoyal />
-      <div className="hide-on-mobile">
-        <WhatsAppButton />
-      </div>
+      
+      
     </div>
   )
 }

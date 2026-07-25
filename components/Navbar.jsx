@@ -300,23 +300,38 @@ useEffect(() => {
 
                 {/* Top strip: announcement / delivery / app download (desktop) */}
                 <div className="hidden lg:flex items-center justify-between bg-[#0a6c3d] text-white text-xs px-6 py-1.5">
-                    <span className="truncate">Welcome to Shubh Value Cart – Shop More, Save More!</span>
+  {/* WhatsApp Contact Link */}
+                    <span className="flex items-center gap-1.5 whitespace-nowrap">
+                        <a 
+                        href="https://wa.me/919509086545" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center gap-1.5 text-white hover:text-green-300"
+                        >
+                        <img 
+                            src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+                            alt="WhatsApp" 
+                            className="w-4 h-4"
+                        />
+                        Contact us on WhatsApp
+                        </a>
+                    </span>
+
                     <span className="flex items-center gap-1.5 whitespace-nowrap">
                         <Truck size={14} />
                         Free Delivery on Orders Above ₹500
                     </span>
+
                     <span className="flex items-center gap-2 whitespace-nowrap">
                         Download Our App
                         <PlayCircle size={16} />
                         <Apple size={16} />
                     </span>
-                </div>
+                    </div>
+
 
                 {/* Top strip: compact single-line version (mobile / tablet) */}
-                <div className="lg:hidden flex items-center justify-center gap-1.5 bg-[#0a6c3d] text-white text-[11px] font-medium px-4 py-1.5">
-                    <Truck size={12} />
-                    <span className="truncate">Free Delivery on Orders Above ₹999</span>
-                </div>
+                
 
                 {/* Main header row */}
                 <div className="bg-white border-b border-gray-200/70">

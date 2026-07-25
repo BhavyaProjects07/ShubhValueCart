@@ -12,7 +12,8 @@ import { fetchAddress } from "@/lib/features/address/addressSlice";
 import { fetchUserRatings } from "@/lib/features/rating/ratingSlice";
 import BottomBar from "@/components/BottomBar";
 import CouponBanner from "@/components/Coupon";
-
+import WhatsAppButton from "@/components/Whatsapp";
+import ShubhamGoyal from "@/components/ShubhamGoyal";
 export default function PublicLayout({ children }) {
 
     const dispatch = useDispatch()
@@ -53,8 +54,11 @@ export default function PublicLayout({ children }) {
             
             {/* <Banner /> */}
             {children}
-          
-            
+            <ShubhamGoyal />
+            <div>
+            <WhatsAppButton />
+
+            </div>
             <BottomBar/>
             
             <Footer />
