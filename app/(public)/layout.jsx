@@ -54,11 +54,8 @@ export default function PublicLayout({ children }) {
             
             {/* <Banner /> */}
             {children}
-            <ShubhamGoyal />
-            <div>
-            <WhatsAppButton />
-
-            </div>
+            
+            
             <BottomBar/>
             
             <Footer />
