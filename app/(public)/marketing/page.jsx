@@ -21,6 +21,7 @@ export default function Home() {
      
 
      {/* Hero Section */}
+{/* Hero Section */}
 <section className="relative overflow-hidden pt-12 pb-20 md:pt-16 md:pb-24 lg:pt-10 lg:pb-32" id="about">
   <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
     <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -55,13 +56,22 @@ export default function Home() {
           "A young man who started with just 8 rupees, and built his unique identity through relentless hard work, networking, marketing skills, and deep-rooted social service."
         </p>
 
-        {/* CTA */}
-        <div className="flex justify-center lg:justify-start pt-2">
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-2">
           <a
             href="#journey"
             className="w-full sm:w-auto inline-flex items-center justify-center rounded-full bg-slate-900 px-8 py-4 font-medium text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-slate-800 hover:shadow-xl"
           >
             Explore His Journey
+          </a>
+
+          <a
+            href="https://wa.me/919756225637"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-full border border-green-600 bg-green-600 px-8 py-4 font-medium text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-green-700 hover:border-green-700 hover:shadow-xl"
+          >
+            Call / WhatsApp
           </a>
         </div>
       </motion.div>
@@ -73,7 +83,7 @@ export default function Home() {
         transition={{ duration: 0.8, delay: 0.2 }}
         className="relative"
       >
-        <div className="relative w-full aspect-[5/3]  sm:min-h-[340px] md:min-h-[420px] rounded-3xl overflow-hidden bg-slate-100 shadow-2xl">
+        <div className="relative w-full aspect-[5/3] sm:min-h-[340px] md:min-h-[420px] rounded-3xl overflow-hidden bg-slate-100 shadow-2xl">
           <Image
             src="https://ik.imagekit.io/rsjsqdge7/Screenshot%202026-07-26%20010814.png?updatedAt=1785010975076"
             alt="Sourabh Jain Profile - Jain Digital Agency"
