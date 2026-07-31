@@ -11,10 +11,10 @@ export default function FounderFloatingCard() {
   // Collapsed State (Only Image)
   if (collapsed) {
     return (
-      <div className="fixed bottom-20 right-4 z-[999]">
+      <div className="fixed right-4 bottom-35 md:bottom-24 z-[999]">
         <button
           onClick={() => setCollapsed(false)}
-          className="relative h-14 w-14 overflow-hidden rounded-full shadow-xl ring-2 ring-white transition-all duration-300 hover:scale-105"
+          className="relative h-10 w-10 overflow-hidden rounded-full shadow-xl ring-2 ring-white transition-all duration-300 hover:scale-105"
         >
           <Image
             src="https://ik.imagekit.io/rsjsqdge7/Screenshot%202026-07-23%20025124.png" // Put founder image inside /public
@@ -28,13 +28,13 @@ export default function FounderFloatingCard() {
   }
 
   return (
-    <div className="fixed bottom-24 right-4 z-[999] animate-in slide-in-from-right-8 duration-500">
+    <div className="fixed bottom-35 md:bottom-24 right-4 z-[999] animate-in slide-in-from-right-8 duration-500">
       {/* Close Button */}
       <button
         onClick={() => setCollapsed(true)}
         className="absolute -top-2 -right-2 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-slate-800 text-white shadow-md transition hover:scale-110 hover:bg-black"
       >
-        <X size={14} />
+        <X size={10} />
       </button>
 
       {/* Founder Card */}
