@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -15,6 +16,7 @@ import {
   ShoppingBasket,
   ShoppingBag,
   ShieldCheck,
+  Grid2x2,
 } from "lucide-react";
 import axios from "axios";
 import { assets } from "@/assets/assets";
@@ -29,6 +31,80 @@ const TRUST_FEATURES = [
 ];
 
 export default function HeroSlider() {
+
+  const CATEGORY_CONFIG = [
+  {
+    id: 1,
+    name: "Groceries",
+    slug: "food-grocery",
+    href: "/category/food-grocery",
+    image: "https://ik.imagekit.io/rr50hbc3l/download%20(2).jpg",
+  },
+  {
+    id: 2,
+    name: "Cooking",
+    slug: "staples-cooking",
+    href: "/category/staples-cooking",
+    image: "https://ik.imagekit.io/rr50hbc3l/cooking.png",
+  },
+  {
+    id: 3,
+    name: "Body Care",
+    slug: "personal-care",
+    href: "/category/personal-care",
+    image: "https://ik.imagekit.io/rr50hbc3l/body%20care.png",
+  },
+  {
+    id: 4,
+    name: "Home Cleaning",
+    slug: "home-cleaning",
+    href: "/category/home-cleaning",
+    image: "https://ik.imagekit.io/rr50hbc3l/home%20CL.png",
+  },
+  {
+    id: 5,
+    name: "Baby Care",
+    slug: "baby-care",
+    href: "/category/baby-care",
+    image: "https://ik.imagekit.io/rr50hbc3l/baby.png",
+  },
+  {
+    id: 6,
+    name: "Toys",
+    slug: "toys-kids",
+    href: "/category/toys-kids",
+    image: "https://ik.imagekit.io/rr50hbc3l/3082060.png",
+  },
+  {
+    id: 7,
+    name: "Household",
+    slug: "household",
+    href: "/category/household",
+    image: "https://ik.imagekit.io/rr50hbc3l/household.png",
+  },
+  {
+    id: 8,
+    name: "Stationery",
+    slug: "stationery",
+    href: "/category/stationery",
+    image: "https://ik.imagekit.io/rr50hbc3l/stationery.png",
+  },
+  {
+    id: 9,
+    name: "Electronics",
+    slug: "electronics",
+    href: "/category/electronics",
+    image: "https://ik.imagekit.io/rr50hbc3l/electronics.png",
+  },
+  {
+    id: 10,
+    name: "Fashion",
+    slug: "fashion",
+    href: "/category/fashion",
+    image: "https://ik.imagekit.io/rr50hbc3l/fashion.png",
+  },
+  
+];
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const [banners, setBanners] = useState([]);
@@ -92,7 +168,7 @@ setBanners(active);
   if (!banners.length) return null;
 
   return (
-    <section className="relative w-full bg-[#f5f7f4] pb-6 pt-4">
+    <section className="relative w-full bg-[#ffffff] pb-2 pt-4">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ---------------------------------------------------------------- */}
@@ -168,19 +244,72 @@ setBanners(active);
         {/* ---------------------------------------------------------------- */}
         {/* Trust features bar                                                */}
         {/* ---------------------------------------------------------------- */}
-        <div className="mt-6 bg-white border border-gray-100 rounded-xl shadow-sm px-5 sm:px-8 py-5">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-5 gap-x-3">
-            {TRUST_FEATURES.map(({ icon: Icon, title, subtitle }) => (
-              <div key={title} className="flex items-center gap-2.5">
-                <Icon size={20} strokeWidth={1.8} className="text-[#0a6c3d] shrink-0" />
-                <div className="leading-tight">
-                  <div className="text-[13px] font-semibold text-gray-900">{title}</div>
-                  <div className="text-[11px] text-gray-500">{subtitle}</div>
-                </div>
-              </div>
-            ))}
+        <section className="mt-4 lg:hidden">
+  <div className="rounded-2xl border border-slate-100 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]">
+    <div className="flex items-start justify-between overflow-x-auto scrollbar-hide px-2 py-3">
+      {CATEGORY_CONFIG.map((category) => (
+        <Link
+          key={category.id}
+          href={category.href}
+          className="group flex min-w-[68px] flex-col items-center gap-2 shrink-0"
+        >
+          {/* Circle */}
+          <div
+            className="
+              relative
+              flex
+              h-[60px]
+              w-[60px]
+              items-center
+              justify-center
+              rounded-full
+              bg-gradient-to-b
+              from-[#F7FAFF]
+              to-[#EEF4FF]
+              border
+              border-[#E7EEF9]
+              transition-all
+              duration-300
+              group-active:scale-95
+              group-hover:shadow-md
+            "
+          >
+            {category.icon ? (
+              <Grid2x2
+                size={24}
+                strokeWidth={1.8}
+                className="text-slate-700"
+              />
+            ) : (
+              <Image
+                src={category.image}
+                alt={category.name}
+                width={42}
+                height={42}
+                className="object-contain"
+                draggable={false}
+              />
+            )}
           </div>
-        </div>
+
+          {/* Text */}
+          <span
+            className="
+              text-[11px]
+              font-medium
+              text-[#1E293B]
+              text-center
+              leading-tight
+              line-clamp-2
+            "
+          >
+            {category.name}
+          </span>
+        </Link>
+      ))}
+    </div>
+  </div>
+</section>
 
         {/* ---------------------------------------------------------------- */}
         {/* 3 promo banner cards                                              */}
@@ -189,7 +318,7 @@ setBanners(active);
         {/* watermark shown below with real product photography.             */}
         {/* ---------------------------------------------------------------- */}
         {/* Promo cards — swipeable slider on mobile, grid on desktop */}
-<div className="mt-5">
+<div className="mt-5 hidden md:block">
   <div
     className="
       flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2

@@ -1,13 +1,46 @@
-import React from 'react';
-import { Star, ArrowUpRight } from 'lucide-react';
-import Link from "next/link"
-import Loading from './Loading';
+'use client'
+
+import React from 'react'
+import Link from 'next/link'
+import { Star, ArrowUpRight , Plus} from 'lucide-react';
+
 /**
- * Luxury Editorial Product Card
- * High-end, sophisticated, and elegant aesthetic.
+ * Flash-Deal Product Card
+ * Contains ONLY: image, name, price, MRP, discount badge, add (+) button.
  */
-const ProductCard = ({ product }) => {
-    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '';
+const ProductCard = ({ product, onAdd }) => {
+  const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '₹'
+
+  if (!product) {
+    return (
+      <div className="h-full w-full rounded-xl border border-gray-200 bg-gray-50 animate-pulse" />
+    )
+  }
+
+  const id = product.id || product._id || '000'
+  const name = product.name || 'Product'
+  const image =
+    product?.images?.[0] || product?.image || 'https://picsum.photos/seed/p/300/300'
+
+  const price = Number(product.price) || 0
+  const mrp = Number(product.mrp ?? product.originalPrice ?? product.original) || 0
+  const hasMrp = mrp > price
+
+  const discount = hasMrp
+    ? Math.round(((mrp - price) / mrp) * 100)
+    : Number(product.discount) || 0
+
+  const fmt = (v) => `${currency}${v}`
+
+  const handleAdd = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onAdd?.(product)
+  }
+    
+    
+    // dekstop 
+
     const productName = product?.name || "Signature Collection";
     const loading = !product;
     const rawPrice = product?.price || "0.00";
@@ -40,14 +73,64 @@ if (Array.isArray(product?.rating)) {
     avgRating = total / reviewCount; // ✅ keep decimal
   }
 }
-
     const isDiscounted = !!productMrp;
 
-    if (!product) return <Loading />
     return (
-        <Link 
+        <>
+            {/* Mobile product Card */}
+            <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-colors duration-200 hover:border-gray-300 lg:hidden">
+            {/* Discount badge */}
+            {discount > 0 && (
+                <span className="absolute left-1.5 top-1.5 z-10 rounded-[5px] bg-[#EF4444] px-1.5 py-[3px] text-[9px] font-bold leading-none tracking-tight text-white shadow-sm sm:text-[10px]">
+                {discount}% OFF
+                </span>
+            )}
+
+            <Link href={`/product/${id}`} prefetch className="flex flex-1 flex-col px-2 pb-1 pt-6 sm:px-2.5 sm:pt-7">
+                {/* Image */}
+                <div className="flex h-[62px] items-center justify-center sm:h-[92px]">
+                <img
+                    src={image}
+                    alt={name}
+                    loading="lazy"
+                    className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                />
+                </div>
+
+                {/* Name */}
+                <h3 className="mt-2 line-clamp-2 min-h-[26px] text-[10px] font-normal leading-[13px] text-gray-700 sm:min-h-[32px] sm:text-[12px] sm:leading-4">
+                {name}
+                </h3>
+            </Link>
+
+            {/* Price row + add button */}
+            <div className="mt-auto flex items-center justify-between gap-1 px-2 pb-2 sm:px-2.5 sm:pb-2.5">
+            <div className="flex flex-1 items-baseline gap-1 overflow-hidden">
+                <span className="text-[12px] font-bold leading-none text-gray-900 sm:text-[14px]">
+                    {fmt(price)}
+                </span>
+                {hasMrp && (
+                    <span className="text-[9px] font-normal leading-none text-gray-400 line-through sm:text-[11px]">
+                    {fmt(mrp)}
+                    </span>
+                )}
+                </div>
+
+                <button
+                type="button"
+                onClick={handleAdd}
+                aria-label={`Add ${name}`}
+                className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-md border border-[#C7D2FE] bg-white text-[#4F46E5] transition-colors hover:bg-[#EEF2FF] active:scale-95 sm:h-6 sm:w-6"
+                >
+                <Plus className="h-3 w-3 sm:h-3.5 sm:w-3.5" strokeWidth={2.5} />
+                </button>
+            </div>
+            </div>
+
+            {/* Desktop product Card */}
+            <Link 
   href={`/product/${productId}`} prefetch
-  className="group flex flex-col w-full max-w-[320px] mx-auto ..."
+  className="group hidden w-full max-w-[320px] mx-auto flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-xl lg:flex"
 >
             {/* Image Container */}
             <div className="relative aspect-[4/5] overflow-hidden bg-[#f3f4f6] p-6 flex items-center justify-center">
@@ -145,7 +228,9 @@ if (Array.isArray(product?.rating)) {
                 </div>
             </div>
         </Link>
-    );
-};
+      
+      </>
+  )
+}
 
-export default ProductCard;
+export default ProductCard

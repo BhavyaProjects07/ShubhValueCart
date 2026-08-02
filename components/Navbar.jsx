@@ -22,6 +22,8 @@ import {
   Truck,
   User,
   PlayCircle,
+  Bell,
+  Mic,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -55,7 +57,6 @@ const Navbar = () => {
     const { user } = useUser()
     const {openSignIn} = useClerk()
     const router = useRouter();
-    const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
     const [search, setSearch] = useState('')
     const [isVisible, setIsVisible] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -86,6 +87,10 @@ const Navbar = () => {
   "Mobiles": Smartphone,
   "Beauty": Sparkles,
 };
+
+    // Placeholder until a notifications API is wired up — badge only renders when > 0
+    const [notificationCount, setNotificationCount] = useState(0);
+
     const [mounted, setMounted] = useState(false)
 
 useEffect(() => {
@@ -135,13 +140,6 @@ useEffect(() => {
     useEffect(() => {
         setIsVisible(true)
     }, [])
-
-    // Autofocus the mobile search field the moment it expands
-    useEffect(() => {
-        if (mobileSearchOpen && mobileSearchInputRef.current) {
-            mobileSearchInputRef.current.focus();
-        }
-    }, [mobileSearchOpen]);
 
     useEffect(() => {
         if (!user) {
@@ -333,8 +331,8 @@ useEffect(() => {
                 {/* Top strip: compact single-line version (mobile / tablet) */}
                 
 
-                {/* Main header row */}
-                <div className="bg-white border-b border-gray-200/70">
+                {/* Main header row (desktop / tablet only — mobile has its own header block below) */}
+                <div className="hidden lg:block bg-white border-b border-gray-200/70">
                     <div className="max-w-[1400px] mx-auto flex items-center gap-4 sm:gap-6 px-4 sm:px-6 py-2 sm:py-3">
 
                         {/* Logo */}
@@ -442,144 +440,101 @@ useEffect(() => {
                             </Link>
                         </div>
 
-                        {/* Mobile right-side icons */}
-                        <div className="flex lg:hidden items-center gap-0.5 ml-auto">
+                        {/* Desktop logo/search/icons above stay exactly as-is; mobile now renders its own dedicated header below */}
+                    </div>
+                </div>
+
+                {/* ============================================================ */}
+                {/*  MOBILE APP-STYLE HEADER (phones/tablets only — lg:hidden)    */}
+                {/*  One combined top row (menu+logo / location / bell+cart),     */}
+                {/*  matching the reference 1:1 — no separate category strip.     */}
+                {/* ============================================================ */}
+                <div className="lg:hidden bg-[#F4F8FF]  overflow-hidden -mt-px shadow-[0_2px_12px_rgba(37,99,235,0.05)]">
+
+                    {/* Row 1 — hamburger + logo (left) · delivery location (center) · bell + cart (right) */}
+                    <div className="flex items-center justify-between gap-2 px-4 pt-3.5 pb-2.5">
+                        <div className="flex items-center gap-1.5 shrink-0">
                             <button
-                                onClick={() => setMobileSearchOpen((v) => !v)}
-                                aria-label="Search"
-                                className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors ${
-                                    mobileSearchOpen ? "bg-[#eef5ee] text-[#0a6c3d]" : "text-gray-700 hover:bg-gray-100 active:bg-gray-200"
-                                }`}
+                                onClick={() => setMobileMenuOpen((v) => !v)}
+                                aria-label="Menu"
+                                className="w-9 h-9 -ml-1.5 flex items-center justify-center rounded-full text-gray-800 active:bg-gray-100 transition-colors"
                             >
-                                <Search size={17} />
+                                {mobileMenuOpen ? <X size={21} strokeWidth={2.2} /> : <Menu size={21} strokeWidth={2.2} />}
+                            </button>
+
+                            <Link href="/" className="flex items-center active:opacity-70 transition-opacity">
+                                {assets?.logo ? (
+                                    <Image src={assets.logo} alt="Shubh Value Cart" width={100} height={32} className="object-contain h-6 w-auto" />
+                                ) : (
+                                    <div className="leading-none">
+                                        <div className="text-[16px] font-extrabold text-gray-900 tracking-tight">Shubh</div>
+                                        <div className="text-[8.5px] font-extrabold text-blue-600 tracking-[0.18em] -mt-0.5">VALUE CART</div>
+                                    </div>
+                                )}
+                            </Link>
+                        </div>
+
+                        <button
+                            onClick={() => setShowLocationModal(true)}
+                            aria-label="Change delivery location"
+                            className="flex items-center gap-1 min-w-0 flex-1 justify-center active:opacity-60 transition-opacity"
+                        >
+                            <MapPin size={14} className="shrink-0 text-blue-600" />
+                            <span className="min-w-0 truncate text-[12.5px] font-semibold text-gray-800">
+                                {selectedAddress
+                                    ? `Delivering to ${selectedAddress.locality || selectedAddress.street || selectedAddress.name}`
+                                    : "Store Locator"}
+                            </span>
+                            <ChevronDown size={14} className="shrink-0 text-gray-400" />
+                        </button>
+
+                        <div className="flex items-center gap-0.5 shrink-0 -mr-1.5">
+                            <button
+                                aria-label="Notifications"
+                                className="relative w-9 h-9 flex items-center justify-center rounded-full text-gray-800 active:bg-gray-100 transition-colors"
+                            >
+                                <Bell size={20} strokeWidth={2} />
+                                {notificationCount > 0 && (
+                                    <span className="absolute top-1 right-1 min-w-[15px] h-[15px] px-[3px] flex items-center justify-center text-[9px] font-bold text-white bg-blue-500 rounded-full ring-2 ring-white">
+                                        {notificationCount}
+                                    </span>
+                                )}
                             </button>
 
                             <Link
                                 href="/cart"
                                 aria-label="Cart"
-                                className="relative w-9 h-9 flex items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 active:bg-gray-200 transition-colors"
+                                className="relative w-9 h-9 flex items-center justify-center rounded-full text-gray-800 active:bg-gray-100 transition-colors"
                             >
-                                <ShoppingCart size={17} />
+                                <ShoppingCart size={20} strokeWidth={2} />
                                 {cartCount > 0 && (
-                                    <span className="absolute top-0.5 right-0.5 text-[9px] font-bold text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center">
+                                    <span className="absolute top-1 right-1 min-w-[15px] h-[15px] px-[3px] flex items-center justify-center text-[9px] font-bold text-white bg-blue-500 rounded-full ring-2 ring-white">
                                         {cartCount}
                                     </span>
                                 )}
                             </Link>
-
-                            {!mounted ? (
-                                <div className="w-9 h-9 flex items-center justify-center">
-                                    <div className="w-7 h-7 bg-gray-200 rounded-full animate-pulse" />
-                                </div>
-                            ) : !user ? (
-                                <button
-                                    onClick={() => router.push("/phone-signup")}
-                                    aria-label="Account"
-                                    className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 active:bg-gray-200 transition-colors"
-                                >
-                                    <User size={17} />
-                                </button>
-                            ) : (
-                                <div className="w-9 h-9 flex items-center justify-center">
-                                    <UserButton appearance={{ elements: { avatarBox: "w-7 h-7 shadow-sm" } }}>
-                                        {AccountMenuItems}
-                                    </UserButton>
-                                </div>
-                            )}
-
-                            <button
-                                onClick={() => setMobileMenuOpen((v) => !v)}
-                                aria-label="Menu"
-                                className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors ${
-                                    mobileMenuOpen ? "bg-[#eef5ee] text-[#0a6c3d]" : "text-gray-700 hover:bg-gray-100 active:bg-gray-200"
-                                }`}
-                            >
-                                {mobileMenuOpen ? <X size={17} /> : <Menu size={17} />}
-                            </button>
                         </div>
                     </div>
 
-                    {/* Mobile search + address row */}
-                    <div className="lg:hidden px-4 pb-2 space-y-1.5">
-                        <button
-                            onClick={() => setShowLocationModal(true)}
-                            className="flex w-full items-center gap-2 rounded-lg bg-gray-50 border border-gray-100 px-3 py-1.5 text-left transition hover:bg-gray-100 active:scale-[0.99]"
+                    {/* Row 2 — always-visible pill search bar, app-style (no expand/collapse) */}
+                    <div className="px-4 pb-3.5">
+                        <form
+                            onSubmit={handleSearch}
+                            className="flex items-center gap-2 rounded-full bg-white border border-blue-100 shadow-sm px-4 py-2.5 focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all"
                         >
-                            <MapPin size={14} className="shrink-0 text-[#0a6c3d]" />
-                            <span className="min-w-0 flex-1 truncate text-[12.5px] font-semibold text-gray-800">
-                                {selectedAddress
-                                    ? `Deliver to: ${selectedAddress.name}, ${selectedAddress.locality || selectedAddress.street}`
-                                    : "Store Locator — Find your nearest store"}
-                            </span>
-                            <ChevronDown size={14} className="shrink-0 text-gray-400" />
-                        </button>
-
-                        <div
-                            className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                                mobileSearchOpen ? "max-h-16 opacity-100" : "max-h-0 opacity-0"
-                            }`}
-                        >
-                            <form
-                                onSubmit={handleSearch}
-                                className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 overflow-hidden focus-within:border-[#0a6c3d] focus-within:bg-white transition-colors"
-                            >
-                                <input
-                                    ref={mobileSearchInputRef}
-                                    type="text"
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Search for products, brands and more..."
-                                    className="flex-1 min-w-0 px-3 py-2 text-sm font-medium text-[#1D1D1F] bg-transparent outline-none placeholder-gray-400"
-                                />
-                                <button type="submit" className="shrink-0 w-10 self-stretch flex items-center justify-center bg-[#0a6c3d]">
-                                    <Search size={15} className="text-white" />
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    {/* Mobile category quick-links — hides on scroll-down, reappears on scroll-up, same as desktop */}
-                    <div
-                        className={`lg:hidden border-t border-gray-100 overflow-hidden transition-all duration-300 ${
-                            showCategoryBar ? "max-h-20 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-                        }`}
-                    >
-                        <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar px-4 py-2">
-                            <button
-                                onClick={() => router.push("/shop")}
-                                className="flex flex-col items-center gap-1 shrink-0"
-                            >
-                                <div className="w-9 h-9 rounded-full bg-[#0a6c3d] flex items-center justify-center">
-                                    <Menu size={15} className="text-white" />
-                                </div>
-                                <span className="text-[10px] font-semibold text-gray-800">All</span>
+                            <Search size={18} className="shrink-0 text-gray-500" />
+                            <input
+                                ref={mobileSearchInputRef}
+                                type="text"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                placeholder="Search for products, brands & more..."
+                                className="flex-1 min-w-0 bg-transparent text-[13.5px] text-[#1D1D1F] outline-none placeholder-text-gray-500"
+                            />
+                            <button type="submit" aria-label="Voice search" className="shrink-0 text-gray-500 active:text-blue-600 transition-colors">
+                                <Mic size={18} />
                             </button>
-
-                            {categories.length > 0
-                                ? categories.slice(0, 10).map((cat, idx) => {
-                                      const Icon = categoryIcons[cat.name] || Package;
-                                      return (
-                                          <button
-                                              key={idx}
-                                              onClick={() => router.push(`/shop?category=${cat.slug}`)}
-                                              className="flex flex-col items-center gap-1 shrink-0"
-                                          >
-                                              <div className="w-9 h-9 rounded-full bg-[#eef5ee] flex items-center justify-center">
-                                                  <Icon size={15} className="text-[#0a6c3d]" />
-                                              </div>
-                                              <span className="text-[10px] font-medium text-gray-700 whitespace-nowrap max-w-[60px] truncate">
-                                                  {cat.name}
-                                              </span>
-                                          </button>
-                                      );
-                                  })
-                                : Array.from({ length: 6 }).map((_, idx) => (
-                                      <div key={idx} className="flex flex-col items-center gap-1 shrink-0 animate-pulse">
-                                          <div className="w-9 h-9 rounded-full bg-gray-100" />
-                                          <div className="w-8 h-2 rounded-full bg-gray-100" />
-                                      </div>
-                                  ))}
-                        </div>
+                        </form>
                     </div>
                 </div>
 
@@ -646,7 +601,7 @@ useEffect(() => {
 
                 {/* Mobile Menu Dropdown */}
                 {mobileMenuOpen && (
-                    <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg animate-[fadeInUp_0.25s_ease-out]">
+                    <div className="lg:hidden bg-white rounded-t-[22px] shadow-[0_-4px_24px_rgba(15,23,42,0.12)] animate-[fadeInUp_0.25s_ease-out] overflow-hidden">
 
                         {/* Greeting header */}
                         <div className="flex items-center gap-3 px-6 py-4 bg-[#f5f7f4] border-b border-gray-100">
@@ -756,7 +711,7 @@ useEffect(() => {
 
             <div
                 className="
-                    h-[196px]
+                    h-[124px]
                     lg:h-[168px]
                 "
             />

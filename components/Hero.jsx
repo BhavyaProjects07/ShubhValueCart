@@ -132,7 +132,7 @@ const CategoryGrid = React.memo(({ categories = [] }) => {
   const router = useRouter(); // This line was already present in the user's last edit.
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10 -mt-8 sm:-mt-12">
-      <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-100 backdrop-blur-lg bg-white/90">
+      <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-100 backdrop-blur-lg ">
         
         {/* Empty State */}
         {categories.length === 0 ? (
@@ -310,13 +310,13 @@ export default function Hero2() {
       <CustomNavbar categories={categories}/>
       <div className="">
         <HeroSlider />
+        <Deals />
         <CouponBanner />
+        <BestSelling />
         
         <Newsletter />
 
-        <Deals />
 
-        <BestSelling />
         
         
         <MidBanner banner={midBanners[0]} />
