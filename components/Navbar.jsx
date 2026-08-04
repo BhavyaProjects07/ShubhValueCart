@@ -449,7 +449,7 @@ useEffect(() => {
                 {/*  One combined top row (menu+logo / location / bell+cart),     */}
                 {/*  matching the reference 1:1 — no separate category strip.     */}
                 {/* ============================================================ */}
-                <div className="lg:hidden bg-[#F4F8FF]  overflow-hidden -mt-px shadow-[0_2px_12px_rgba(37,99,235,0.05)]">
+                <div className="lg:hidden bg-gradient-to-b from-[#e0ecff] to-white overflow-hidden -mt-px ">
 
                     {/* Row 1 — hamburger + logo (left) · delivery location (center) · bell + cart (right) */}
                     <div className="flex items-center justify-between gap-2 px-4 pt-3.5 pb-2.5">

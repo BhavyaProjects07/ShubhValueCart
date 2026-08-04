@@ -4,7 +4,7 @@ import React from 'react'
 import ProductCard from './ProductCard'
 import { useSelector } from 'react-redux'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight , HandMetal } from 'lucide-react'
 
 const BestSelling = () => {
   const products = useSelector((state) => state.product.list) || []
