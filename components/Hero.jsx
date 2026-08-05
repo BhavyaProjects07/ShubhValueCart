@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import { 
-  ChevronRight, ChevronLeft
+  ChevronRight, ChevronLeft, ArrowRight
 } from 'lucide-react';
 import axios from 'axios';
 import BestSelling from './BestSelling';
 import CouponBanner from './Coupon';
 import { useRouter } from "next/navigation";
 import HeroSlider from './heroBanner';
-
+import Link from 'next/link';
 import Image from "next/image";
 import Newsletter from './Newsletter';
 import Deals from './Deals';
@@ -89,22 +89,14 @@ const bestSellers = [
   { id: 11, name: 'Tata Tea Gold (500g)', price: '₹245', original: '₹300', discount: '18% OFF', rating: 4.8, reviews: '10k', image: 'https://images.unsplash.com/photo-1594631252845-29fc4cc8c0a1?w=400' },
 ];
 
-const midBanners = [
-  { id: 1, title: 'Grocery Sale', subtitle: 'Stock up and save big on daily essentials', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200', color: 'from-[#0a4d2e]/90' , cat:"food-grocery" },
-  { id: 2, title: 'Enhance your skin', subtitle: 'Latest skin care products at unbeatable prices', image: 'https://thephrase.in/cdn/shop/articles/Skin_Care_Banner_1.jpg?v=1697455809&width=1100?w=1200', color: 'from-orange-900/90' , cat:"personal-care"}
-];
+
 
 const splitBanners = [
   { id: 1, title: 'Staples & Cooking', subtitle: 'Starting at ₹1,999', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC4CAlq-V7qlxvzyWFr3D6SIRkT9lwJiS5-Q&s', color: 'from-[#0a6c3d]/90' ,cat : "staples-cooking"},
   { id: 2, title: 'Your Stationary Collection', subtitle: 'Up to 60% OFF', image: 'https://static.vecteezy.com/system/resources/thumbnails/071/157/463/small/back-to-school-supplies-background-colorful-stationery-calculator-and-blank-workspace-for-educational-and-creative-projects-photo.jpg?w=800', color: 'from-orange-800/90' , cat : "stationery"}
 ];
 
-const gridBanners = [
-  { id: 1, title: 'Under ₹499', subtitle: 'Daily Essentials', image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400', color: 'bg-green-50' },
-  { id: 2, title: 'Up to 10% off', subtitle: 'HouseHold Essentials', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400', color: 'bg-amber-50' },
-  { id: 3, title: 'New Toys', subtitle: 'Toys for kids', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400', color: 'bg-lime-50' },
-  { id: 4, title: 'Clearance', subtitle: 'Home Decor', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400', color: 'bg-orange-50' }
-];
+
 
 // --- COMPONENTS ---
 
@@ -304,7 +296,7 @@ export default function Hero2() {
   return (
     <div 
       
-      className="min-h-screen bg-[#f5f7f4] font-sans overflow-x-hidden"
+      className="min-h-screen bg-[#ffffff] font-sans overflow-x-hidden"
     >
       
       <CustomNavbar categories={categories}/>
@@ -313,16 +305,197 @@ export default function Hero2() {
         <Deals />
         <CouponBanner />
         <BestSelling />
+        <div className="mt-5 block lg:hidden px-3">
+  <div className="grid grid-cols-3 gap-2">
+
+    {/* Card 1 */}
+    <div className="group relative overflow-hidden rounded-2xl bg-[#e7efe1] p-3 h-[165px]">
+      <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[#0a6c3d]/10 blur-xl" />
+
+      <div className="relative z-10">
+        <h3 className="text-[12px] font-bold leading-4 text-gray-900">
+          Savings on
+          <br />
+          Daily Essentials
+        </h3>
+
+        <p className="mt-2 text-[9px] uppercase text-gray-500">
+          Up To
+        </p>
+
+        <div className="leading-none">
+          <span className="text-[28px] font-black text-[#0a6c3d]">
+            60%
+          </span>
+          <span className="ml-1 text-[13px] font-bold text-gray-900">
+            OFF
+          </span>
+        </div>
+
+        <Link
+          href="/shop?category=daily-essentials"
+          className="mt-3 inline-flex items-center gap-1 rounded-md bg-[#0a6c3d] px-2.5 py-1.5 text-[9px] font-bold text-white transition hover:bg-[#085531]"
+        >
+          Shop
+          <ArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
+
+      <div className="absolute bottom-0 right-0 h-[82px] w-[82px]">
+        <Image
+          src="https://ik.imagekit.io/rsjsqdge7/s1.png"
+          alt="Daily essentials"
+          fill
+          className="object-contain object-bottom"
+        />
+      </div>
+    </div>
+
+    {/* Card 2 */}
+    <div className="group relative overflow-hidden rounded-2xl bg-[#f2e9fb] p-3 h-[165px]">
+      <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-purple-400/15 blur-xl" />
+
+      <div className="relative z-10">
+        <h3 className="text-[12px] font-bold leading-4 text-gray-900">
+          Personal Care
+          <br />
+          Fest
+        </h3>
+
+        <p className="mt-2 text-[9px] uppercase text-gray-500">
+          Up To
+        </p>
+
+        <div className="leading-none">
+          <span className="text-[28px] font-black text-purple-600">
+            50%
+          </span>
+          <span className="ml-1 text-[13px] font-bold text-gray-900">
+            OFF
+          </span>
+        </div>
+
+        <Link
+          href="/shop?category=personal-care"
+          className="mt-3 inline-flex items-center gap-1 rounded-md bg-purple-600 px-2.5 py-1.5 text-[9px] font-bold text-white transition hover:bg-purple-700"
+        >
+          Shop
+          <ArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
+
+      <div className="absolute bottom-0 right-0 h-[82px] w-[82px]">
+        <Image
+          src="https://ik.imagekit.io/rsjsqdge7/s2.png"
+          alt="Personal Care"
+          fill
+          className="object-contain object-bottom"
+        />
+      </div>
+            </div>
+            
+                {/* Card 3 */}
+    <div className="group relative overflow-hidden rounded-2xl bg-[#fdecd8] p-3 h-[165px]">
+      <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-orange-400/15 blur-xl" />
+
+      <div className="relative z-10">
+        <h3 className="text-[12px] font-bold leading-4 text-gray-900">
+          Home & Kitchen
+          <br />
+          Essentials
+        </h3>
+
+        <p className="mt-2 text-[9px] uppercase text-gray-500">
+          Up To
+        </p>
+
+        <div className="leading-none">
+          <span className="text-[28px] font-black text-orange-500">
+            40%
+          </span>
+          <span className="ml-1 text-[13px] font-bold text-gray-900">
+            OFF
+          </span>
+        </div>
+
+        <Link
+          href="/shop?category=home-kitchen"
+          className="mt-3 inline-flex items-center gap-1 rounded-md bg-orange-500 px-2.5 py-1.5 text-[9px] font-bold text-white transition hover:bg-orange-600"
+        >
+          Shop
+          <ArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
+
+      <div className="absolute bottom-0 right-0 h-[82px] w-[82px]">
+        <Image
+          src="https://ik.imagekit.io/rsjsqdge7/s3.png"
+          alt="Home & Kitchen"
+          fill
+          className="object-contain object-bottom"
+        />
+      </div>
+    </div>
+
+  </div>
+        </div>
         
-        <Newsletter />
 
 
+        <Link
+      href="/shop?page=1&category=personal-care"
+      className="block px-3 my-4"
+    >
+      <div className="relative aspect-[3/1] overflow-hidden rounded-2xl">
+        <Image
+          src="https://ik.imagekit.io/rsjsqdge7/ChatGPT%20Image%20Aug%205,%202026,%2011_49_10%20PM.png"
+          alt="Banner"
+          fill
+          priority
+          className="object-cover"
+        />
+      </div>
+        </Link>
+
+        <Link
+      href="/shop?page=1&maxPrice=10000&minDiscount=40"
+      className="block px-3 my-4"
+    >
+      <div className="relative aspect-[3/1] overflow-hidden rounded-2xl">
+        <Image
+          src="https://ik.imagekit.io/rsjsqdge7/ChatGPT%20Image%20Aug%206,%202026,%2012_34_21%20AM.png"
+          alt="Banner"
+          fill
+          priority
+          className="object-cover"
+        />
+      </div>
+        </Link>
         
         
-        <MidBanner banner={midBanners[0]} />
+
+        
+      <Newsletter />
+
+        
+
+        <Link
+      href="/"
+      className="block px-3 my-4"
+    >
+      <div className="relative aspect-[3/1] overflow-hidden rounded-2xl">
+        <Image
+          src="https://ik.imagekit.io/rsjsqdge7/ChatGPT%20Image%20Aug%206,%202026,%2012_56_57%20AM.png"
+          alt="Banner"
+          fill
+          priority
+          className="object-cover"
+        />
+      </div>
+        </Link>
         
         
-        <MidBanner banner={midBanners[1]} />
+        
         
       </div>
     </div>

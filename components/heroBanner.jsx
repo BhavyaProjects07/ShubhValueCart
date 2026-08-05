@@ -13,10 +13,10 @@ import {
   RefreshCcw,
   CreditCard,
   Truck,
-  ShoppingBasket,
-  ShoppingBag,
-  ShieldCheck,
+
   Grid2x2,
+  ArrowRight,
+  
 } from "lucide-react";
 import axios from "axios";
 import { assets } from "@/assets/assets";
@@ -37,70 +37,70 @@ export default function HeroSlider() {
     id: 1,
     name: "Groceries",
     slug: "food-grocery",
-    href: "/category/food-grocery",
+    href: "/shop?page=1&category=food-grocery",
     image: "https://ik.imagekit.io/rr50hbc3l/download%20(2).jpg",
   },
   {
     id: 2,
     name: "Cooking",
     slug: "staples-cooking",
-    href: "/category/staples-cooking",
+    href: "/shop?page=1&category=staples-cooking",
     image: "https://ik.imagekit.io/rr50hbc3l/cooking.png",
   },
   {
     id: 3,
     name: "Body Care",
     slug: "personal-care",
-    href: "/category/personal-care",
+    href: "/shop?page=1&category=personal-care",
     image: "https://ik.imagekit.io/rr50hbc3l/body%20care.png",
   },
   {
     id: 4,
     name: "Home Cleaning",
     slug: "home-cleaning",
-    href: "/category/home-cleaning",
+    href: "/shop?page=1&category=home-cleaning",
     image: "https://ik.imagekit.io/rr50hbc3l/home%20CL.png",
   },
   {
     id: 5,
     name: "Baby Care",
     slug: "baby-care",
-    href: "/category/baby-care",
+    href: "/shop?page=1&category=baby-care",
     image: "https://ik.imagekit.io/rr50hbc3l/baby.png",
   },
   {
     id: 6,
     name: "Toys",
     slug: "toys-kids",
-    href: "/category/toys-kids",
+    href: "/shop?page=1&category=toys-kids",
     image: "https://ik.imagekit.io/rr50hbc3l/3082060.png",
   },
   {
     id: 7,
     name: "Household",
     slug: "household",
-    href: "/category/household",
+    href: "/shop?page=1&category=household",
     image: "https://ik.imagekit.io/rr50hbc3l/household.png",
   },
   {
     id: 8,
     name: "Stationery",
     slug: "stationery",
-    href: "/category/stationery",
+    href: "/shop?page=1&category=stationery",
     image: "https://ik.imagekit.io/rr50hbc3l/stationery.png",
   },
   {
     id: 9,
     name: "Electronics",
     slug: "electronics",
-    href: "/category/electronics",
+    href: "/shop?page=1&category=electronics",
     image: "https://ik.imagekit.io/rr50hbc3l/electronics.png",
   },
   {
     id: 10,
     name: "Fashion",
     slug: "fashion",
-    href: "/category/fashion",
+    href: "/shop?page=1&category=fashion",
     image: "https://ik.imagekit.io/rr50hbc3l/fashion.png",
   },
   
@@ -326,98 +326,96 @@ setBanners(active);
       md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:snap-none md:pb-0
     "
   >
-    {/* Card 1 — Weekend Super Saver Sale */}
+    {/* Card 1 — Savings on Daily Essentials */}
     <div className="group relative overflow-hidden rounded-2xl bg-[#e7efe1] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between shrink-0 w-[80%] sm:w-[55%] md:w-auto snap-center snap-always transition-all duration-300 motion-reduce:transition-none hover:shadow-xl hover:shadow-[#0a6c3d]/15 md:hover:-translate-y-1">
       <div className="pointer-events-none absolute -right-8 -top-8 w-36 h-36 rounded-full bg-[#0a6c3d]/10 blur-2xl" aria-hidden="true" />
       <div className="relative z-10 max-w-[72%]">
-        <div className="text-xs font-bold uppercase tracking-widest text-[#0a6c3d] mb-1.5">
-          Weekend
-        </div>
         <h3 className="text-xl sm:text-[22px] font-extrabold text-gray-900 leading-snug mb-3">
-          Super Saver Sale
+          Savings on
+          <br />
+          Daily Essentials
         </h3>
         <div className="text-xs text-gray-500 mb-0.5">Up to</div>
-        <div className="text-3xl sm:text-4xl font-extrabold mb-1">
-          <span className="text-orange-500">50%</span>{" "}
+        <div className="text-3xl sm:text-4xl font-extrabold mb-4">
+          <span className="text-[#0a6c3d]">60%</span>{" "}
           <span className="text-gray-900">OFF</span>
         </div>
-        <div className="text-sm text-gray-600 mb-4">On Selected Products</div>
         <Link
-          href="/shop?sale=weekend"
-          className="inline-block bg-[#0a6c3d] hover:bg-[#085531] active:scale-95 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0a6c3d]"
+          href="/shop?category=daily-essentials"
+          className="inline-flex items-center gap-1.5 bg-[#0a6c3d] hover:bg-[#085531] active:scale-95 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0a6c3d]"
         >
-          Shop Now
+          Shop Now <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
       <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32 transition-transform duration-300 md:group-hover:scale-105">
-        {assets?.promoWeekendSale ? (
-          <Image src={assets.promoWeekendSale} alt="Weekend super saver sale" fill className="object-contain" />
-        ) : (
-          <ShoppingBasket className="w-full h-full text-[#0a6c3d]/15" strokeWidth={1} />
-        )}
+        <Image
+          src="https://ik.imagekit.io/rsjsqdge7/a1.JPG?updatedAt=1785950751145"
+          alt="Daily essentials — grocery staples"
+          fill
+          className="object-contain"
+        />
       </div>
     </div>
 
-    {/* Card 2 — Smart Shoppers Save More */}
-    <div className="group relative overflow-hidden rounded-2xl bg-[#fbe9d4] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between shrink-0 w-[80%] sm:w-[55%] md:w-auto snap-center snap-always transition-all duration-300 motion-reduce:transition-none hover:shadow-xl hover:shadow-orange-500/15 md:hover:-translate-y-1">
+    {/* Card 2 — Personal Care Fest */}
+    <div className="group relative overflow-hidden rounded-2xl bg-[#f2e9fb] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between shrink-0 w-[80%] sm:w-[55%] md:w-auto snap-center snap-always transition-all duration-300 motion-reduce:transition-none hover:shadow-xl hover:shadow-purple-500/15 md:hover:-translate-y-1">
+      <div className="pointer-events-none absolute -right-8 -top-8 w-36 h-36 rounded-full bg-purple-400/15 blur-2xl" aria-hidden="true" />
+      <div className="relative z-10 max-w-[72%]">
+        <h3 className="text-xl sm:text-[22px] font-extrabold text-gray-900 leading-snug mb-3">
+          Personal Care
+          <br />
+          Fest
+        </h3>
+        <div className="text-xs text-gray-500 mb-0.5">Up to</div>
+        <div className="text-3xl sm:text-4xl font-extrabold mb-4">
+          <span className="text-purple-600">50%</span>{" "}
+          <span className="text-gray-900">OFF</span>
+        </div>
+        <Link
+          href="/shop?category=personal-care"
+          className="inline-flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 active:scale-95 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
+        >
+          Shop Now <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+      <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32 transition-transform duration-300 md:group-hover:scale-105">
+        <Image
+          src="https://ik.imagekit.io/rsjsqdge7/s2.jpg"
+          alt="Personal care — skin and hair essentials"
+          fill
+          className="object-contain"
+        />
+      </div>
+    </div>
+
+    {/* Card 3 — Home & Kitchen Essentials */}
+    <div className="group relative overflow-hidden rounded-2xl bg-[#fdecd8] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between shrink-0 w-[80%] sm:w-[55%] md:w-auto snap-center snap-always transition-all duration-300 motion-reduce:transition-none hover:shadow-xl hover:shadow-orange-500/15 md:hover:-translate-y-1">
       <div className="pointer-events-none absolute -right-8 -top-8 w-36 h-36 rounded-full bg-orange-400/15 blur-2xl" aria-hidden="true" />
       <div className="relative z-10 max-w-[72%]">
         <h3 className="text-xl sm:text-[22px] font-extrabold text-gray-900 leading-snug mb-3">
-          Smart Shoppers
+          Home & Kitchen
           <br />
-          Save More!
+          Essentials
         </h3>
-        <div className="text-xs font-semibold text-orange-600 mb-0.5">Get Extra</div>
-        <div className="text-3xl sm:text-4xl font-extrabold mb-1">
-          <span className="text-orange-500">5%</span>{" "}
+        <div className="text-xs text-gray-500 mb-0.5">Up to</div>
+        <div className="text-3xl sm:text-4xl font-extrabold mb-4">
+          <span className="text-orange-500">40%</span>{" "}
           <span className="text-gray-900">OFF</span>
         </div>
-        <div className="text-sm text-gray-600 mb-4">On Prepaid Orders</div>
         <Link
-          href="/shop"
-          className="inline-block bg-orange-500 hover:bg-orange-600 active:scale-95 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+          href="/shop?category=home-kitchen"
+          className="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 active:scale-95 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
         >
-          Order Now
+          Shop Now <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
       <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32 transition-transform duration-300 md:group-hover:scale-105">
-        {assets?.promoPrepaidOffer ? (
-          <Image src={assets.promoPrepaidOffer} alt="Prepaid order offer" fill className="object-contain" />
-        ) : (
-          <ShoppingBag className="w-full h-full text-orange-500/20" strokeWidth={1} />
-        )}
-      </div>
-    </div>
-
-    {/* Card 3 — 100% Quality Assured */}
-    <div className="group relative overflow-hidden rounded-2xl bg-[#e7efe1] p-6 sm:p-7 min-h-[220px] flex flex-col justify-between shrink-0 w-[80%] sm:w-[55%] md:w-auto snap-center snap-always transition-all duration-300 motion-reduce:transition-none hover:shadow-xl hover:shadow-[#0a6c3d]/15 md:hover:-translate-y-1">
-      <div className="pointer-events-none absolute -right-8 -top-8 w-36 h-36 rounded-full bg-[#0a6c3d]/10 blur-2xl" aria-hidden="true" />
-      <div className="relative z-10 max-w-[72%]">
-        <h3 className="text-2xl sm:text-[26px] font-extrabold text-[#0a6c3d] leading-[1.15] mb-3">
-          100%
-          <br />
-          Quality
-          <br />
-          Assured
-        </h3>
-        <div className="text-sm text-gray-600 mb-4">
-          Branded Products
-          <br />
-          You Can Trust
-        </div>
-        <Link
-          href="/shop"
-          className="inline-block bg-[#0a6c3d] hover:bg-[#085531] active:scale-95 text-white text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0a6c3d]"
-        >
-          Explore Now
-        </Link>
-      </div>
-      <div className="absolute right-2 bottom-2 w-28 h-28 sm:w-32 sm:h-32 transition-transform duration-300 md:group-hover:scale-105">
-        {assets?.promoQualityAssured ? (
-          <Image src={assets.promoQualityAssured} alt="Quality assured products" fill className="object-contain" />
-        ) : (
-          <ShieldCheck className="w-full h-full text-[#0a6c3d]/15" strokeWidth={1} />
-        )}
+        <Image
+          src="https://ik.imagekit.io/rsjsqdge7/s3.png"
+          alt="Home and kitchen appliances"
+          fill
+          className="object-contain"
+        />
       </div>
     </div>
   </div>

@@ -6,59 +6,59 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
 const LatestProducts = () => {
-    const displayQuantity = 4
+    const displayQuantity = 36
     const products = useSelector(state => state.product.list) || []
 
+    const visibleProducts = products
+        .slice()
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, displayQuantity)
+
     return (
-        <section className="py-24 lg:py-32 bg-[#F5F5F7] text-[#1D1D1F] font-inter">
+        <section className="py-12 lg:py-16  text-[#1D1D1F] font-inter">
             <style dangerouslySetInnerHTML={{__html: `
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
                 .font-inter { font-family: 'Inter', sans-serif; }
             `}} />
-            
-            <div className="max-w-[1400px] mx-auto px-6 md:px-12 xl:px-24">
-                {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 md:mb-16">
-                    <div className="max-w-2xl">
-                        <h3 className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">
-                            New Arrivals
-                        </h3>
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter leading-[1.1] text-[#1D1D1F]">
-                            Latest Pieces.
-                        </h2>
-                        <p className="mt-4 text-gray-500 font-medium text-sm sm:text-base">
-                            Showing {products.length < displayQuantity ? products.length : displayQuantity} of {products.length} products
-                        </p>
+
+            <div className="max-w-[1600px] mx-auto px-3 sm:px-6 md:px-10">
+                {/* Widget Card — Flipkart style container */}
+                <div className="bg-white rounded-lg sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 md:p-8">
+
+                    {/* Header Section */}
+                    <div className="flex flex-row justify-between items-center gap-4 mb-5 sm:mb-8">
+                        <div>
+                            <h3 className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-1 sm:mb-2">
+                                New Arrivals
+                            </h3>
+                            <h2 className="text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight text-[#1D1D1F]">
+                                Latest Pieces
+                            </h2>
+                        </div>
+
+                        <Link
+                            href="/shop"
+                            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-[#1D1D1F] hover:text-black transition-colors group whitespace-nowrap shrink-0"
+                        >
+                            VIEW ALL <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
+                        </Link>
                     </div>
-                    
-                    {/* Desktop View All Button */}
-                    <Link 
-                        href="/shop" 
-                        className="hidden md:flex items-center gap-2 text-sm font-semibold text-[#1D1D1F] hover:text-gray-900 transition-colors group bg-white border border-gray-200 px-6 py-3 rounded-full hover:bg-gray-50 shadow-sm"
-                    >
-                        Shop Latest <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                </div>
 
-                {/* Product Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-12">
-                    {products
-                        .slice()
-                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                        .slice(0, displayQuantity)
-                        .map((product, index) => (
-                            <ProductCard key={index} product={product} />
+                    {/* Product Grid — dense, Flipkart-style tiles */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 sm:gap-4">
+                        {visibleProducts.map((product, index) => (
+                            <div
+                                key={index}
+                                className="bg-white border border-gray-200 rounded-md sm:rounded-lg p-2 sm:p-3 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+                            >
+                                <ProductCard product={product} />
+                            </div>
                         ))}
-                </div>
+                    </div>
 
-                {/* Mobile View All Button */}
-                <div className="mt-10 md:hidden flex justify-center">
-                    <Link 
-                        href="/shop" 
-                        className="w-full flex items-center justify-center gap-2 py-4 rounded-full bg-white border border-gray-200 text-[#1D1D1F] text-sm font-semibold hover:bg-gray-50 transition-colors shadow-sm"
-                    >
-                        Shop Latest <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    <p className="mt-6 text-center text-gray-400 font-medium text-xs sm:text-sm">
+                        Showing {visibleProducts.length} of {products.length} products
+                    </p>
                 </div>
             </div>
         </section>
