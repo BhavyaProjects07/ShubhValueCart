@@ -32,7 +32,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCart, fetchCart } from "@/lib/features/cart/cartSlice";
 import { assets } from "@/assets/assets";
 import Image from "next/image"
-import {useUser , useClerk , UserButton , useAuth} from "@clerk/nextjs";
+import {useUser , useClerk , UserButton , useAuth , SignInButton} from "@clerk/nextjs";
 import { PackageIcon, Store , MapPin , ChevronDown } from "lucide-react";
 import axios from "axios";
 import LocationModal from "./LocationModal";
@@ -605,18 +605,37 @@ useEffect(() => {
 
                         {/* Greeting header */}
                         <div className="flex items-center gap-3 px-6 py-4 bg-[#f5f7f4] border-b border-gray-100">
-                            <div className="w-10 h-10 rounded-full bg-[#0a6c3d]/10 flex items-center justify-center shrink-0">
-                                <User size={18} className="text-[#0a6c3d]" />
-                            </div>
-                            <div className="min-w-0">
-                                <div className="text-sm font-bold text-gray-900 truncate">
-                                    {user ? (user?.firstName ? `Hi, ${user.firstName}` : "Welcome back") : "Welcome to Shubh Value Cart"}
-                                </div>
-                                <div className="text-xs text-gray-500 truncate">
-                                    {user ? "Manage your account & orders" : "Sign in for faster checkout"}
-                                </div>
-                            </div>
-                        </div>
+      <div className="w-10 h-10 rounded-full bg-[#0a6c3d]/10 flex items-center justify-center shrink-0">
+        <User size={18} className="text-[#0a6c3d]" />
+      </div>
+      <div className="min-w-0">
+        <div className="text-sm font-bold text-gray-900 truncate">
+          {user
+            ? user?.firstName
+              ? `Hi, ${user.firstName}`
+              : "Welcome back"
+            : "Welcome to Shubh Value Cart"}
+        </div>
+        <div className="text-xs text-gray-500 truncate">
+          {user ? "Manage your account & orders" : "Sign in for faster checkout"}
+        </div>
+      </div>
+
+      {/* Right side: Clerk button */}
+      <div className="ml-auto">
+        {user ? (
+          <UserButton afterSignOutUrl="/" />
+        ) : (
+          <SignInButton mode="modal">
+            <button className="px-3 py-1 text-sm font-medium text-white bg-[#0a6c3d] rounded-md hover:bg-[#085a32] transition">
+              Sign In
+            </button>
+          </SignInButton>
+        )}
+      </div>
+    </div>
+
+                        
 
                         <Link
                             href="/orders"
