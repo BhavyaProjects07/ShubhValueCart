@@ -318,6 +318,14 @@ const Footer = () => {
         >
           © {new Date().getFullYear()} Shubh Value Cart. All rights reserved.
         </motion.p>
+
+        <motion.p
+          variants={fadeUp}
+          onClick={() => window.open("https://linkedin.com/in/bhavya-sharma-b34179315", "_blank")}
+          className="text-center text-[13px] sm:text-sm text-slate-500 mt-6 px-2"
+        >
+          © {new Date().getFullYear()} Developed by Bhavya Sharma
+        </motion.p>
       </motion.div>
     </footer>
   );
