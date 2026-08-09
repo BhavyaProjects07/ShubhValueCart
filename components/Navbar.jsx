@@ -626,11 +626,11 @@ useEffect(() => {
         {user ? (
           <UserButton afterSignOutUrl="/" />
         ) : (
-          <SignInButton mode="modal">
+          <Link href="/phone-signup">
             <button className="px-3 py-1 text-sm font-medium text-white bg-[#0a6c3d] rounded-md hover:bg-[#085a32] transition">
               Sign In
             </button>
-          </SignInButton>
+          </Link>
         )}
       </div>
     </div>
