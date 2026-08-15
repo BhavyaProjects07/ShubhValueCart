@@ -210,7 +210,7 @@ export default function About() {
                     +91 89554 97322
                   </a>
                   <a href="tel:+919509086545" className="text-lg font-medium hover:text-[#ff9900] transition-colors block">
-                    +91 84456 95011
+                    +91 95090 86545
                   </a>
                 </div>
               </div>
