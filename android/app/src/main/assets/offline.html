@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>You're Offline</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 24px;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background: #ffffff;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+
+            text-align: center;
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+
+            margin: 0 auto 24px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f0fdf4;
+
+            font-size: 38px;
+        }
+
+        h1 {
+            margin: 0;
+
+            font-size: 28px;
+            font-weight: 700;
+
+            color: #111827;
+        }
+
+        p {
+            margin-top: 12px;
+
+            color: #6b7280;
+
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .status {
+            margin-top: 20px;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 8px 14px;
+
+            border-radius: 999px;
+
+            background: #fef2f2;
+            color: #dc2626;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="icon">
+            📡
+        </div>
+
+        <h1>
+            You're Offline
+        </h1>
+
+        <p>
+            Please check your internet connection.
+            Shubh Value Cart will automatically reconnect
+            when your internet is available.
+        </p>
+
+        <div class="status">
+            <span class="dot"></span>
+            No Internet Connection
+        </div>
+
+    </div>
+
+</body>
+
+</html>

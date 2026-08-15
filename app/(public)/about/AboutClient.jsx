@@ -209,7 +209,7 @@ export default function About() {
                   <a href="tel:+918955497322" className="text-lg font-medium hover:text-[#ff9900] transition-colors block">
                     +91 89554 97322
                   </a>
-                  <a href="tel:+918445695011" className="text-lg font-medium hover:text-[#ff9900] transition-colors block">
+                  <a href="tel:+919509086545" className="text-lg font-medium hover:text-[#ff9900] transition-colors block">
                     +91 84456 95011
                   </a>
                 </div>

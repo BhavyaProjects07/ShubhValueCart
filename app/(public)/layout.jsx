@@ -6,8 +6,8 @@ import Preloader from "@/components/Preloader";
 import BottomBar from "@/components/BottomBar";
 import WhatsAppButton from "@/components/Whatsapp";
 import ShubhamGoyal from "@/components/ShubhamGoyal";
+import OfflineScreen from "@/components/OfflineScreen";
 
-import OfflineGuard from "@/components/OfflineGuard";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -57,8 +57,9 @@ export default function PublicLayout({ children }) {
   }, [cartItems, user, getToken, dispatch]);
 
   return (
-    <OfflineGuard>
-      <>
+    
+    <>
+      <OfflineScreen/>
         {/* Preloader */}
         <Preloader />
 
@@ -80,6 +81,6 @@ export default function PublicLayout({ children }) {
         {/* Footer */}
         <Footer />
       </>
-    </OfflineGuard>
+    
   );
 }
