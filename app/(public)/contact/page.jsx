@@ -45,7 +45,7 @@ const Contact = () => {
     {
       icon: <Phone className="w-6 h-6 text-[#2874f0]" />,
       title: "Phone Number",
-      details: "+91 9509086545\n+91 9006848596",
+      details: "+91 9509086545\n++91 8955497322",
       action: "Call Now",
       link: "tel:+919509086545"
     },
