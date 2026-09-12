@@ -475,7 +475,7 @@ export default function Hero2() {
         
 
         
-      <Newsletter />
+      <Newsletter id="categories" />
 
         
 

@@ -22,7 +22,7 @@ export default function BottomBar() {
     },
     {
       name: "Categories",
-      href: "/categories",
+      href: "/#categories",
       icon: Grid2x2,
     },
     {
