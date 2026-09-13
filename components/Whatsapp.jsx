@@ -14,14 +14,14 @@ export default function MarketingButton() {
         {/* Floating Image */}
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-20 md:bottom-5 right-4 z-50 group"
+          className="fixed bottom-20 md:bottom-10 left-1 z-50 group"
         >
           <div className="relative">
             <Image
               src="https://ik.imagekit.io/rsjsqdge7/Screenshot%202026-07-26%20012224.png?updatedAt=1785009214170" // <-- Replace with your image
               alt="Saurabh Jain"
-              width={40}
-              height={40}
+              width={35}
+              height={35}
               className="rounded-full object-cover border-4 border-white shadow-2xl transition-transform duration-300 group-hover:scale-110"
             />
 
@@ -49,9 +49,9 @@ export default function MarketingButton() {
           <Image
             src="https://ik.imagekit.io/rsjsqdge7/Screenshot%202026-07-26%20012224.png?updatedAt=1785009214170"
             alt="Saurabh Jain"
-            width={24}
-            height={24}
-            className="rounded-full object-cover"
+            width={16}
+              height={16}
+              className="rounded-full object-cover"
           />
 
           <div className="leading-tight">

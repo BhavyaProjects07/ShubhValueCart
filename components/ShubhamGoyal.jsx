@@ -11,7 +11,7 @@ export default function FounderFloatingCard() {
   // Collapsed State (Only Image)
   if (collapsed) {
     return (
-      <div className="fixed right-4 bottom-35 md:bottom-24 z-[999]">
+      <div className="fixed right-4 bottom-20 md:bottom-14 z-[999]">
         <button
           onClick={() => setCollapsed(false)}
           className="relative h-10 w-10 overflow-hidden rounded-full shadow-xl ring-2 ring-white transition-all duration-300 hover:scale-105"
