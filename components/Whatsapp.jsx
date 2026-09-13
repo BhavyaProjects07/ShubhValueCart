@@ -14,7 +14,7 @@ export default function MarketingButton() {
         {/* Floating Image */}
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-20 md:bottom-10 left-1 z-50 group"
+          className="fixed bottom-20 md:bottom-10 left-2 z-50 group"
         >
           <div className="relative">
             <Image
@@ -33,7 +33,7 @@ export default function MarketingButton() {
   }
 
   return (
-    <div className="fixed bottom-20 md:bottom-5 left-1 z-50">
+    <div className="fixed bottom-20 md:bottom-6 left-2 z-50">
 
       {/* Close */}
       <button
