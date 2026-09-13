@@ -33,7 +33,7 @@ export default function MarketingButton() {
   }
 
   return (
-    <div className="fixed bottom-20 md:bottom-5 right-5 z-50">
+    <div className="fixed bottom-20 md:bottom-5 left-1 z-50">
 
       {/* Close */}
       <button

@@ -28,7 +28,7 @@ export default function FounderFloatingCard() {
   }
 
   return (
-    <div className="fixed bottom-35 md:bottom-24 right-4 z-[999] animate-in slide-in-from-right-8 duration-500">
+    <div className="fixed bottom-20 md:bottom-14 right-4 z-[999] animate-in slide-in-from-right-8 duration-500">
       {/* Close Button */}
       <button
         onClick={() => setCollapsed(true)}
