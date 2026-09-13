@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   User,
   MessageCircle,
+  Phone,
 } from "lucide-react";
 
 export default function BottomBar() {
@@ -21,10 +22,11 @@ export default function BottomBar() {
       icon: Home,
     },
     {
-      name: "Categories",
-      href: "/#categories",
-      icon: Grid2x2,
-    },
+  name: "Call",
+  href: "tel:919509086545",   // This makes it clickable to dial
+  icon: Phone,               // Use a phone icon from lucide-react
+}
+,
     {
       name: "Deals",
       href: "/#deals",

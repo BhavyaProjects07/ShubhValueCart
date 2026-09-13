@@ -637,17 +637,31 @@ useEffect(() => {
 
                         
 
-                        <Link
-                            href="/orders"
-                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            <div className="flex items-center gap-3">
-                                <PackageIcon size={18} className="text-[#0a6c3d]" />
-                                <span className="text-sm font-medium text-gray-800">My Orders</span>
-                            </div>
-                            <ChevronRight size={16} className="text-gray-400" />
-                        </Link>
+                       <Link
+    href="/orders"
+    className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+    onClick={(e) => {
+        if (!user) {
+            e.preventDefault();
+            setMobileMenuOpen(false);
+
+            alert("Please login to view your orders.");
+
+            return;
+        }
+
+        setMobileMenuOpen(false);
+    }}
+>
+    <div className="flex items-center gap-3">
+        <PackageIcon size={18} className="text-[#0a6c3d]" />
+        <span className="text-sm font-medium text-gray-800">
+            My Orders
+        </span>
+    </div>
+
+    <ChevronRight size={16} className="text-gray-400" />
+</Link>
 
                         <Link
                             href="/shop"
