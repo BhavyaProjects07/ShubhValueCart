@@ -73,7 +73,7 @@ export default function PublicLayout({ children }) {
         <ShubhamGoyal />
 
         {/* Marketing / WhatsApp Widget */}
-        <WhatsAppButton />
+        
 
         {/* Mobile Bottom Navigation */}
         <BottomBar />

@@ -219,6 +219,26 @@ useEffect(() => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Lock background scroll while the mobile drawer is open
+    useEffect(() => {
+        if (!mobileMenuOpen) return;
+        const original = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = original;
+        };
+    }, [mobileMenuOpen]);
+
+    // Close the mobile drawer on Escape
+    useEffect(() => {
+        if (!mobileMenuOpen) return;
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") setMobileMenuOpen(false);
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [mobileMenuOpen]);
+
     const handleSearch = (e) => {
         e.preventDefault()
         if (!search.trim()) return
@@ -457,6 +477,7 @@ useEffect(() => {
                             <button
                                 onClick={() => setMobileMenuOpen((v) => !v)}
                                 aria-label="Menu"
+                                aria-expanded={mobileMenuOpen}
                                 className="w-9 h-9 -ml-1.5 flex items-center justify-center rounded-full text-gray-800 active:bg-gray-100 transition-colors"
                             >
                                 {mobileMenuOpen ? <X size={21} strokeWidth={2.2} /> : <Menu size={21} strokeWidth={2.2} />}
@@ -599,147 +620,173 @@ useEffect(() => {
                     </div>
                 </div>
 
-                {/* Mobile Menu Dropdown */}
-                {mobileMenuOpen && (
-                    <div className="lg:hidden bg-white rounded-t-[22px] shadow-[0_-4px_24px_rgba(15,23,42,0.12)] animate-[fadeInUp_0.25s_ease-out] overflow-hidden">
+                {/* ============================================================ */}
+                {/*  MOBILE MENU DRAWER                                           */}
+                {/*  Slides in left → right and slides back out on close.         */}
+                {/*  Always mounted (not conditionally rendered) so the closing   */}
+                {/*  transition can actually play instead of snapping away.       */}
+                {/*  Closes on: backdrop click, Escape, or tapping any option.    */}
+                {/* ============================================================ */}
 
-                        {/* Greeting header */}
-                        <div className="flex items-center gap-3 px-6 py-4 bg-[#f5f7f4] border-b border-gray-100">
-      <div className="w-10 h-10 rounded-full bg-[#0a6c3d]/10 flex items-center justify-center shrink-0">
-        <User size={18} className="text-[#0a6c3d]" />
-      </div>
-      <div className="min-w-0">
-        <div className="text-sm font-bold text-gray-900 truncate">
-          {user
-            ? user?.firstName
-              ? `Hi, ${user.firstName}`
-              : "Welcome back"
-            : "Welcome to Shubh Value Cart"}
-        </div>
-        <div className="text-xs text-gray-500 truncate">
-          {user ? "Manage your account & orders" : "Sign in for faster checkout"}
-        </div>
-      </div>
+                {/* Backdrop */}
+                <div
+                    onClick={() => setMobileMenuOpen(false)}
+                    aria-hidden="true"
+                    className={`lg:hidden fixed inset-0 bg-black/50 z-[109] transition-opacity duration-300 ease-out ${
+                        mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
+                />
 
-      {/* Right side: Clerk button */}
-      <div className="ml-auto">
-        {user ? (
-          <UserButton afterSignOutUrl="/" />
-        ) : (
-          <Link href="/phone-signup">
-            <button className="px-3 py-1 text-sm font-medium text-white bg-[#0a6c3d] rounded-md hover:bg-[#085a32] transition">
-              Sign In
-            </button>
-          </Link>
-        )}
-      </div>
-    </div>
-
-                        
-
-                       <Link
-    href="/orders"
-    className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-    onClick={(e) => {
-        if (!user) {
-            e.preventDefault();
-            setMobileMenuOpen(false);
-
-            alert("Please login to view your orders.");
-
-            return;
-        }
-
-        setMobileMenuOpen(false);
-    }}
->
-    <div className="flex items-center gap-3">
-        <PackageIcon size={18} className="text-[#0a6c3d]" />
-        <span className="text-sm font-medium text-gray-800">
-            My Orders
-        </span>
-    </div>
-
-    <ChevronRight size={16} className="text-gray-400" />
-</Link>
-
-                        <Link
-                            href="/shop"
-                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            <div className="flex items-center gap-3">
-                                <ShoppingBag size={18} className="text-[#0a6c3d]" />
-                                <span className="text-sm font-medium text-gray-800">Shop</span>
+                {/* Sliding panel */}
+                <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Main menu"
+                    className={`lg:hidden fixed top-0 left-0 h-full w-[82%] max-w-[320px] bg-white z-[110] shadow-[4px_0_28px_rgba(15,23,42,0.18)] transform transition-transform duration-300 ease-out overflow-y-auto hide-scrollbar ${
+                        mobileMenuOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
+                    }`}
+                >
+                    {/* Greeting header */}
+                    <div className="flex items-center gap-3 px-6 py-4 bg-[#f5f7f4] border-b border-gray-100 sticky top-0">
+                        <div className="w-10 h-10 rounded-full bg-[#0a6c3d]/10 flex items-center justify-center shrink-0">
+                            <User size={18} className="text-[#0a6c3d]" />
+                        </div>
+                        <div className="min-w-0">
+                            <div className="text-sm font-bold text-gray-900 truncate">
+                                {user
+                                    ? user?.firstName
+                                        ? `Hi, ${user.firstName}`
+                                        : "Welcome back"
+                                    : "Welcome to Shubh Value Cart"}
                             </div>
-                            <ChevronRight size={16} className="text-gray-400" />
-                        </Link>
-
-                        <Link
-                            href="/terms"
-                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            <div className="flex items-center gap-3">
-                                <Gift size={18} className="text-[#0a6c3d]" />
-                                <span className="text-sm font-medium text-gray-800">Terms & Conditions</span>
+                            <div className="text-xs text-gray-500 truncate">
+                                {user ? "Manage your account & orders" : "Sign in for faster checkout"}
                             </div>
-                            <ChevronRight size={16} className="text-gray-400" />
-                        </Link>
+                        </div>
 
-                        <Link
-                            href="/about"
-                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            <div className="flex items-center gap-3">
-                                <Info size={18} className="text-[#0a6c3d]" />
-                                <span className="text-sm font-medium text-gray-800">About Us</span>
-                            </div>
-                            <ChevronRight size={16} className="text-gray-400" />
-                        </Link>
-
-                        <Link
-                            href="/contact"
-                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            <div className="flex items-center gap-3">
-                                <PhoneCallIcon size={18} className="text-[#0a6c3d]" />
-                                <span className="text-sm font-medium text-gray-800">Contact Us</span>
-                            </div>
-                            <ChevronRight size={16} className="text-gray-400" />
-                        </Link>
-
-                        {isSeller && (
-                            <Link
-                                href="/admin-verify-svc?redirect=/store"
-                                className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                        {/* Right side: Clerk button + explicit close */}
+                        <div className="ml-auto flex items-center gap-1.5 shrink-0">
+                            {user ? (
+                                <UserButton afterSignOutUrl="/" />
+                            ) : (
+                                <Link href="/phone-signup" onClick={() => setMobileMenuOpen(false)}>
+                                    <button className="px-3 py-1 text-sm font-medium text-white bg-[#0a6c3d] rounded-md hover:bg-[#085a32] transition">
+                                        Sign In
+                                    </button>
+                                </Link>
+                            )}
+                            <button
                                 onClick={() => setMobileMenuOpen(false)}
+                                aria-label="Close menu"
+                                className="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-200/70 active:bg-gray-200 transition-colors"
                             >
-                                <div className="flex items-center gap-3">
-                                    <Store size={18} className="text-[#0a6c3d]" />
-                                    <span className="text-sm font-medium text-gray-800">Store Dashboard</span>
-                                </div>
-                                <ChevronRight size={16} className="text-gray-400" />
-                            </Link>
-                        )}
-
-                        {isAdmin && (
-                            <Link
-                                href="/admin-verify-svc?redirect=/admin"
-                                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
-                                onClick={() => setMobileMenuOpen(false)}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <PackageIcon size={18} className="text-[#0a6c3d]" />
-                                    <span className="text-sm font-medium text-gray-800">Admin Panel</span>
-                                </div>
-                                <ChevronRight size={16} className="text-gray-400" />
-                            </Link>
-                        )}
+                                <X size={18} />
+                            </button>
+                        </div>
                     </div>
-                )}
+
+                    <Link
+                        href="/orders"
+                        className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                        onClick={(e) => {
+                            if (!user) {
+                                e.preventDefault();
+                                setMobileMenuOpen(false);
+
+                                alert("Please login to view your orders.");
+
+                                return;
+                            }
+
+                            setMobileMenuOpen(false);
+                        }}
+                    >
+                        <div className="flex items-center gap-3">
+                            <PackageIcon size={18} className="text-[#0a6c3d]" />
+                            <span className="text-sm font-medium text-gray-800">
+                                My Orders
+                            </span>
+                        </div>
+
+                        <ChevronRight size={16} className="text-gray-400" />
+                    </Link>
+
+                    <Link
+                        href="/shop"
+                        className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        <div className="flex items-center gap-3">
+                            <ShoppingBag size={18} className="text-[#0a6c3d]" />
+                            <span className="text-sm font-medium text-gray-800">Shop</span>
+                        </div>
+                        <ChevronRight size={16} className="text-gray-400" />
+                    </Link>
+
+                    <Link
+                        href="/terms"
+                        className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        <div className="flex items-center gap-3">
+                            <Gift size={18} className="text-[#0a6c3d]" />
+                            <span className="text-sm font-medium text-gray-800">Terms & Conditions</span>
+                        </div>
+                        <ChevronRight size={16} className="text-gray-400" />
+                    </Link>
+
+                    <Link
+                        href="/about"
+                        className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        <div className="flex items-center gap-3">
+                            <Info size={18} className="text-[#0a6c3d]" />
+                            <span className="text-sm font-medium text-gray-800">About Us</span>
+                        </div>
+                        <ChevronRight size={16} className="text-gray-400" />
+                    </Link>
+
+                    <Link
+                        href="/contact"
+                        className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        <div className="flex items-center gap-3">
+                            <PhoneCallIcon size={18} className="text-[#0a6c3d]" />
+                            <span className="text-sm font-medium text-gray-800">Contact Us</span>
+                        </div>
+                        <ChevronRight size={16} className="text-gray-400" />
+                    </Link>
+
+                    {isSeller && (
+                        <Link
+                            href="/admin-verify-svc?redirect=/store"
+                            className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <div className="flex items-center gap-3">
+                                <Store size={18} className="text-[#0a6c3d]" />
+                                <span className="text-sm font-medium text-gray-800">Store Dashboard</span>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-400" />
+                        </Link>
+                    )}
+
+                    {isAdmin && (
+                        <Link
+                            href="/admin-verify-svc?redirect=/admin"
+                            className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <div className="flex items-center gap-3">
+                                <PackageIcon size={18} className="text-[#0a6c3d]" />
+                                <span className="text-sm font-medium text-gray-800">Admin Panel</span>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-400" />
+                        </Link>
+                    )}
+                </div>
             </nav>
 
             <div
