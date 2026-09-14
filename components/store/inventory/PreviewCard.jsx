@@ -8,6 +8,7 @@ import {
   MinusCircle,
   ArrowRight,
   AlertTriangle,
+  IndianRupee,
 } from "lucide-react";
 
 export default function PreviewCard({
@@ -38,6 +39,13 @@ export default function PreviewCard({
       color: "text-orange-600",
       bg: "bg-orange-50",
       icon: RefreshCcw,
+    },
+    {
+      title: "Price Changes",
+      value: preview.priceUpdates,
+      color: "text-purple-600",
+      bg: "bg-purple-50",
+      icon: IndianRupee,
     },
     {
       title: "Out Of Stock",
@@ -74,7 +82,7 @@ export default function PreviewCard({
 
       {/* Statistics */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5 p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6 gap-5 p-6">
 
         {cards.map((card) => {
 
@@ -99,7 +107,7 @@ export default function PreviewCard({
               </h3>
 
               <div className={`text-3xl font-bold mt-1 ${card.color}`}>
-                {card.value.toLocaleString()}
+                {(card.value ?? 0).toLocaleString()}
               </div>
 
             </div>
@@ -131,11 +139,12 @@ export default function PreviewCard({
               />
 
               <span className="text-sm">
-                Update stock of existing products
+                Update existing products
                 {syncExisting && (
                   <span className="text-gray-500">
                     {" "}
-                    (includes marking products missing from Excel as Out Of Stock)
+                    (includes stock, price and MRP changes, plus
+                    marking products missing from Excel as Out Of Stock)
                   </span>
                 )}
               </span>

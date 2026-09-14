@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/bs443/AppData/Local/Temp/5556a276-8771-4637-89c5-f81517f38a8d_assignment2.zip.a8d/assignment2/src",
+      "program": "c:/Users/bs443/AppData/Local/Temp/5556a276-8771-4637-89c5-f81517f38a8d_assignment2.zip.a8d/assignment2/src/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
