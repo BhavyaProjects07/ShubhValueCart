@@ -3,7 +3,7 @@ import React from 'react';
 import { MapPin, Mail, Phone, ShoppingBag, Package, Shirt, Award, TrendingUp, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Script from "next/script";
-import Saurabh from "@/components/Saurabh";
+
 export default function About() {
 
     <Script
@@ -128,7 +128,7 @@ export default function About() {
           </div>
         </div>
 
-        <Saurabh />
+        
 
         {/* Header Section */}
         <div className="text-center mb-16">
