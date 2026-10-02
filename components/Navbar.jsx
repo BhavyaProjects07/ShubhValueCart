@@ -32,7 +32,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCart, fetchCart } from "@/lib/features/cart/cartSlice";
 import { assets } from "@/assets/assets";
 import Image from "next/image"
-import {useUser , useClerk , UserButton , useAuth , SignInButton} from "@clerk/nextjs";
+import {useUser , useClerk , UserButton , useAuth} from "@clerk/nextjs";
 import { PackageIcon, Store , MapPin , ChevronDown } from "lucide-react";
 import axios from "axios";
 import LocationModal from "./LocationModal";
@@ -55,7 +55,7 @@ const Navbar = () => {
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSeller, setIsSeller] = useState(false)
     const { user } = useUser()
-    const {openSignIn} = useClerk()
+    const { openSignUp } = useClerk()
     const router = useRouter();
     const [search, setSearch] = useState('')
     const [isVisible, setIsVisible] = useState(false);
@@ -420,7 +420,7 @@ useEffect(() => {
                                 <div className="w-24 h-9 bg-gray-200 rounded-md animate-pulse" />
                             ) : !user ? (
                                 <button
-                                    onClick={() => router.push("/phone-signup")}
+                                    onClick={() => openSignUp({ redirectUrl: "/" })}
                                     className="flex items-center gap-2 text-gray-700 hover:text-[#0a6c3d] transition-colors"
                                 >
                                     <User size={20} />
@@ -669,11 +669,15 @@ useEffect(() => {
                             {user ? (
                                 <UserButton afterSignOutUrl="/" />
                             ) : (
-                                <Link href="/phone-signup" onClick={() => setMobileMenuOpen(false)}>
-                                    <button className="px-3 py-1 text-sm font-medium text-white bg-[#0a6c3d] rounded-md hover:bg-[#085a32] transition">
-                                        Sign In
-                                    </button>
-                                </Link>
+                                <button
+                                    onClick={() => {
+                                        setMobileMenuOpen(false);
+                                        openSignUp({ redirectUrl: "/" });
+                                    }}
+                                    className="px-3 py-1 text-sm font-medium text-white bg-[#0a6c3d] rounded-md hover:bg-[#085a32] transition"
+                                >
+                                    Sign In
+                                </button>
                             )}
                             <button
                                 onClick={() => setMobileMenuOpen(false)}

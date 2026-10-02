@@ -34,7 +34,8 @@ export default function About() {
       },
     }),
   }}
-/>
+  />
+  
   return (
     <div className="min-h-screen bg-[#FDFBF7] py-16 px-4 sm:px-6 lg:px-8 pt-[100px] md:pt-[140px]">
       <div className="max-w-6xl mx-auto">
