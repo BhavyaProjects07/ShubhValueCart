@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 
@@ -10,7 +10,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
     try {
-        const { userId } = getAuth(request);
+        const session = await getSession();
+    const userId = session?.userId;
         const { orderId, productId, rating, review } = await request.json();
         
         const order = await prisma.order.findUnique({

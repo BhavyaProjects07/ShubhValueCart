@@ -1,30 +1,21 @@
-import { clerkClient } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
 
 const authAdmin = async (userId) => {
   try {
-    // console.log("Incoming userId:", userId);
-
     if (!userId) return false;
 
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
 
-    const email = user.emailAddresses[0]?.emailAddress;
+    if (!user || !user.phone) return false;
+    const phone = user.phone;
 
-    // console.log("User email:", email);
-    // console.log("ADMIN_EMAIL:", process.env.ADMIN_EMAIL);
-
-    const admins = process.env.ADMIN_EMAIL
+    const admins = process.env.ADMIN_PHONE
       ?.split(",")
-      .map((e) => e.trim().toLowerCase());
+      .map((e) => e.trim()) || [];
 
-    // console.log("Admin list:", admins);
-
-    const isAdmin = admins.includes(email.toLowerCase());
-
-    // console.log("Is Admin:", isAdmin);
-
-    return isAdmin;
+    return admins.includes(phone);
   } catch (err) {
     console.error(err);
     return false;

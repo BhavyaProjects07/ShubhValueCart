@@ -1,5 +1,5 @@
 import authSeller from "@/middlewares/authSeller";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { openai } from "@/configs/openai";
 
@@ -67,8 +67,8 @@ Description must be 4 to 5 sentences. and the product title must be 1 line
 
 export async function POST(request) {
     try {
-        const { userId } = getAuth(request)
-        const isSeller = await authSeller(userId)
+        const session = await getSession();
+    const userId = session?.userId;const isSeller = await authSeller(userId)
 
         if (!isSeller) {
             return NextResponse.json({ error : 'Not authorized'} , {status : 401})

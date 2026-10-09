@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 import * as XLSX from "xlsx";
 
 
 export default function UsersTable() {
-  const { getToken } = useAuth();
+  
     const currency =
   process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || "₹";
   // =========================
@@ -35,7 +35,7 @@ export default function UsersTable() {
     try {
       setLoading(true);
 
-      const token = await getToken();
+      
 
       const { data } = await axios.get("/api/admin/users", {
         headers: {
@@ -71,7 +71,7 @@ export default function UsersTable() {
     return users.filter((user) => {
       return (
         user.name?.toLowerCase().includes(keyword) ||
-        user.email?.toLowerCase().includes(keyword) ||
+        
         user.phone?.toLowerCase().includes(keyword) ||
         user.storeName?.toLowerCase().includes(keyword)
       );
@@ -140,7 +140,7 @@ export default function UsersTable() {
     try {
       const excelData = users.map((user) => ({
         Name: user.name,
-        Email: user.email,
+        
         Phone: user.phone,
         Orders: user.orders,
         CompletedOrders: user.completedOrders,
@@ -362,7 +362,7 @@ export default function UsersTable() {
             </p>
 
             <p className="text-sm text-gray-500">
-              {user.email}
+              {user.phone}
             </p>
 
           </div>

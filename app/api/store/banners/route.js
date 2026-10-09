@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import imagekit from "@/configs/imageKit";
-import { auth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 
 // GET -> Fetch all banners
 export async function GET() {

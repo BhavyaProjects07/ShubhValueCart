@@ -4,14 +4,12 @@ import { format } from "date-fns"
 import toast from "react-hot-toast"
 import { DeleteIcon } from "lucide-react"
 import { couponDummyData } from "@/assets/assets"
-import { useAuth } from "@clerk/nextjs"
-import axios from "axios"
+import { useAuth } from "@/contexts/AuthContext";import axios from "axios"
 
 
 export default function AdminCoupons() {
   const [coupons, setCoupons] = useState([])
 
-  const { getToken } = useAuth()
   const extractMinOrderValue = (text) => {
   const match = text.match(/₹\s*(\d+)/i)
   return match ? Number(match[1]) : 0
@@ -30,7 +28,6 @@ export default function AdminCoupons() {
 
   const fetchCoupons = async () => {
     try {
-      const token = await getToken()
       const {data} = await axios.get('/api/admin/coupon', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -46,8 +43,6 @@ export default function AdminCoupons() {
   e.preventDefault()
 
   try {
-    const token = await getToken()
-
     const minOrderValue = extractMinOrderValue(newCoupon.description)
 
     const payload = {
@@ -79,7 +74,6 @@ export default function AdminCoupons() {
     try {
       const confirm = window.confirm("Are you sure you want to delete this coupon?")
       if (!confirm) return
-      const token = await getToken()
       const {data} = await axios.delete(`/api/admin/coupon?code=${code}`, {
         headers: { 
           Authorization: `Bearer ${token}`,

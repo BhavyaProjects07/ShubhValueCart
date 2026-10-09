@@ -1,12 +1,22 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
-export default clerkMiddleware();
+export function middleware(request) {
+  const token = request.cookies.get('svc_session')?.value;
+  const path = request.nextUrl.pathname;
+
+  // Protect Admin and Store routes from unauthenticated users
+  if ((path.startsWith('/admin') || path.startsWith('/store')) && !token) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  // Allow next handler
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
+    // Apply middleware to specific protected routes (frontend only, APIs are protected internally)
+    '/admin/:path*',
+    '/store/:path*',
   ],
 };

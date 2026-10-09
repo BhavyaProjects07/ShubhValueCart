@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
+import { createSession, createRegistrationSession } from "@/lib/auth"
 
 export async function POST(req) {
   try {
@@ -33,7 +34,7 @@ export async function POST(req) {
       )
     }
 
-    console.log("VERIFY PHONE:", normalizedPhone)
+
 
     // =========================
     // 🔍 FIND OTP
@@ -43,7 +44,7 @@ export async function POST(req) {
       orderBy: { createdAt: "desc" } // ✅ important
     })
 
-    console.log("DB RECORD:", record)
+
 
     if (!record) {
       return NextResponse.json(
@@ -96,9 +97,28 @@ export async function POST(req) {
       where: { id: record.id }
     })
 
-    return NextResponse.json({
-      message: "OTP verified successfully"
+    // 🔍 Find existing user
+    const user = await prisma.user.findUnique({
+      where: { phone: normalizedPhone }
     })
+
+    if (user) {
+      // 🔐 Create authenticated session
+      await createSession(user.id)
+
+      return NextResponse.json({
+        message: "OTP verified and logged in successfully",
+        isNewUser: false
+      })
+    } else {
+      // ⚠️ User not found. DO NOT create automatically.
+      await createRegistrationSession(normalizedPhone)
+
+      return NextResponse.json({
+        message: "OTP verified. Please complete registration.",
+        isNewUser: true
+      })
+    }
 
   } catch (error) {
     console.error("VERIFY ERROR:", error)

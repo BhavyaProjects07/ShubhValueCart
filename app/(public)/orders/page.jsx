@@ -3,7 +3,7 @@ import PageTitle from "@/components/PageTitle"
 import { useEffect, useState } from "react";
 import OrderItem from "@/components/OrderItem";
 import { orderDummyData } from "@/assets/assets";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
@@ -12,15 +12,14 @@ export default function Orders() {
 
     const router = useRouter()
 
-    const { getToken } = useAuth();
-    const { user , isLoaded} = useUser();
+    
+    const { user, loading: isLoaded } = useAuth();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const token = await getToken()
                 const {data}= await axios.get('/api/orders',{
                     headers:{ Authorization:`Bearer ${token}` }
                 });
@@ -38,7 +37,7 @@ export default function Orders() {
                 router.push('/')
             }
         }
-    }, [isLoaded, user, getToken, router]);
+    }, [isLoaded, user, router]);
     
     if (!isLoaded || loading) {
         return <Loading />;

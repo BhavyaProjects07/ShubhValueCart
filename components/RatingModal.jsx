@@ -4,7 +4,7 @@ import { Star } from 'lucide-react';
 import React, { useState } from 'react'
 import { XIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from "@/contexts/AuthContext";
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { addRating } from '@/lib/features/rating/ratingSlice';
@@ -14,7 +14,6 @@ import { addRating } from '@/lib/features/rating/ratingSlice';
 const RatingModal = ({ ratingModal, setRatingModal }) => {
 
 
-    const { getToken } = useAuth()
     const dispatch = useDispatch()
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
@@ -28,7 +27,6 @@ const RatingModal = ({ ratingModal, setRatingModal }) => {
         }
 
         try {
-            const token = await getToken()
             const { data } = await axios.post('api/rating', { productId: ratingModal.productId, orderId: ratingModal.orderId, rating, review }, {
                 headers: {
                     Authorization: `Bearer ${token}`

@@ -1,6 +1,6 @@
 import { inngest } from "@/inngest/client";
 import authAdmin from "@/middlewares/authAdmin";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { cacheTag } from "next/cache";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
@@ -10,8 +10,8 @@ import prisma from "@/lib/prisma";
 
 export async function POST(request) {
     try {
-        const { userId } = getAuth(request)
-        const isAdmin = await authAdmin(userId)
+        const session = await getSession();
+    const userId = session?.userId;const isAdmin = await authAdmin(userId)
 
         if (!isAdmin) {
             return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 })
@@ -46,8 +46,8 @@ export async function POST(request) {
 
 export async function DELETE(request) {
     try {
-        const { userId } = getAuth(request)
-        const isAdmin = await authAdmin(userId)
+        const session = await getSession();
+    const userId = session?.userId;const isAdmin = await authAdmin(userId)
         if (!isAdmin) {
             return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 })
         }
@@ -69,8 +69,8 @@ export async function DELETE(request) {
 // get all coupons
 export async function GET(request) { 
     try {
-        const { userId } = getAuth(request)
-        const isAdmin = await authAdmin(userId)
+        const session = await getSession();
+    const userId = session?.userId;const isAdmin = await authAdmin(userId)
         if (!isAdmin) {
             return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 })
         }

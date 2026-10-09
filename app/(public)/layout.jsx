@@ -11,7 +11,7 @@ import OfflineScreen from "@/components/OfflineScreen";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 
 import { fetchProducts } from "@/lib/features/product/productSlice";
 import {
@@ -24,8 +24,8 @@ import { fetchUserRatings } from "@/lib/features/rating/ratingSlice";
 export default function PublicLayout({ children }) {
   const dispatch = useDispatch();
 
-  const { user } = useUser();
-  const { getToken } = useAuth();
+  const { user } = useAuth();
+  
 
   const { cartItems } = useSelector((state) => state.cart);
 
@@ -42,10 +42,10 @@ export default function PublicLayout({ children }) {
   useEffect(() => {
     if (!user) return;
 
-    dispatch(fetchCart({ getToken }));
-    dispatch(fetchAddress({ getToken }));
-    dispatch(fetchUserRatings({ getToken }));
-  }, [user, getToken, dispatch]);
+    dispatch(fetchCart());
+    dispatch(fetchAddress());
+    dispatch(fetchUserRatings());
+  }, [user, dispatch]);
 
   /* --------------------------------
      Upload Cart
@@ -53,8 +53,8 @@ export default function PublicLayout({ children }) {
   useEffect(() => {
     if (!user) return;
 
-    dispatch(uploadCart({ getToken }));
-  }, [cartItems, user, getToken, dispatch]);
+    dispatch(uploadCart());
+  }, [cartItems, user, dispatch]);
 
   return (
     

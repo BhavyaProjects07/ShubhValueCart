@@ -7,8 +7,7 @@ import { useState } from "react"
 import RatingModal from "./RatingModal"
 import axios from "axios"
 import toast from "react-hot-toast"
-import { useAuth } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext";import { useRouter } from "next/navigation"
 
 
 const OrderItem = ({ order, onCancelSuccess }) => {
@@ -18,8 +17,6 @@ const OrderItem = ({ order, onCancelSuccess }) => {
 
   const [ratingModal, setRatingModal] = useState(null)
   const [cancelLoading, setCancelLoading] = useState(false)
-
-  const { getToken } = useAuth()
 
   /* ---------------- CANCEL CONDITIONS ---------------- */
   const canCancel =
@@ -35,8 +32,6 @@ const OrderItem = ({ order, onCancelSuccess }) => {
 
     try {
       setCancelLoading(true)
-      const token = await getToken()
-
       await axios.post(
         "/api/orders/cancel",
         { orderId: order.id },

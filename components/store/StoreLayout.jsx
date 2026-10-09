@@ -6,13 +6,11 @@ import { ArrowRightIcon } from "lucide-react"
 import SellerNavbar from "./StoreNavbar"
 import SellerSidebar from "./StoreSidebar"
 import { dummyStoreData } from "@/assets/assets"
-import { useAuth } from "@clerk/nextjs"
-import { set } from "date-fns"
+import { useAuth } from "@/contexts/AuthContext";import { set } from "date-fns"
 import axios from "axios"
 
 const StoreLayout = ({ children }) => {
 
-  const { getToken } = useAuth()
   const [isStoreActive, setIsStoreActive] = useState(true)
 
   const [isSeller, setIsSeller] = useState(false)
@@ -21,7 +19,6 @@ const StoreLayout = ({ children }) => {
 
   const fetchIsSeller = async () => {
     try {
-      const token = await getToken()
       const { data } = await axios.get("/api/store/is-seller", {
         headers: {
           Authorization: `Bearer ${token}`

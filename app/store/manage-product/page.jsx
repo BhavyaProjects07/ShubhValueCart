@@ -4,13 +4,10 @@ import { toast } from "react-hot-toast"
 import Image from "next/image"
 import Loading from "@/components/Loading"
 import { useRouter } from "next/navigation"
-import { useAuth, useUser } from "@clerk/nextjs"
-import axios from "axios"
+import { useAuth } from "@/contexts/AuthContext";import axios from "axios"
 
 export default function StoreManageProducts() {
-  const { getToken } = useAuth()
-  const { user } = useUser()
-  const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || "$"
+  const { user } = useAuth();const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || "$"
   const router = useRouter()
 
   const [loading, setLoading] = useState(true)
@@ -47,8 +44,6 @@ export default function StoreManageProducts() {
   // ✅ UPDATED FETCH (ONLY CHANGE HERE)
   const fetchProducts = async (pageNum = 1) => {
     try {
-      const token = await getToken()
-
       const { data } = await axios.get(
         `/api/store/product?${buildQuery(pageNum)}`,
         {
@@ -70,7 +65,6 @@ export default function StoreManageProducts() {
 
   const toggleStock = async (productId) => {
     try {
-      const token = await getToken()
       const { data } = await axios.post(
         "/api/store/stock-toggle",
         { productId },

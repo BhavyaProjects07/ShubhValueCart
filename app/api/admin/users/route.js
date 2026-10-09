@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import authAdmin from "@/middlewares/authAdmin";
 
@@ -8,7 +8,8 @@ export async function GET(req) {
     // =========================
     // AUTH
     // =========================
-    const { userId } = getAuth(req);
+    const session = await getSession();
+    const userId = session?.userId;
 
     const isAdmin = await authAdmin(userId);
 
@@ -65,7 +66,7 @@ export async function GET(req) {
 
         name: user.name,
 
-        email: user.email,
+        
 
         phone: user.phone || "-",
 

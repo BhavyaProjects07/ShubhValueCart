@@ -1,5 +1,5 @@
 import authSeller from "@/middlewares/authSeller";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
@@ -7,7 +7,8 @@ import prisma from "@/lib/prisma";
 
 export async function GET(request) {
     try {
-        const { userId } = getAuth(request);
+        const session = await getSession();
+    const userId = session?.userId;
         const storeId = await authSeller(userId);
 
         // Get all orders for seller

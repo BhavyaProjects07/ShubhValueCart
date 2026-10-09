@@ -1,4 +1,4 @@
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
@@ -7,7 +7,8 @@ import prisma from "@/lib/prisma";
 
 export async function POST(request) {
   try {
-    const { userId } = getAuth(request);
+    const session = await getSession();
+    const userId = session?.userId;
 
     // 1. User must be logged in
     if (!userId) {
@@ -66,7 +67,8 @@ export async function POST(request) {
 
 export async function GET(request) {
     try {
-        const { userId } = getAuth(request);
+        const session = await getSession();
+    const userId = session?.userId;
 
         const addresses = await prisma.address.findMany({
             where: { userId }

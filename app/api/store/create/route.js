@@ -1,13 +1,13 @@
 // create the store
 import imagekit from "@/configs/imageKit";
 import prisma from "@/lib/prisma";
-import { getAuth} from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
     try {
-        const { userId } = getAuth(request)
-        // get the data from the form
+        const session = await getSession();
+    const userId = session?.userId;// get the data from the form
         const formData = await request.formData()
 
         const name = formData.get("name")
@@ -113,9 +113,8 @@ export async function POST(request) {
 
 export async function GET(request) {
     try { 
-        const { userId } = getAuth(request)
-
-        const store = await prisma.store.findFirst({
+        const session = await getSession();
+    const userId = session?.userId;const store = await prisma.store.findFirst({
             where: {
                 userId: userId
             }

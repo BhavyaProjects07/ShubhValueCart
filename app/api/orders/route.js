@@ -1,4 +1,4 @@
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import  prisma from "@/lib/prisma";
 import { PaymentMethod } from "@prisma/client";
@@ -28,7 +28,8 @@ const razorpay = new Razorpay({
 
 export async function POST(request) {
   try {
-    const { userId } = getAuth(request);
+    const session = await getSession();
+    const userId = session?.userId;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -180,9 +181,9 @@ const { orderIds, fullAmount, subtotal, discountAmount, shippingFee } = result;
     /* -------- CUSTOMER EMAIL (EXACT FORMAT) -------- */
 
 
-    if (user?.email && user.email.includes("@")) {
+    if (address?.email) {
       await sendBrevoEmail({
-        to: user.email,
+        to: address.email,
         subject: "Your ShubhValueCart order has been placed successfully",
         htmlContent: `
           <p>Hello ${user.name || "Customer"},</p>
@@ -291,7 +292,7 @@ const { orderIds, fullAmount, subtotal, discountAmount, shippingFee } = result;
           <h3>👤 Customer Details</h3>
           <p>
             <strong>Name:</strong> ${user.name || "N/A"}<br/>
-            <strong>Email:</strong> ${user.email}
+            <strong>Phone:</strong> ${user.phone}
           </p>
   
           <hr/>
@@ -348,7 +349,8 @@ const { orderIds, fullAmount, subtotal, discountAmount, shippingFee } = result;
 
 export async function GET(request) {
   try {
-    const { userId } = getAuth(request);
+    const session = await getSession();
+    const userId = session?.userId;
 
     const orders = await prisma.order.findMany({
       where: {

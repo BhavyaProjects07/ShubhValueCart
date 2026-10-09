@@ -9,9 +9,9 @@ datasource db {
 
 // Required for creating a User: id, name, email, image, cart (optional JSON string)
 model User {
-  id    String @id   // Clerk ID
+  id    String @id @default(cuid())
   name  String
-  email String
+
   image String?
   cart  Json   @default("{}")
 

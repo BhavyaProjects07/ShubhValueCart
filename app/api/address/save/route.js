@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
 function clean(value) {
@@ -8,7 +8,8 @@ function clean(value) {
 
 export async function POST(req) {
   try {
-    const { userId } = getAuth(req);
+    const session = await getSession();
+    const userId = session?.userId;
 
     if (!userId) {
       return NextResponse.json(

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 import AdminNavbar from "./AdminNavbar"
 import AdminSidebar from "./AdminSidebar"
-import { useUser , useAuth } from "@clerk/nextjs"
+import { useAuth } from "@/contexts/AuthContext"
 import axios from "axios"
 import { set } from "date-fns"
 
@@ -15,12 +15,8 @@ const AdminLayout = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
 
-  const { user } = useUser()
-  const { getToken } = useAuth()
-
-  const fetchIsAdmin = async () => {
+  const { user } = useAuth();const fetchIsAdmin = async () => {
     try {
-      const token = await getToken()
       const { data } = await axios.get("/api/admin/is-admin", {
         headers: { Authorization: `Bearer ${token}` },
       })

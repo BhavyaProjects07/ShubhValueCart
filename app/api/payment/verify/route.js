@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { createOrder } from "@/lib/services/createOrder";
 import prisma from "@/lib/prisma";
 import { sendBrevoEmail } from "@/lib/brevo";
@@ -40,7 +40,8 @@ export async function POST(req) {
     }
 
     // ---------------- AUTH ----------------
-    const { userId } = getAuth(req);
+    const session = await getSession();
+    const userId = session?.userId;
 
     if (!userId) {
       return NextResponse.json(
@@ -110,9 +111,9 @@ export async function POST(req) {
     `;
 
     // ---------------- CUSTOMER EMAIL ----------------
-    if (user?.email && user.email.includes("@")) {
+    if (order?.address?.email) {
       await sendBrevoEmail({
-        to: user.email,
+        to: order.address.email,
         subject: "Your ShubhValueCart order has been placed successfully",
         htmlContent: `
           <p>Hello ${user.name || "Customer"},</p>
@@ -144,7 +145,7 @@ export async function POST(req) {
         <p><strong>Payment:</strong> RAZORPAY</p>
 
         <h3>Customer</h3>
-        <p>${user.name} (${user.email})</p>
+        <p>${user.name} (${user.phone})</p>
 
         <h3>Items</h3>
         <p>${orderItemsBlock}</p>

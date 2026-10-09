@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Image from "next/image";
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export default function AdminBanners() {
-  const { getToken } = useAuth();
+  
 
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -71,7 +71,7 @@ const [deleting, setDeleting] = useState(false);
     try {
       setUploading(true);
 
-      const token = await getToken();
+      
 
       const fd = new FormData();
 
@@ -109,7 +109,7 @@ const [deleting, setDeleting] = useState(false);
   try {
     setSaving(true);
 
-    const token = await getToken();
+    
 
     const fd = new FormData();
 
@@ -155,7 +155,7 @@ const [deleting, setDeleting] = useState(false);
 
     setDeleting(true);
 
-    const token = await getToken();
+    
 
     await axios.delete(
       `/api/store/banners/${id}`,

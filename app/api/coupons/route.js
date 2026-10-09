@@ -1,4 +1,4 @@
-import {  getAuth} from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 

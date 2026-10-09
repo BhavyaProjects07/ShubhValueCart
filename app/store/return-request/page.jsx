@@ -190,7 +190,7 @@ export default function StoreReturnRequestsPage() {
                           Customer
                         </div>
                         <p className="text-slate-800 break-all">
-                          {req.user.email}
+                          {req.user.phone}
                         </p>
                       </div>
 

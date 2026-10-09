@@ -10,15 +10,12 @@ import AddressModal from './AddressModal'
 import { useSelector, useDispatch } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
-import { useUser, useAuth } from '@clerk/nextjs'
-import axios from 'axios'
+import { useAuth } from "@/contexts/AuthContext";import axios from 'axios'
 import { fetchCart } from '@/lib/features/cart/cartSlice'
 
 
 const OrderSummary = ({ totalPrice, items }) => {
-  const { user } = useUser()
-  const { getToken } = useAuth()
-  const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '₹'
+  const { user } = useAuth();const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '₹'
 
   const router = useRouter()
   const dispatch = useDispatch()
@@ -48,8 +45,6 @@ const handleCouponCode = async (e) => {
       toast.error('Enter a coupon code')
       return
     }
-
-    const token = await getToken()
 
     const { data } = await axios.post(
       '/api/coupons',
@@ -133,7 +128,7 @@ useEffect(() => {
       return;
     }
 
-    const token = await getToken();
+    
 
     const orderData = {
       addressId: selectedAddress.id,
@@ -176,7 +171,7 @@ useEffect(() => {
 
         handler: async function (response) {
   try {
-    const token = await getToken();
+    
 
     // 🔥 VERIFY PAYMENT + CREATE ORDER
     
@@ -207,7 +202,7 @@ await axios.post(
 
     router.push("/order-success");
 
-    dispatch(fetchCart({ getToken }));
+    dispatch(fetchCart());
 
   } catch (error) {
     console.error("VERIFY ERROR:", error);
@@ -237,7 +232,7 @@ await axios.post(
     // =============================
    
     router.push("/order-success");
-    dispatch(fetchCart({ getToken }));
+    dispatch(fetchCart());
 
   } catch (error) {
     console.error("ORDER ERROR:", error);

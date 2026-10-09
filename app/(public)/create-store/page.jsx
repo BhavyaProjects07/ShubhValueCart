@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import toast from "react-hot-toast"
 import Loading from "@/components/Loading"
-import { useUser , useAuth} from "@clerk/nextjs"
+import { useAuth } from "@/contexts/AuthContext"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 
@@ -14,10 +14,7 @@ export default function CreateStore() {
     const [status, setStatus] = useState("")
     const [loading, setLoading] = useState(true)
     const [message, setMessage] = useState("")
-    const { user } = useUser()
-    const router = useRouter()
-    const {getToken} = useAuth()
-
+    const { user } = useAuth();const router = useRouter()
     const [storeInfo, setStoreInfo] = useState({
         name: "",
         username: "",
@@ -36,7 +33,6 @@ export default function CreateStore() {
         // Logic to check if the store is already submitted
         setLoading(true)
         try {
-            const token = await getToken()
             const data = await axios.get('/api/store/create', {
                 headers: {Authorization: `Bearer ${token}`}
             })
@@ -74,7 +70,6 @@ export default function CreateStore() {
         }
 
         try {
-            const token = await getToken()
             const formData = new FormData()
             formData.append("name", storeInfo.name)
             formData.append("username", storeInfo.username)

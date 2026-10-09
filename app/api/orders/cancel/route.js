@@ -1,10 +1,11 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { sendBrevoEmail } from "@/lib/brevo";
 export async function POST(req) {
   try {
-    const { userId } = getAuth(req);
+    const session = await getSession();
+    const userId = session?.userId;
     if (!userId) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -62,7 +63,7 @@ export async function POST(req) {
     
 
     await sendBrevoEmail({
-      to: cancelledOrder.user.email,
+      to: cancelledOrder.address?.email,
       subject: "Your ShubhValueCart order has been cancelled",
       htmlContent: `
         <p>Hello ${cancelledOrder.user.name || "Customer"},</p>
@@ -98,7 +99,7 @@ export async function POST(req) {
         <hr/>
     
         <p><strong>Order ID:</strong> ${cancelledOrder.id}</p>
-        <p><strong>Customer:</strong> ${cancelledOrder.user.name} (${cancelledOrder.user.email})</p>
+        <p><strong>Customer:</strong> ${cancelledOrder.user.name} (${cancelledOrder.user.phone})</p>
         <p><strong>Total:</strong> ₹${cancelledOrder.total}</p>
         <p><strong>Status:</strong> CANCELLED</p>
     

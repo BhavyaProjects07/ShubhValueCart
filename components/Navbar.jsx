@@ -32,7 +32,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCart, fetchCart } from "@/lib/features/cart/cartSlice";
 import { assets } from "@/assets/assets";
 import Image from "next/image"
-import {useUser , useClerk , UserButton , useAuth} from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
+import LoginModal from "./LoginModal";
 import { PackageIcon, Store , MapPin , ChevronDown } from "lucide-react";
 import axios from "axios";
 import LocationModal from "./LocationModal";
@@ -51,16 +52,16 @@ const NavLink = ({ href, children }) => {
 }
 
 const Navbar = () => {
-    const { getToken } = useAuth()
+    const { user, logout } = useAuth()
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSeller, setIsSeller] = useState(false)
-    const { user } = useUser()
-    const { openSignUp } = useClerk()
+    const [showLoginModal, setShowLoginModal] = useState(false)
     const router = useRouter();
     const [search, setSearch] = useState('')
     const [isVisible, setIsVisible] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [profileSidebarOpen, setProfileSidebarOpen] = useState(false);
     const [showLocationModal, setShowLocationModal] = useState(false);
     // Fallback for cartCount if redux is not set up in the environment
     const cartCount = useSelector(state => state?.cart?.total || 0)
@@ -107,7 +108,7 @@ useEffect(() => {
 
         
   // User logged in
-  dispatch(fetchCart({ getToken }));
+  dispatch(fetchCart());
 
     }, [user, mounted]);
     
@@ -116,13 +117,7 @@ useEffect(() => {
     if (!user) return;
 
     try {
-      const token = await getToken();
-
-      const { data } = await axios.get("/api/address", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await axios.get("/api/address");
 
       const defaultAddress =
         data.addresses?.find((a) => a.isDefault) ||
@@ -150,14 +145,10 @@ useEffect(() => {
 
             const fetchRoles = async () => {
                 try {
-                    const token = await getToken()
-                    if (!token) return;
 
                     // Admin check
                     try {
-                        await axios.get("/api/admin/is-admin", {
-                            headers: { Authorization: `Bearer ${token}` },
-                        })
+                        await axios.get("/api/admin/is-admin")
                         setIsAdmin(true)
                     } catch {
                         setIsAdmin(false)
@@ -165,10 +156,7 @@ useEffect(() => {
 
                     // Seller check
                     const sellerRes = await axios.get(
-                        "/api/store/is-seller",
-                        {
-                            headers: { Authorization: `Bearer ${token}` },
-                        }
+                        "/api/store/is-seller"
                         );
 
                     setIsSeller(!!sellerRes.data?.isSeller)
@@ -245,43 +233,11 @@ useEffect(() => {
         router.push(`/shop?search=${encodeURIComponent(search.trim())}`)
     }
 
-    // Shared UserButton menu (used in both desktop + mobile slots)
-    const AccountMenuItems = (
-        <UserButton.MenuItems>
-            <UserButton.Action
-                labelIcon={<ShoppingCart size={16} />}
-                label="Cart"
-                onClick={() => router.push("/cart")}
-            />
-            <UserButton.Action
-                labelIcon={<PackageIcon size={16} />}
-                label="My Orders"
-                onClick={() => router.push("/orders")}
-            />
-            <UserButton.Action
-                labelIcon={<PackageIcon size={16} />}
-                label="About Us"
-                onClick={() => router.push("/about")}
-            />
-            {isSeller && (
-                <UserButton.Action
-                    labelIcon={<Store size={16} />}
-                    label="Store Dashboard"
-                    onClick={() => router.push("/admin-verify-svc?redirect=/store")}
-                />
-            )}
-            {isAdmin && (
-                <UserButton.Action
-                    labelIcon={<PackageIcon size={16} />}
-                    label="Admin Panel"
-                    onClick={() => router.push("/admin-verify-svc?redirect=/admin")}
-                />
-            )}
-        </UserButton.MenuItems>
-    );
+
 
     return (
         <>
+            <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
                 .font-inter { font-family: 'Inter', sans-serif; }
@@ -420,7 +376,7 @@ useEffect(() => {
                                 <div className="w-24 h-9 bg-gray-200 rounded-md animate-pulse" />
                             ) : !user ? (
                                 <button
-                                    onClick={() => openSignUp({ redirectUrl: "/" })}
+                                    onClick={() => setShowLoginModal(true)}
                                     className="flex items-center gap-2 text-gray-700 hover:text-[#0a6c3d] transition-colors"
                                 >
                                     <User size={20} />
@@ -430,17 +386,17 @@ useEffect(() => {
                                     </div>
                                 </button>
                             ) : (
-                                <div className="flex items-center gap-2">
-                                    <UserButton appearance={{ elements: { avatarBox: "w-9 h-9 shadow-sm" } }}>
-                                        {AccountMenuItems}
-                                    </UserButton>
-                                    <div className="leading-tight text-left">
+                                <button onClick={() => setProfileSidebarOpen(true)} className="flex items-center gap-2 text-left">
+                                    <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                                        {user?.image ? <img src={user.image} className="w-full h-full object-cover" /> : <User size={20} />}
+                                    </div>
+                                    <div className="leading-tight">
                                         <div className="text-[13px] font-semibold text-gray-900">My Account</div>
                                         <div className="text-[11px] text-gray-500 max-w-[110px] truncate">
-                                            {user?.firstName || "Welcome back"}
+                                            {user?.name || "Welcome back"}
                                         </div>
                                     </div>
-                                </div>
+                                </button>
                             )}
 
                             {/* My Cart */}
@@ -651,28 +607,28 @@ useEffect(() => {
                         <div className="w-10 h-10 rounded-full bg-[#0a6c3d]/10 flex items-center justify-center shrink-0">
                             <User size={18} className="text-[#0a6c3d]" />
                         </div>
-                        <div className="min-w-0">
+                        <Link href={user ? "/profile" : "#"} onClick={() => { if(user) setMobileMenuOpen(false); }} className="min-w-0">
                             <div className="text-sm font-bold text-gray-900 truncate">
                                 {user
-                                    ? user?.firstName
-                                        ? `Hi, ${user.firstName}`
+                                    ? user?.name
+                                        ? `Hi, ${user.name}`
                                         : "Welcome back"
                                     : "Welcome to Shubh Value Cart"}
                             </div>
                             <div className="text-xs text-gray-500 truncate">
-                                {user ? "Manage your account & orders" : "Sign in for faster checkout"}
+                                {user ? "View your profile" : "Sign in for faster checkout"}
                             </div>
-                        </div>
+                        </Link>
 
                         {/* Right side: Clerk button + explicit close */}
                         <div className="ml-auto flex items-center gap-1.5 shrink-0">
                             {user ? (
-                                <UserButton afterSignOutUrl="/" />
+                                <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition">Sign Out</button>
                             ) : (
                                 <button
                                     onClick={() => {
                                         setMobileMenuOpen(false);
-                                        openSignUp({ redirectUrl: "/" });
+                                        setShowLoginModal(true);
                                     }}
                                     className="px-3 py-1 text-sm font-medium text-white bg-[#0a6c3d] rounded-md hover:bg-[#085a32] transition"
                                 >
@@ -799,6 +755,70 @@ useEffect(() => {
                     lg:h-[168px]
                 "
             />
+
+            <div
+                onClick={() => setProfileSidebarOpen(false)}
+                className={`hidden lg:block fixed inset-0 bg-black/50 z-[109] transition-opacity duration-300 ease-out ${
+                    profileSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                }`}
+            />
+            <div
+                className={`hidden lg:flex flex-col fixed top-0 right-0 h-full w-[360px] bg-white z-[110] shadow-[-4px_0_28px_rgba(15,23,42,0.18)] transform transition-transform duration-300 ease-out ${
+                    profileSidebarOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
+                }`}
+            >
+                <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+                    <h2 className="text-lg font-bold text-gray-900">My Profile</h2>
+                    <button
+                        onClick={() => setProfileSidebarOpen(false)}
+                        className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                    >
+                        <X size={18} className="text-gray-600" />
+                    </button>
+                </div>
+                
+                {user && (
+                    <div className="p-6 border-b border-gray-100 bg-[#f8faf8]">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-full bg-[#0a6c3d]/10 flex items-center justify-center shrink-0">
+                                {user?.image ? <img src={user.image} className="w-full h-full object-cover rounded-full" /> : <User size={28} className="text-[#0a6c3d]" />}
+                            </div>
+                            <div>
+                                <div className="font-bold text-gray-900 text-lg">{user.name}</div>
+                                <div className="text-sm text-gray-500">{user.phone}</div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <div className="flex flex-col flex-1 overflow-y-auto py-2">
+                    <button onClick={() => { setProfileSidebarOpen(false); router.push("/orders"); }} className="flex items-center gap-3 px-6 py-4 hover:bg-gray-50 text-left transition-colors">
+                        <PackageIcon size={20} className="text-[#0a6c3d]" />
+                        <span className="font-medium text-gray-800">My Orders</span>
+                    </button>
+                    {isSeller && (
+                        <button onClick={() => { setProfileSidebarOpen(false); router.push("/admin-verify-svc?redirect=/store"); }} className="flex items-center gap-3 px-6 py-4 hover:bg-gray-50 text-left transition-colors">
+                            <Store size={20} className="text-[#0a6c3d]" />
+                            <span className="font-medium text-gray-800">Store Dashboard</span>
+                        </button>
+                    )}
+                    {isAdmin && (
+                        <button onClick={() => { setProfileSidebarOpen(false); router.push("/admin-verify-svc?redirect=/admin"); }} className="flex items-center gap-3 px-6 py-4 hover:bg-gray-50 text-left transition-colors">
+                            <User size={20} className="text-[#0a6c3d]" />
+                            <span className="font-medium text-gray-800">Admin Panel</span>
+                        </button>
+                    )}
+                </div>
+
+                <div className="p-6 border-t border-gray-100">
+                    <button 
+                        onClick={() => { setProfileSidebarOpen(false); logout(); }} 
+                        className="w-full py-3 rounded-lg font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                    >
+                        Sign Out
+                    </button>
+                </div>
+            </div>
 
             <LocationModal
                 isOpen={showLocationModal}

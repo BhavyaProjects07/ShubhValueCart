@@ -1,11 +1,12 @@
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 // update user cart
 export async function POST(request) {
     try {
-        const { userId } = getAuth(request);
+        const session = await getSession();
+    const userId = session?.userId;
         if (!userId) {
   return NextResponse.json(
     { cart: {} },
@@ -43,7 +44,8 @@ if (!user) {
 // get user cart
 export async function GET(request) {
     try {
-        const { userId } = getAuth(request);
+        const session = await getSession();
+    const userId = session?.userId;
         const user = await prisma.user.findUnique({
             where:{id: userId}
         })

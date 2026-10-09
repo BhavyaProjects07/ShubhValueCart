@@ -1,12 +1,10 @@
 import prisma from "@/lib/prisma"
-import { getAuth } from "@clerk/nextjs/server"
-import { NextResponse } from "next/server"
+import { getSession } from "@/lib/auth";import { NextResponse } from "next/server"
 import { sendBrevoEmail } from "@/lib/brevo"
 
 export async function PATCH(req, { params }) {
-  const { userId } = getAuth(req)
-
-  if (!userId) {
+  const session = await getSession();
+    const userId = session?.userId;if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
   }
 
@@ -70,7 +68,7 @@ export async function PATCH(req, { params }) {
   if (returnRequest.user?.email) {
     if (status === "APPROVED") {
       await sendBrevoEmail({
-        to: returnRequest.user.email,
+        to: returnRequest.order?.address?.email,
         subject: "Your return request has been approved",
         htmlContent: `
           <h2>Return Approved</h2>
@@ -82,7 +80,7 @@ export async function PATCH(req, { params }) {
 
     if (status === "REJECTED") {
       await sendBrevoEmail({
-        to: returnRequest.user.email,
+        to: returnRequest.order?.address?.email,
         subject: "Your return request has been rejected",
         htmlContent: `
           <h2>Return Rejected</h2>

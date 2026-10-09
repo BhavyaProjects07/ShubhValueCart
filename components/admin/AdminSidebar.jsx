@@ -1,6 +1,5 @@
 "use client"
-import { useUser } from "@clerk/nextjs"
-import { usePathname } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext";import { usePathname } from "next/navigation"
 import { HomeIcon, ShieldCheckIcon, StoreIcon, TicketPercentIcon , ImagePlus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -8,9 +7,7 @@ import Link from "next/link"
 
 const AdminSidebar = () => {
   const pathname = usePathname()
-  const {user} = useUser()
-
-  const sidebarLinks = [
+  const { user } = useAuth();const sidebarLinks = [
     { name: "Dashboard", href: "/admin", icon: HomeIcon },
     { name: "Stores", href: "/admin/stores", icon: StoreIcon },
     { name: "Approve Store", href: "/admin/approve", icon: ShieldCheckIcon },

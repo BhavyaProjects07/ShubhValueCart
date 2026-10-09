@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   MapPin,
   Navigation,
@@ -19,8 +19,8 @@ export default function LocationModal({
   onDetectLocation,
 }) {
   const modalRef = useRef(null);
-    const { getToken } = useAuth();
-const { user } = useUser();
+    
+const { user } = useAuth();
   
     const [step, setStep] = useState(1);
 
@@ -100,7 +100,7 @@ const [address, setAddress] = useState({
 
   const timer = setTimeout(async () => {
     try {
-      const token = await getToken();
+      
 
       const { data } = await axios.post(
         "/api/address/search",
@@ -121,11 +121,11 @@ const [address, setAddress] = useState({
   }, 400);
 
   return () => clearTimeout(timer);
-    }, [search, getToken]);
+    }, [search]);
     
   const handleDeleteAddress = async (id) => {
   try {
-    const token = await getToken();
+    
 
     await axios.delete(`/api/address/${id}`, {
       headers: {
@@ -163,7 +163,7 @@ const [address, setAddress] = useState({
         
         
         
-}, [isOpen , getToken]);
+}, [isOpen ]);
 
     if (!isOpen) return null;
     
@@ -203,7 +203,7 @@ const [address, setAddress] = useState({
   try {
     setLoadingAddresses(true);
 
-    const token = await getToken();
+    
 
     const { data } = await axios.get("/api/address", {
       headers: {
@@ -237,7 +237,7 @@ setSuggestions([]);
   try {
     setLoading(true);
 
-    const token = await getToken();
+    
 
     const { data } = await axios.post(
       "/api/address",
@@ -282,7 +282,7 @@ onClose();
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
-          const token = await getToken();
+          
 
           const { data } = await axios.post(
             "/api/address/reverse",

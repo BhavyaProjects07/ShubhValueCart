@@ -1,26 +1,26 @@
 import prisma from "@/lib/prisma";
-import { clerkClient } from "@clerk/nextjs/server";
 
 const authSeller = async (userId) => {
   try {
     if (!userId) return false;
 
-    const client = await clerkClient();
-    const clerkUser = await client.users.getUser(userId);
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { store: true }
+    });
 
-    const email = clerkUser.emailAddresses[0].emailAddress
-      .trim()
-      .toLowerCase();
+    if (!user || !user.phone) return false;
+    const phone = user.phone;
 
     // ==========================
     // ✅ MANAGER ACCESS
     // ==========================
-    const managerEmails = (process.env.STORE_MANAGERS || "")
+    const managerPhones = (process.env.STORE_MANAGERS || "")
       .split(",")
-      .map((email) => email.trim().toLowerCase())
+      .map((e) => e.trim())
       .filter(Boolean);
 
-    if (managerEmails.includes(email)) {
+    if (managerPhones.includes(phone)) {
       const clientStore = await prisma.store.findFirst({
         where: {
           email: process.env.STORE_OWNER_EMAIL,
@@ -34,16 +34,7 @@ const authSeller = async (userId) => {
     // ==========================
     // ✅ NORMAL STORE OWNER
     // ==========================
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      include: {
-        store: true,
-      },
-    });
-
-    if (user?.store?.status === "approved") {
+    if (user.store?.status === "approved") {
       return user.store.id;
     }
 

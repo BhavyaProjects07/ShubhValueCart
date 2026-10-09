@@ -1,8 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import Loading from "@/components/Loading"
-import { useAuth } from "@clerk/nextjs"
-import toast from "react-hot-toast"
+import { useAuth } from "@/contexts/AuthContext";import toast from "react-hot-toast"
 import axios from "axios"
 
 export default function StoreOrders() {
@@ -10,8 +9,6 @@ export default function StoreOrders() {
   const [loading, setLoading] = useState(true)
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const { getToken } = useAuth()
 
   // ✅ FILTER STATE (NEW)
   const [filters, setFilters] = useState({
@@ -48,8 +45,6 @@ export default function StoreOrders() {
   // ✅ UPDATED FETCH (ONLY CHANGE)
   const fetchOrders = async () => {
     try {
-      const token = await getToken()
-
       const { data } = await axios.get(
         `/api/store/orders?${buildQuery()}`,
         {
@@ -70,8 +65,6 @@ export default function StoreOrders() {
 
   const updateOrderStatus = async (orderId, status) => {
     try {
-      const token = await getToken()
-
       await axios.post(
         "/api/store/orders",
         { orderId, status },

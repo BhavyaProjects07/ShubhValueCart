@@ -54,7 +54,7 @@ const StoreInfo = ({ store }) => {
         />
         <div>
           <p className="text-[#6b5d52] font-medium">{store.user.name}</p>
-          <p className="text-[#9a8978]">{store.user.email}</p>
+          
         </div>
       </div>
     </div>

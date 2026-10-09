@@ -1,5 +1,5 @@
 import AdminLayout from "@/components/admin/AdminLayout";
-import { SignedIn,SignIn, SignedOut } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 export const metadata = {
@@ -11,18 +11,11 @@ export default function RootAdminLayout({ children }) {
 
     return (
         <>
-            <SignedIn>
-                <AdminLayout>
+            <AdminLayout>
                     {children}
                 </AdminLayout>
 
-            </SignedIn>
-
-            <SignedOut>
-                <div className="min-h-screen flex items-center justify-center">
-                    <SignIn fallbackRedirectUrl="/admin" routing="hash"/>
-                </div>
-            </SignedOut>
+            
 
 
         </>

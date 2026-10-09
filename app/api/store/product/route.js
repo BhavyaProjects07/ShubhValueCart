@@ -1,10 +1,8 @@
 // add a new product to the store
-import { verifyToken } from "@clerk/backend";
 
 import imagekit from "@/configs/imageKit"
 import authSeller from "@/middlewares/authSeller"
-import { getAuth } from "@clerk/nextjs/server"
-import { NextResponse } from "next/server"
+import { getSession } from "@/lib/auth";import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 
 

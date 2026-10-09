@@ -1,8 +1,7 @@
 'use client'
 import { AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs"
-import { XIcon } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext";import { XIcon } from "lucide-react"
 import { useState } from "react"
 import { toast } from "react-hot-toast"
 import { useDispatch } from "react-redux"
@@ -12,7 +11,7 @@ import { addAddress } from "@/lib/features/address/addressSlice"
 
 const AddressModal = ({ setShowAddressModal }) => {
 
-    const { getToken, isSignedIn } = useAuth()
+    const {  isSignedIn } = useAuth()
     const dispatch = useDispatch()
 const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
     const [loading, setLoading] = useState(false)
@@ -47,8 +46,6 @@ const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
 
         try {
             setLoading(true)
-
-            const token = await getToken()
 
             const { data } = await axios.post(
                 "/api/address",

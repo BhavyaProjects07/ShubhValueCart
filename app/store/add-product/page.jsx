@@ -1,8 +1,7 @@
 "use client"
 
 import { assets } from "@/assets/assets"
-import { useAuth } from "@clerk/nextjs"
-import axios from "axios"
+import { useAuth } from "@/contexts/AuthContext";import axios from "axios"
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import { toast } from "react-hot-toast"
@@ -10,8 +9,6 @@ import { useSearchParams, useRouter } from "next/navigation"
 
 export default function StoreAddProduct() {
   const router = useRouter()
-  const { getToken } = useAuth()
-
   /* ---------------- SIZE STATES ---------------- */
   const [enableSizes, setEnableSizes] = useState(false)
 
@@ -131,7 +128,6 @@ export default function StoreAddProduct() {
 
       reader.onloadend = async () => {
         try {
-          const token = await getToken()
           const base64String = reader.result.split(",")[1]
 
           await toast.promise(
@@ -175,7 +171,6 @@ export default function StoreAddProduct() {
   try {
     setLoading(true)
 
-    const token = await getToken()
     console.log("TOKEN:", token) // 🔥 ADD THIS
 
     const formData = new FormData()
@@ -230,7 +225,6 @@ export default function StoreAddProduct() {
 
     const fetchProduct = async () => {
       try {
-        const token = await getToken()
         const { data } = await axios.get(
           `/api/store/product/${editProductId}`,
           { headers: { Authorization: `Bearer ${token}` } }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
+import crypto from "crypto"
 
 export async function POST(req) {
   try {
@@ -57,7 +58,7 @@ export async function POST(req) {
     // =========================
     // 🔢 GENERATE OTP
     // =========================
-    const otp = Math.floor(100000 + Math.random() * 900000).toString()
+    const otp = crypto.randomInt(100000, 1000000).toString()
 
     // =========================
     // 💾 SAVE OTP (STORE CLEAN FORMAT)
@@ -80,12 +81,12 @@ export async function POST(req) {
 
     const url = `https://api.amazesms.com/api/sms?key=${process.env.SMS_KEY}&from=${process.env.SMS_SENDER}&to=${smsPhone}&body=${encodeURIComponent(message)}&templateid=${process.env.SMS_TEMPLATE}&entityid=${process.env.SMS_ENTITY}`
 
-    console.log("SMS URL:", url)
+
 
     const res = await fetch(url)
     const text = await res.text()
 
-    console.log("SMS RESPONSE:", text)
+
 
     if (!res.ok) {
       return NextResponse.json(

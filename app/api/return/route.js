@@ -1,12 +1,11 @@
 import prisma from "@/lib/prisma"
-import { getAuth } from "@clerk/nextjs/server"
-import { NextResponse } from "next/server"
+import { getSession } from "@/lib/auth";import { NextResponse } from "next/server"
 import { sendBrevoEmail } from "@/lib/brevo"
 import imagekit from "@/configs/imageKit"
 
 export async function POST(req) {
-  const { userId } = getAuth(req)
-  if (!userId) {
+  const session = await getSession();
+    const userId = session?.userId;if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
   }
 

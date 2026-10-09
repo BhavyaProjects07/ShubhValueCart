@@ -1,5 +1,5 @@
 import authSeller from "@/middlewares/authSeller";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { sendBrevoEmail } from "@/lib/brevo";
@@ -21,7 +21,8 @@ function buildOrderItemsBlock(orderItems) {
 
 export async function POST(request) {
   try {
-    const { userId } = getAuth(request);
+    const session = await getSession();
+    const userId = session?.userId;
     const storeId = await authSeller(userId);
 
     if (!storeId) {
@@ -59,7 +60,7 @@ export async function POST(request) {
 
     try {
       await sendBrevoEmail({
-        to: order.user.email,
+        to: order.address?.email,
         subject: `Your ShubhValueCart order is now ${statusLabel}`,
         htmlContent: `
           <p>Hello ${order.user.name || "Customer"},</p>
@@ -138,7 +139,8 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
-    const { userId } = getAuth(request);
+    const session = await getSession();
+    const userId = session?.userId;
     const storeId = await authSeller(userId);
 
     if (!storeId) {
