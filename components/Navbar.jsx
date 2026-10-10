@@ -34,9 +34,10 @@ import { assets } from "@/assets/assets";
 import Image from "next/image"
 import { useAuth } from "@/contexts/AuthContext";
 import LoginModal from "./LoginModal";
-import { PackageIcon, Store , MapPin , ChevronDown } from "lucide-react";
+import { PackageIcon, Store , MapPin , ChevronDown, Trash2 } from "lucide-react";
 import axios from "axios";
 import LocationModal from "./LocationModal";
+import toast from "react-hot-toast";
 
 
 const NavLink = ({ href, children }) => {
@@ -63,6 +64,20 @@ const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [profileSidebarOpen, setProfileSidebarOpen] = useState(false);
     const [showLocationModal, setShowLocationModal] = useState(false);
+
+    const handleDeleteAccount = async () => {
+        if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) return;
+        try {
+            await axios.delete("/api/auth/delete-account");
+            toast.success("Account deleted successfully");
+            setProfileSidebarOpen(false);
+            logout();
+            router.push("/");
+        } catch (error) {
+            console.error(error);
+            toast.error(error.response?.data?.error || "Failed to delete account");
+        }
+    };
     // Fallback for cartCount if redux is not set up in the environment
     const cartCount = useSelector(state => state?.cart?.total || 0)
     const dispatch = useDispatch();
@@ -810,12 +825,19 @@ useEffect(() => {
                     )}
                 </div>
 
-                <div className="p-6 border-t border-gray-100">
+                <div className="p-6 border-t border-gray-100 flex flex-col gap-3">
                     <button 
                         onClick={() => { setProfileSidebarOpen(false); logout(); }} 
                         className="w-full py-3 rounded-lg font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
                     >
                         Sign Out
+                    </button>
+                    <button 
+                        onClick={handleDeleteAccount} 
+                        className="w-full py-3 rounded-lg font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+                    >
+                        <Trash2 size={18} />
+                        Delete Account
                     </button>
                 </div>
             </div>
