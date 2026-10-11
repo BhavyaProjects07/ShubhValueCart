@@ -17,9 +17,8 @@ const AdminLayout = ({ children }) => {
 
   const { user } = useAuth();const fetchIsAdmin = async () => {
     try {
-      const { data } = await axios.get("/api/admin/is-admin", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      const { data } = await axios.get("/api/admin/is-admin")
+
       setIsAdmin(data.isAdmin)
       
     } catch (error) {

@@ -11,11 +11,7 @@ export default function AdminApprove() {
   const [loading, setLoading] = useState(true)
   const { user } = useAuth();const fetchStores = async () => {
     try {
-      const data = await axios.get('/api/admin/approve-store', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const data = await axios.get('/api/admin/approve-store')
       setStores(data.data.stores)
       
     } catch (error) {
@@ -27,11 +23,7 @@ export default function AdminApprove() {
   const handleApprove = async ({ storeId, status }) => {
     
     try {
-      const data = await axios.post('/api/admin/approve-store',{ storeId, status }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const data = await axios.post('/api/admin/approve-store', { storeId, status })
       toast.success(data.data.message)
       await fetchStores()
     } catch (error) {

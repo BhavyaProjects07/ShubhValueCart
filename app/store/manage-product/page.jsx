@@ -45,12 +45,7 @@ export default function StoreManageProducts() {
   const fetchProducts = async (pageNum = 1) => {
     try {
       const { data } = await axios.get(
-        `/api/store/product?${buildQuery(pageNum)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `/api/store/product?${buildQuery(pageNum)}`
       )
 
       setProducts(data.products)
@@ -67,12 +62,7 @@ export default function StoreManageProducts() {
     try {
       const { data } = await axios.post(
         "/api/store/stock-toggle",
-        { productId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { productId }
       )
 
       setProducts((prev) =>

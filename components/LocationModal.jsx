@@ -84,11 +84,8 @@ const [address, setAddress] = useState({
 
   setAddress((prev) => ({
     ...prev,
-    name: user.fullName || "",
-    email:
-      user.primaryEmailAddress?.emailAddress || "",
-    phone:
-      user.primaryPhoneNumber?.phoneNumber || "",
+    name: user.name || "",
+    phone: user.phone || "",
   }));
     }, [user]);
     
@@ -106,11 +103,6 @@ const [address, setAddress] = useState({
         "/api/address/search",
         {
           query: search,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       );
 
@@ -127,11 +119,7 @@ const [address, setAddress] = useState({
   try {
     
 
-    await axios.delete(`/api/address/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await axios.delete(`/api/address/${id}`);
 
     toast.success("Address deleted");
 
@@ -205,11 +193,7 @@ const [address, setAddress] = useState({
 
     
 
-    const { data } = await axios.get("/api/address", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data } = await axios.get("/api/address");
 
     const addresses = data.addresses || [];
 
@@ -243,11 +227,6 @@ setSuggestions([]);
       "/api/address",
       {
         address,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       }
     );
 
@@ -289,11 +268,6 @@ onClose();
             {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
             }
           );
 

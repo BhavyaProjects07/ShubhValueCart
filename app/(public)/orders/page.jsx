@@ -20,9 +20,7 @@ export default function Orders() {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const {data}= await axios.get('/api/orders',{
-                    headers:{ Authorization:`Bearer ${token}` }
-                });
+                const { data } = await axios.get('/api/orders');
                 setOrders(data.orders);
                 setLoading(false);
             } catch (error) {

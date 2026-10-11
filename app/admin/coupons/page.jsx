@@ -28,11 +28,7 @@ export default function AdminCoupons() {
 
   const fetchCoupons = async () => {
     try {
-      const {data} = await axios.get('/api/admin/coupon', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const {data} = await axios.get('/api/admin/coupon')
       setCoupons(data.coupons)
     } catch (error) {
        toast.error(error?.response?.data?.error || error.message || "Failed to fetch coupons")
@@ -54,8 +50,7 @@ export default function AdminCoupons() {
 
     const { data } = await axios.post(
       "/api/admin/coupon",
-      { coupon: payload },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { coupon: payload }
     )
 
     toast.success(data.message)
@@ -74,11 +69,7 @@ export default function AdminCoupons() {
     try {
       const confirm = window.confirm("Are you sure you want to delete this coupon?")
       if (!confirm) return
-      const {data} = await axios.delete(`/api/admin/coupon?code=${code}`, {
-        headers: { 
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const {data} = await axios.delete(`/api/admin/coupon?code=${code}`)
       toast.success(data.message)
       await fetchCoupons()
       toast.success("Coupon deleted successfully")

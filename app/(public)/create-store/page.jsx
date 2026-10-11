@@ -33,9 +33,7 @@ export default function CreateStore() {
         // Logic to check if the store is already submitted
         setLoading(true)
         try {
-            const data = await axios.get('/api/store/create', {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+            const data = await axios.get('/api/store/create')
             if (data.data.status && data.data.status !== "not registered") {
                 setAlreadySubmitted(true)
                 setStatus(data.data.status)
@@ -79,9 +77,7 @@ export default function CreateStore() {
             formData.append("address", storeInfo.address)
             formData.append("image", storeInfo.image)
 
-            const data = await axios.post('/api/store/create', formData, {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+            const data = await axios.post('/api/store/create', formData)
             toast.success(data.message && "Store created successfully")
             await fetchSellerStatus()
         } catch (error) {

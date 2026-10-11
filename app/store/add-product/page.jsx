@@ -136,8 +136,7 @@ export default function StoreAddProduct() {
               {
                 base64Image: base64String,
                 mimeType: file.type,
-              },
-              { headers: { Authorization: `Bearer ${token}` } }
+              }
             ),
             {
               loading: "Analyzing Image with AI...",
@@ -199,9 +198,7 @@ export default function StoreAddProduct() {
 
     const method = isEditMode ? "put" : "post"
 
-    const promise = axios[method](endpoint, formData, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const promise = axios[method](endpoint, formData)
 
     await toast.promise(promise, {
       loading: "Saving Product...",
@@ -226,8 +223,7 @@ export default function StoreAddProduct() {
     const fetchProduct = async () => {
       try {
         const { data } = await axios.get(
-          `/api/store/product/${editProductId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          `/api/store/product/${editProductId}`
         )
 
         const product = data.product

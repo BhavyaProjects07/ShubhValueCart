@@ -37,11 +37,8 @@ export default function UsersTable() {
 
       
 
-      const { data } = await axios.get("/api/admin/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await axios.get("/api/admin/users");
+
 
       setUsers(data.users || []);
     } catch (error) {

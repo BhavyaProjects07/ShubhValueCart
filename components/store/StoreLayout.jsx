@@ -19,11 +19,7 @@ const StoreLayout = ({ children }) => {
 
   const fetchIsSeller = async () => {
     try {
-      const { data } = await axios.get("/api/store/is-seller", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const { data } = await axios.get("/api/store/is-seller")
       setIsSeller(data.isSeller)
       setStoreInfo(data.storeInfo)
       setIsStoreActive(data.isStoreActive)

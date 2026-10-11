@@ -27,11 +27,7 @@ const RatingModal = ({ ratingModal, setRatingModal }) => {
         }
 
         try {
-            const { data } = await axios.post('api/rating', { productId: ratingModal.productId, orderId: ratingModal.orderId, rating, review }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            const { data } = await axios.post('/api/rating', { productId: ratingModal.productId, orderId: ratingModal.orderId, rating, review })
             dispatch(addRating(data.rating))
             toast.success(data.message)
             setRatingModal(null)

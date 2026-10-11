@@ -27,11 +27,7 @@ export default function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const {data} = await axios.get('/api/admin/dashboard', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const {data} = await axios.get('/api/admin/dashboard')
       setDashboardData(data.dashboardData)
       setLoading(false)
     } catch (error) {

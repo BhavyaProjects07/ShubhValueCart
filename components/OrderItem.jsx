@@ -34,12 +34,7 @@ const OrderItem = ({ order, onCancelSuccess }) => {
       setCancelLoading(true)
       await axios.post(
         "/api/orders/cancel",
-        { orderId: order.id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { orderId: order.id }
       )
 
       toast.success("Order cancelled successfully", { duration: 4000 })

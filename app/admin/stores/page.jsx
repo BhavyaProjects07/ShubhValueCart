@@ -12,11 +12,7 @@ export default function AdminStores() {
   const [loading, setLoading] = useState(true)
   const { user } = useAuth();const fetchStores = async () => {
     try {
-      const data = await axios.get('/api/admin/stores', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const data = await axios.get('/api/admin/stores')
       setStores(data.data.stores)
     } catch (error) {
        toast.error(error?.response?.data?.error || error.message || "Failed to fetch stores")
@@ -26,11 +22,7 @@ export default function AdminStores() {
 
   const toggleIsActive = async (storeId) => {
     try {
-      const data = await axios.post('/api/admin/toggle-store',{storeId}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const data = await axios.post('/api/admin/toggle-store', { storeId })
       await fetchStores()
       toast.success(data.data.message)
 

@@ -29,6 +29,13 @@ const OrderSummary = ({ totalPrice, items }) => {
   const [coupon, setCoupon] = useState(null)
   const [couponError, setCouponError] = useState('')
 
+  useEffect(() => {
+    if (addressList && addressList.length > 0 && !selectedAddress) {
+      const defaultAddr = addressList.find((a) => a.isDefault) || addressList[0];
+      setSelectedAddress(defaultAddr);
+    }
+  }, [addressList, selectedAddress]);
+
   /* ================= APPLY COUPON ================= */
   /* ================= APPLY COUPON ================= */
 const handleCouponCode = async (e) => {
@@ -48,12 +55,7 @@ const handleCouponCode = async (e) => {
 
     const { data } = await axios.post(
       '/api/coupons',
-      { code: couponCodeInput.trim().toUpperCase() },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      { code: couponCodeInput.trim().toUpperCase() }
     )
 
     const couponData = data.coupon
@@ -146,9 +148,7 @@ useEffect(() => {
     }
 
     // 🔥 Call backend
-    const { data } = await axios.post('/api/orders', orderData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await axios.post('/api/orders', orderData);
 
     // =============================
     // 💰 RAZORPAY FLOW
@@ -189,11 +189,6 @@ await axios.post(
         size: item.size || null,
       })),
       couponCode: coupon?.code || null,
-    },
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${token}`, // 🔥 CRITICAL
     },
   }
 );

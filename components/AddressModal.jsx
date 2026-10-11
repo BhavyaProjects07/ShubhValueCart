@@ -2,7 +2,7 @@
 import { AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";import { XIcon } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { toast } from "react-hot-toast"
 import { useDispatch } from "react-redux"
 
@@ -11,22 +11,32 @@ import { addAddress } from "@/lib/features/address/addressSlice"
 
 const AddressModal = ({ setShowAddressModal }) => {
 
-    const {  isSignedIn } = useAuth()
+    const { user, isSignedIn } = useAuth()
     const dispatch = useDispatch()
-const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
+    const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
     const [loading, setLoading] = useState(false)
     const router = useRouter();
 
     const [address, setAddress] = useState({
-        name: '',
+        name: user?.name || '',
         email: '',
         street: '',
         city: '',
         state: '',
         zip: '',
-        country: '',
-        phone: ''
+        country: 'India',
+        phone: user?.phone || ''
     })
+
+    useEffect(() => {
+        if (user) {
+            setAddress(prev => ({
+                ...prev,
+                name: prev.name || user.name || '',
+                phone: prev.phone || user.phone || ''
+            }));
+        }
+    }, [user]);
 
     const handleAddressChange = (e) => {
         setAddress({
@@ -38,8 +48,10 @@ const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        const isUserLoggedIn = Boolean(user || isSignedIn);
+
         // 🚨 NOT LOGGED IN
-        if (!isSignedIn) {
+        if (!isUserLoggedIn) {
             toast.error("Please login to add address")
             return
         }
@@ -49,33 +61,29 @@ const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
 
             const { data } = await axios.post(
                 "/api/address",
-                { address },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+                { address }
             )
 
-            dispatch(addAddress(data.newAddress))
-            toast.success(data.message)
+            if (data?.newAddress) {
+                dispatch(addAddress(data.newAddress))
+            }
+            toast.success(data?.message || "Address added successfully")
 
             setShowAddressModal(false)
 
         } catch (error) {
-    console.log("STATUS:", error.response?.status);
-    console.log("DATA:", error.response?.data);
+            console.error("ADD ADDRESS ERROR:", error);
 
-    if (
-    error.response?.status === 403 &&
-    error.response?.data?.code === "ACCOUNT_INCOMPLETE"
-) {
-    setShowCompleteAccountModal(true);
-    return;
-}
+            if (
+                error.response?.status === 403 &&
+                error.response?.data?.code === "ACCOUNT_INCOMPLETE"
+            ) {
+                setShowCompleteAccountModal(true);
+                return;
+            }
 
-    toast.error(error.response?.data?.error || "Something went wrong.");
-} finally {
+            toast.error(error.response?.data?.error || error.message || "Something went wrong.");
+        } finally {
             setLoading(false)
         }
     }
@@ -126,8 +134,7 @@ const [showCompleteAccountModal, setShowCompleteAccountModal] = useState(false);
               onChange={handleAddressChange}
               className="p-3 px-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00a300]"
               type="email"
-              placeholder="Email address"
-              required
+              placeholder="Email address (optional)"
             />
 
             <input

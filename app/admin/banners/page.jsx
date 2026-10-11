@@ -79,11 +79,7 @@ const [deleting, setDeleting] = useState(false);
       fd.append("title", form.title);
       fd.append("link", form.link);
 
-      await axios.post("/api/store/banners", fd, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post("/api/store/banners", fd);
 
       toast.success("Banner uploaded.");
 
@@ -124,12 +120,7 @@ const [deleting, setDeleting] = useState(false);
 
     await axios.put(
       `/api/store/banners/${editBanner.id}`,
-      fd,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      fd
     );
 
     toast.success("Banner updated.");
@@ -158,12 +149,7 @@ const [deleting, setDeleting] = useState(false);
     
 
     await axios.delete(
-      `/api/store/banners/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      `/api/store/banners/${id}`
     );
 
     toast.success("Banner deleted.");

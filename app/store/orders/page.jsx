@@ -46,12 +46,7 @@ export default function StoreOrders() {
   const fetchOrders = async () => {
     try {
       const { data } = await axios.get(
-        `/api/store/orders?${buildQuery()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `/api/store/orders?${buildQuery()}`
       )
 
       setOrders(data.orders)
@@ -67,12 +62,7 @@ export default function StoreOrders() {
     try {
       await axios.post(
         "/api/store/orders",
-        { orderId, status },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { orderId, status }
       )
 
       setOrders((prev) =>

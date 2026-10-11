@@ -32,11 +32,7 @@ export default function Dashboard() {
 
   const fetchDashboardData = async () => {
     try {
-        const {data} = await axios.get("/api/store/dashboard", {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        const {data} = await axios.get("/api/store/dashboard")
         setDashboardData(data)
         
         
