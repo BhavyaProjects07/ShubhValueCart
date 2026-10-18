@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import imagekit from "@/configs/imageKit";
 import { getSession } from "@/lib/auth";
+import authAdmin from "@/middlewares/authAdmin";
+import authSeller from "@/middlewares/authSeller";
 
 // GET -> Fetch all banners
 export async function GET() {
@@ -26,10 +28,6 @@ export async function GET() {
     );
   }
 }
-
-import { getSession } from "@/lib/auth";
-import authAdmin from "@/middlewares/authAdmin";
-import authSeller from "@/middlewares/authSeller";
 
 // POST -> Create Banner
 export async function POST(req) {
