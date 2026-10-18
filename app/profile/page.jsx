@@ -22,6 +22,39 @@ export default function ProfilePage() {
         return null; // or a loading spinner
     }
 
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isSeller, setIsSeller] = useState(false);
+
+    useEffect(() => {
+        if (!user) {
+            setIsAdmin(false);
+            setIsSeller(false);
+            return;
+        }
+
+        const fetchRoles = async () => {
+            try {
+                try {
+                    const adminRes = await axios.get("/api/admin/is-admin");
+                    setIsAdmin(!!adminRes.data?.isAdmin);
+                } catch {
+                    setIsAdmin(false);
+                }
+
+                try {
+                    const sellerRes = await axios.get("/api/store/is-seller");
+                    setIsSeller(!!sellerRes.data?.isSeller);
+                } catch {
+                    setIsSeller(false);
+                }
+            } catch (err) {
+                console.error("Role fetch error:", err);
+            }
+        };
+
+        fetchRoles();
+    }, [user]);
+
     const handleLogout = () => {
         logout();
         router.push("/");
@@ -75,13 +108,25 @@ export default function ProfilePage() {
                         <span className="font-medium text-gray-800">My Orders</span>
                     </div>
                 </Link>
-                {/* Add logic for isSeller or isAdmin if needed via API or context, but usually /admin or /store verifies it anyway */}
-                <Link href="/admin-verify-svc?redirect=/store" className="flex items-center justify-between p-4 border-b hover:bg-gray-50">
-                    <div className="flex items-center gap-3">
-                        <Store size={20} className="text-[#0a6c3d]" />
-                        <span className="font-medium text-gray-800">Store Dashboard</span>
-                    </div>
-                </Link>
+
+                {isSeller && (
+                    <Link href="/store" className="flex items-center justify-between p-4 border-b hover:bg-gray-50">
+                        <div className="flex items-center gap-3">
+                            <Store size={20} className="text-[#0a6c3d]" />
+                            <span className="font-medium text-gray-800">Store Dashboard</span>
+                        </div>
+                    </Link>
+                )}
+
+                {isAdmin && (
+                    <Link href="/admin" className="flex items-center justify-between p-4 border-b hover:bg-gray-50">
+                        <div className="flex items-center gap-3">
+                            <User size={20} className="text-[#0a6c3d]" />
+                            <span className="font-medium text-gray-800">Admin Panel</span>
+                        </div>
+                    </Link>
+                )}
+
                 <button onClick={handleLogout} className="w-full flex items-center justify-between p-4 hover:bg-red-50 text-red-600 transition-colors border-b">
                     <div className="flex items-center gap-3">
                         <LogOut size={20} />

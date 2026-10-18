@@ -17,24 +17,32 @@ const StoreLayout = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [storeInfo, setStoreInfo] = useState(null)
 
+  const { user, loading: authLoading } = useAuth();
+
   const fetchIsSeller = async () => {
     try {
-      const { data } = await axios.get("/api/store/is-seller")
-      setIsSeller(data.isSeller)
-      setStoreInfo(data.storeInfo)
-      setIsStoreActive(data.isStoreActive)
-        
+      const { data } = await axios.get("/api/store/is-seller");
+      setIsSeller(!!data.isSeller);
+      setStoreInfo(data.storeInfo || null);
+      setIsStoreActive(data.isActive ?? data.storeInfo?.isActive ?? true);
     } catch (error) {
-      console.log(error)
+      console.log("Seller check error:", error);
+      setIsSeller(false);
+    } finally {
+      setLoading(false);
     }
-    finally {
-      setLoading(false)
-    }
-  }
+  };
 
   useEffect(() => {
-    fetchIsSeller()
-  }, [])
+    if (!authLoading) {
+      if (user) {
+        fetchIsSeller();
+      } else {
+        setIsSeller(false);
+        setLoading(false);
+      }
+    }
+  }, [user, authLoading]);
 
   if (loading) {
     return <Loading />

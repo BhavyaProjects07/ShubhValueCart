@@ -736,7 +736,7 @@ useEffect(() => {
 
                     {isSeller && (
                         <Link
-                            href="/admin-verify-svc?redirect=/store"
+                            href="/store"
                             className="flex items-center justify-between px-6 py-4 border-b hover:bg-gray-50"
                             onClick={() => setMobileMenuOpen(false)}
                         >
@@ -750,7 +750,7 @@ useEffect(() => {
 
                     {isAdmin && (
                         <Link
-                            href="/admin-verify-svc?redirect=/admin"
+                            href="/admin"
                             className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
                             onClick={() => setMobileMenuOpen(false)}
                         >
@@ -812,13 +812,13 @@ useEffect(() => {
                         <span className="font-medium text-gray-800">My Orders</span>
                     </button>
                     {isSeller && (
-                        <button onClick={() => { setProfileSidebarOpen(false); router.push("/admin-verify-svc?redirect=/store"); }} className="flex items-center gap-3 px-6 py-4 hover:bg-gray-50 text-left transition-colors">
+                        <button onClick={() => { setProfileSidebarOpen(false); router.push("/store"); }} className="flex items-center gap-3 px-6 py-4 hover:bg-gray-50 text-left transition-colors">
                             <Store size={20} className="text-[#0a6c3d]" />
                             <span className="font-medium text-gray-800">Store Dashboard</span>
                         </button>
                     )}
                     {isAdmin && (
-                        <button onClick={() => { setProfileSidebarOpen(false); router.push("/admin-verify-svc?redirect=/admin"); }} className="flex items-center gap-3 px-6 py-4 hover:bg-gray-50 text-left transition-colors">
+                        <button onClick={() => { setProfileSidebarOpen(false); router.push("/admin"); }} className="flex items-center gap-3 px-6 py-4 hover:bg-gray-50 text-left transition-colors">
                             <User size={20} className="text-[#0a6c3d]" />
                             <span className="font-medium text-gray-800">Admin Panel</span>
                         </button>

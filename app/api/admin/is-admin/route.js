@@ -6,17 +6,23 @@ import { NextResponse } from "next/server";
 
 
 export async function GET(request) {
-    try {
-        const session = await getSession();
-    const userId = session?.userId;const isAdmin = await authAdmin(userId)
+  try {
+    const session = await getSession();
+    const userId = session?.userId;
 
-        if (!isAdmin) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-        }
-
-        return NextResponse.json({ isAdmin: true })
-    } catch (error) {
-        console.error(error)
-        return NextResponse.json({ error: error.code || error.message }, { status: 400 })
+    if (!userId) {
+      return NextResponse.json({ isAdmin: false, error: "Unauthorized" }, { status: 401 });
     }
-}
+
+    const isAdmin = await authAdmin(userId);
+
+    if (!isAdmin) {
+      return NextResponse.json({ isAdmin: false, error: "Unauthorized" }, { status: 401 });
+    }
+
+    return NextResponse.json({ isAdmin: true });
+  } catch (error) {
+    console.error("IS-ADMIN ERROR:", error);
+    return NextResponse.json({ isAdmin: false, error: error.message }, { status: 500 });
+  }
+}

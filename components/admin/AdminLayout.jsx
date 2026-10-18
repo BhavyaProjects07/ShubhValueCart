@@ -15,28 +15,30 @@ const AdminLayout = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
 
-  const { user } = useAuth();const fetchIsAdmin = async () => {
-    try {
-      const { data } = await axios.get("/api/admin/is-admin")
+  const { user, loading: authLoading } = useAuth();
 
-      setIsAdmin(data.isAdmin)
-      
+  const fetchIsAdmin = async () => {
+    try {
+      const { data } = await axios.get("/api/admin/is-admin");
+      setIsAdmin(!!data.isAdmin);
     } catch (error) {
-      console.log("Error", error)
+      console.log("Admin check error:", error);
+      setIsAdmin(false);
+    } finally {
+      setLoading(false);
     }
-    finally {
-      setLoading(false)
-    }
-  }
+  };
 
   useEffect(() => {
-
-    if (user) {
-      fetchIsAdmin()
+    if (!authLoading) {
+      if (user) {
+        fetchIsAdmin();
+      } else {
+        setIsAdmin(false);
+        setLoading(false);
+      }
     }
-
-    
-  }, [user])
+  }, [user, authLoading]);
 
   return loading ? (
     <Loading />

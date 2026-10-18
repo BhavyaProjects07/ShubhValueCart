@@ -3,14 +3,28 @@ import prisma from "@/lib/prisma";
 import imagekit from "@/configs/imageKit";
 import { getSession } from "@/lib/auth";
 
+import authAdmin from "@/middlewares/authAdmin";
+import authSeller from "@/middlewares/authSeller";
+
 // =========================
 // UPDATE BANNER
 // =========================
 export async function PUT(req, context) {
   try {
-    const { userId } = await auth();
+    const session = await getSession();
+    const userId = session?.userId;
 
     if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const isAdmin = await authAdmin(userId);
+    const isSeller = await authSeller(userId);
+
+    if (!isAdmin && !isSeller) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -155,7 +169,8 @@ export async function PUT(req, context) {
 // =========================
 export async function DELETE(req, context) {
   try {
-    const { userId } = await auth();
+    const session = await getSession();
+    const userId = session?.userId;
 
     if (!userId) {
       return NextResponse.json(
@@ -165,6 +180,16 @@ export async function DELETE(req, context) {
         {
           status: 401,
         }
+      );
+    }
+
+    const isAdmin = await authAdmin(userId);
+    const isSeller = await authSeller(userId);
+
+    if (!isAdmin && !isSeller) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
       );
     }
 

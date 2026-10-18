@@ -1,5 +1,6 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import authSeller from "@/middlewares/authSeller";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -14,8 +15,17 @@ export async function GET(request) {
       );
     }
 
-    const storeInfo = await prisma.store.findFirst({
-      where: { userId },
+    const storeId = await authSeller(userId);
+
+    if (!storeId) {
+      return NextResponse.json({
+        isSeller: false,
+        isActive: false,
+      });
+    }
+
+    const storeInfo = await prisma.store.findUnique({
+      where: { id: storeId },
       select: {
         id: true,
         name: true,
@@ -44,4 +54,4 @@ export async function GET(request) {
       { status: 500 }
     );
   }
-}
+}

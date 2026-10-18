@@ -27,22 +27,33 @@ export async function GET() {
   }
 }
 
+import { getSession } from "@/lib/auth";
+import authAdmin from "@/middlewares/authAdmin";
+import authSeller from "@/middlewares/authSeller";
+
 // POST -> Create Banner
 export async function POST(req) {
   try {
     // ----------------------------
     // Auth
     // ----------------------------
-    const { userId } = await auth();
+    const session = await getSession();
+    const userId = session?.userId;
 
     if (!userId) {
       return NextResponse.json(
-        {
-          error: "Unauthorized",
-        },
-        {
-          status: 401,
-        }
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const isAdmin = await authAdmin(userId);
+    const isSeller = await authSeller(userId);
+
+    if (!isAdmin && !isSeller) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
       );
     }
 
