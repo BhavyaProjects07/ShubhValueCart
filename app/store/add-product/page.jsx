@@ -165,55 +165,53 @@ export default function StoreAddProduct() {
   /* ---------------- SUBMIT ---------------- */
 
   const onSubmitHandler = async (e) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  try {
-    setLoading(true)
+    try {
+      setLoading(true)
 
-    console.log("TOKEN:", token) // 🔥 ADD THIS
+      const formData = new FormData()
 
-    const formData = new FormData()
+      const mappedCategory =
+        categoryMap[productInfo.category?.toUpperCase()] ||
+        productInfo.category
 
-    const mappedCategory =
-      categoryMap[productInfo.category?.toUpperCase()] ||
-      productInfo.category
+      Object.entries({
+        ...productInfo,
+        category: mappedCategory,
+      }).forEach(([k, v]) => formData.append(k, v))
 
-    Object.entries({
-      ...productInfo,
-      category: mappedCategory,
-    }).forEach(([k, v]) => formData.append(k, v))
+      Object.keys(images).forEach((key) => {
+        if (images[key] && typeof images[key] !== "string") {
+          formData.append("images", images[key])
+        }
+      })
 
-    Object.keys(images).forEach((key) => {
-      if (images[key] && typeof images[key] !== "string") {
-        formData.append("images", images[key])
-      }
-    })
+      formData.append("hasSizes", enableSizes)
+      formData.append("sizes", JSON.stringify(sizes))
 
-    formData.append("hasSizes", enableSizes)
-    formData.append("sizes", JSON.stringify(sizes))
+      const endpoint = isEditMode
+        ? `/api/store/product/${editProductId}`
+        : "/api/store/product"
 
-    const endpoint = isEditMode
-      ? `/api/store/product/${editProductId}`
-      : "/api/store/product"
+      const method = isEditMode ? "put" : "post"
 
-    const method = isEditMode ? "put" : "post"
+      const promise = axios[method](endpoint, formData)
 
-    const promise = axios[method](endpoint, formData)
+      await toast.promise(promise, {
+        loading: "Saving Product...",
+        success: isEditMode ? "Product updated successfully" : "Product added successfully",
+        error: isEditMode ? "Failed to update product" : "Failed to add product",
+      })
 
-    await toast.promise(promise, {
-      loading: "Saving Product...",
-      success: "Product added successfully",
-      error: "Failed to add product",
-    })
-
-    router.push("/store/manage-product")
-  } catch (err) {
-    console.error(err)
-    toast.error(err.response?.data?.error || err.message)
-  } finally {
-    setLoading(false)
+      router.push("/store/manage-product")
+    } catch (err) {
+      console.error(err)
+      toast.error(err.response?.data?.error || err.message)
+    } finally {
+      setLoading(false)
+    }
   }
-}
 
   /* ---------------- EDIT PREFILL ---------------- */
 
@@ -388,8 +386,11 @@ export default function StoreAddProduct() {
 
       
 
-      <button className="mt-6 px-6 py-2 bg-black text-white">
-        {isEditMode ? "Update" : "Add Product"}
+      <button
+        disabled={loading}
+        className="mt-6 px-6 py-2 bg-black text-white rounded disabled:opacity-50 cursor-pointer"
+      >
+        {loading ? "Saving..." : isEditMode ? "Update" : "Add Product"}
       </button>
     </form>
   )
