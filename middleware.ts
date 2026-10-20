@@ -9,7 +9,7 @@ export function middleware(request) {
   // Remove this block to restore access
   // ====================================================
   if (path.startsWith('/admin') || path.startsWith('/store')) {
-    return NextResponse.redirect(new URL('/loading-block', request.url));
+    return NextResponse.redirect(new URL('/admin-dashboard', request.url));
   }
 
   // Protect Admin and Store routes from unauthenticated users
